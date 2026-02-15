@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>임상센터 팀 성향 분석~ - 사주 × MBTI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Hi+Melody&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Gowun Batang', 'Hi Melody', serif;
+      background: linear-gradient(160deg, #fff5f7 0%, #fce8ec 30%, #f8e8f4 60%, #f0e6fa 100%);
+      min-height: 100vh;
+      color: #5a4a5a;
+      padding: 2rem;
+      line-height: 1.7;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(221, 160, 221, 0.12) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: 'Hi Melody', cursive;
+      color: #d4849c;
+      text-shadow: 1px 1px 0 rgba(255,255,255,0.8);
+    }
+    h1::before { content: '🌸 '; }
+    h1::after { content: ' 🌸'; }
+    .card {
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid rgba(255, 182, 193, 0.4);
+      border-radius: 24px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 20px rgba(212, 132, 156, 0.12);
+    }
+    .form-row {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .form-group {
+      flex: 1;
+      min-width: 140px;
+    }
+    label {
+      display: block;
+      font-size: 0.9rem;
+      color: #8b7a8b;
+      margin-bottom: 0.35rem;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      border: 2px solid rgba(212, 132, 156, 0.3);
+      border-radius: 16px;
+      background: #fff;
+      color: #5a4a5a;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: #d4849c;
+      box-shadow: 0 0 0 3px rgba(212, 132, 156, 0.15);
+    }
+    input::placeholder {
+      color: #b8a8b8;
+    }
+    select option {
+      background: #fff;
+      color: #5a4a5a;
+    }
+    .mbti-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .mbti-row select {
+      flex: 1;
+      min-width: 70px;
+    }
+    button {
+      padding: 0.7rem 1.3rem;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.25s;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #f4a6b8, #e899b0);
+      color: #fff;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      box-shadow: 0 3px 12px rgba(212, 132, 156, 0.35);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 20px rgba(212, 132, 156, 0.45);
+    }
+    .btn-secondary {
+      background: #fff;
+      color: #c97a94;
+      border: 2px solid rgba(212, 132, 156, 0.5);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 182, 193, 0.25);
+      border-color: #d4849c;
+    }
+    .result-box {
+      background: linear-gradient(135deg, #fff9fb 0%, #fef5f8 100%);
+      border: 2px dashed rgba(212, 132, 156, 0.35);
+      border-radius: 20px;
+      padding: 1.25rem;
+      margin-top: 1rem;
+      white-space: pre-line;
+      min-height: 60px;
+      color: #5a4a5a;
+    }
+    .team-names {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .team-name-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: linear-gradient(135deg, #ffd6e0, #ffe4ec);
+      color: #b85c7a;
+      padding: 0.4rem 0.5rem 0.4rem 0.9rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid rgba(212, 132, 156, 0.3);
+      position: relative;
+    }
+    .tag-delete {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.1rem;
+      height: 1.1rem;
+      padding: 0;
+      border: none;
+      border-radius: 50%;
+      background: rgba(184, 92, 122, 0.25);
+      color: #b85c7a;
+      font-size: 1rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tag-delete:hover {
+      background: rgba(184, 92, 122, 0.45);
+    }
+    .api-key-hint {
+      font-size: 0.8rem;
+      color: #9a8a9a;
+      margin-top: 0.5rem;
+    }
+    .loading {
+      color: #b8a8b8;
+      font-style: italic;
+    }
+    .error {
+      color: #d4607a;
+      font-size: 0.9rem;
+    }
+    .section-title {
+      font-family: 'Hi Melody', cursive;
+      font-size: 1.15rem;
+      color: #c97a94;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>임상센터 팀 성향 분석~ · 사주 × MBTI</h1>
+
+    <!-- 기본 정보 -->
+    <div class="card">
+      <h3 class="section-title" style="margin-bottom: 1rem;">기본 정보</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label>이름</label>
+          <input type="text" id="userName" placeholder="홍길동">
+        </div>
+        <div class="form-group">
+          <label>팀명</label>
+          <input type="text" id="teamName" placeholder="예: 개발팀">
+        </div>
+      </div>
+
+      <!-- 사주: 생년월일시 -->
+      <h4 style="margin: 1rem 0 0.5rem; font-size: 1rem; color: #8b7a8b;">사주 정보</h4>
+      <div class="form-row">
+        <div class="form-group">
+          <label>생년</label>
+          <input type="number" id="birthYear" placeholder="1990" min="1900" max="2100">
+        </div>
+        <div class="form-group">
+          <label>생월</label>
+          <input type="number" id="birthMonth" placeholder="1" min="1" max="12">
+        </div>
+        <div class="form-group">
+          <label>생일</label>
+          <input type="number" id="birthDay" placeholder="15" min="1" max="31">
+        </div>
+        <div class="form-group">
+          <label>태어난 시간</label>
+          <select id="birthHour">
+            <option value="">모름</option>
+            <option value="자시">자시 (23:00~01:00)</option>
+            <option value="축시">축시 (01:00~03:00)</option>
+            <option value="인시">인시 (03:00~05:00)</option>
+            <option value="묘시">묘시 (05:00~07:00)</option>
+            <option value="진시">진시 (07:00~09:00)</option>
+            <option value="사시">사시 (09:00~11:00)</option>
+            <option value="오시">오시 (11:00~13:00)</option>
+            <option value="미시">미시 (13:00~15:00)</option>
+            <option value="신시">신시 (15:00~17:00)</option>
+            <option value="유시">유시 (17:00~19:00)</option>
+            <option value="술시">술시 (19:00~21:00)</option>
+            <option value="해시">해시 (21:00~23:00)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- MBTI -->
+      <h4 style="margin: 1rem 0 0.5rem; font-size: 1rem; color: #8b7a8b;">MBTI</h4>
+      <div class="mbti-row">
+        <select id="mbti1">
+          <option value="">선택</option>
+          <option value="I">I</option>
+          <option value="E">E</option>
+        </select>
+        <select id="mbti2">
+          <option value="">선택</option>
+          <option value="N">N</option>
+          <option value="S">S</option>
+        </select>
+        <select id="mbti3">
+          <option value="">선택</option>
+          <option value="T">T</option>
+          <option value="F">F</option>
+        </select>
+        <select id="mbti4">
+          <option value="">선택</option>
+          <option value="J">J</option>
+          <option value="P">P</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 버튼 영역 -->
+    <div class="card">
+      <div style="margin-bottom: 1rem;">
+        <button type="button" class="btn-primary" id="btnMyResult">내 결과보기</button>
+        <button type="button" class="btn-secondary" id="btnAccumulate">팀원값으로 내정보 누적하기</button>
+      </div>
+      <button type="button" class="btn-primary" id="btnTeamCompatibility">우리 팀의 성향 궁합</button>
+    </div>
+
+    <!-- 내 결과 -->
+    <div class="card">
+      <h3 class="section-title" style="margin-bottom: 0.5rem;">내 성향 결과</h3>
+      <div id="myResult" class="result-box">내 결과가 여기에 표시돼요 💕</div>
+    </div>
+
+    <!-- 누적된 팀원 -->
+    <div class="card">
+      <h3 class="section-title" style="margin-bottom: 0.5rem;">누적된 팀원 이름</h3>
+      <div id="accumulatedNames" class="team-names">아직 누적된 팀원이 없습니다.</div>
+    </div>
+
+    <!-- 팀 궁합 결과 -->
+    <div class="card">
+      <h3 class="section-title" style="margin-bottom: 0.5rem;">우리 팀의 성향 궁합</h3>
+      <div id="teamCompatibility" class="result-box">팀원 정보를 누적한 후 '우리 팀의 성향 궁합' 버튼을 눌러보세요 ✨</div>
+    </div>
+
+    <!-- API 키 설정 (개발용 - 실제 배포 시 서버에서 처리 권장) -->
+    <div class="card">
+      <label>Gemini API 키 <span style="color:#666">(필요 시 입력)</span></label>
+      <input type="password" id="apiKey" placeholder="API 키를 입력하세요 (선택)">
+      <p class="api-key-hint">Google AI Studio(aistudio.google.com)에서 무료 API 키 발급 가능. 브라우저에 노출되므로 로컬/개발용으로만 사용하세요.</p>
+    </div>
+  </div>
+
+  <script>
+    // localStorage 키
+    const STORAGE_KEY = 'team_members_data';
+
+    // MBTI 값 수집
+    function getMBTI() {
+      const m1 = document.getElementById('mbti1').value;
+      const m2 = document.getElementById('mbti2').value;
+      const m3 = document.getElementById('mbti3').value;
+      const m4 = document.getElementById('mbti4').value;
+      if (!m1 || !m2 || !m3 || !m4) return null;
+      return m1 + m2 + m3 + m4;
+    }
+
+    // 사주 정보 수집
+    function getSajuInfo() {
+      const year = document.getElementById('birthYear').value;
+      const month = document.getElementById('birthMonth').value;
+      const day = document.getElementById('birthDay').value;
+      const hour = document.getElementById('birthHour').value;
+      return { year, month, day, hour };
+    }
+
+    // Gemini API 호출
+    async function callGemini(prompt) {
+      const apiKey = document.getElementById('apiKey').value?.trim();
+      if (!apiKey) {
+        throw new Error('Gemini API 키를 입력해 주세요. (Google AI Studio에서 발급 가능)');
+      }
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: prompt }]
+          }],
+          generationConfig: {
+            temperature: 0.8,
+            maxOutputTokens: 2048,
+          }
+        })
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error?.message || 'API 호출 실패');
+      }
+      const data = await res.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || '응답을 생성할 수 없습니다.';
+    }
+
+    // 내 결과보기
+    document.getElementById('btnMyResult').addEventListener('click', async () => {
+      const box = document.getElementById('myResult');
+      const mbti = getMBTI();
+      const saju = getSajuInfo();
+
+      if (!mbti) {
+        box.innerHTML = '<span class="error">MBTI 4가지 성향을 모두 선택해 주세요.</span>';
+        return;
+      }
+      if (!saju.year || !saju.month || !saju.day) {
+        box.innerHTML = '<span class="error">생년, 생월, 생일을 입력해 주세요.</span>';
+        return;
+      }
+
+      box.innerHTML = '<span class="loading">✨ 성향을 분석하고 있어요... 잠시만 기다려 주세요</span>';
+
+      const hourText = saju.hour ? `${saju.hour}` : '시 unknown';
+      const prompt = `당신은 사주팔자와 MBTI를 모두 잘 아는 전문가입니다.
+다음 정보를 바탕으로, 이 사람의 통합 성향을 6~7줄 정도로 자연스러운 한국어로 설명해 주세요.
+사주 정보를 해석하고, MBTI 성향과 연결하여 통합적인 성격/성향 설명을 작성해 주세요.
+
+- 생년: ${saju.year}, 생월: ${saju.month}, 생일: ${saju.day}, 태어난 시간: ${hourText}
+- MBTI: ${mbti}
+
+6~7줄 정도로, 친근하고 이해하기 쉬운 문장으로 작성해 주세요.`;
+
+      try {
+        const result = await callGemini(prompt);
+        box.textContent = result;
+      } catch (e) {
+        box.innerHTML = `<span class="error">오류: ${e.message}</span>`;
+      }
+    });
+
+    // 팀원 정보 누적
+    document.getElementById('btnAccumulate').addEventListener('click', () => {
+      const name = document.getElementById('userName').value?.trim();
+      const team = document.getElementById('teamName').value?.trim();
+      const mbti = getMBTI();
+      const saju = getSajuInfo();
+
+      if (!name) {
+        alert('이름을 입력해 주세요.');
+        return;
+      }
+      if (!team) {
+        alert('팀명을 입력해 주세요.');
+        return;
+      }
+      if (!mbti) {
+        alert('MBTI 4가지 성향을 모두 선택해 주세요.');
+        return;
+      }
+      if (!saju.year || !saju.month || !saju.day) {
+        alert('생년, 생월, 생일을 입력해 주세요.');
+        return;
+      }
+
+      let list = [];
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) list = JSON.parse(raw);
+      } catch (e) {
+        list = [];
+      }
+
+      const key = `${team}::${name}`;
+      const idx = list.findIndex(x => x.key === key);
+      const entry = {
+        key,
+        name,
+        team,
+        mbti,
+        saju,
+        addedAt: new Date().toISOString()
+      };
+      if (idx >= 0) list[idx] = entry;
+      else list.push(entry);
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+
+      updateAccumulatedNames(team);
+      alert(`"${name}"님의 정보가 누적되었습니다.`);
+    });
+
+    function updateAccumulatedNames(teamFilter) {
+      const container = document.getElementById('accumulatedNames');
+      let list = [];
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) list = JSON.parse(raw);
+      } catch (e) {}
+      if (teamFilter) {
+        list = list.filter(x => x.team === teamFilter);
+      }
+      if (list.length === 0) {
+        container.innerHTML = teamFilter
+          ? `"${teamFilter}" 팀에는 아직 누적된 팀원이 없어요`
+          : '아직 누적된 팀원이 없어요';
+        return;
+      }
+      container.innerHTML = list.map(x => `<span class="team-name-tag">${x.name}<button type="button" class="tag-delete" data-key="${x.key}" title="삭제">×</button></span>`).join('');
+    }
+
+    // 팀 궁합 보기
+    document.getElementById('btnTeamCompatibility').addEventListener('click', async () => {
+      const box = document.getElementById('teamCompatibility');
+      const team = document.getElementById('teamName').value?.trim();
+
+      let list = [];
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) list = JSON.parse(raw);
+      } catch (e) {}
+
+      if (team) list = list.filter(x => x.team === team);
+      if (list.length < 2) {
+        box.innerHTML = '<span class="error">팀 궁합을 보려면 같은 팀원이 2명 이상 누적되어 있어야 합니다. 팀명을 입력하고 팀원 정보를 누적해 주세요.</span>';
+        return;
+      }
+
+      box.innerHTML = '<span class="loading">✨ 팀 궁합을 분석하고 있어요... 잠시만 기다려 주세요</span>';
+
+      const membersDesc = list.map((m, i) => {
+        const h = m.saju.hour ? m.saju.hour : '모름';
+        return `${i + 1}. ${m.name}: 사주 ${m.saju.year}년 ${m.saju.month}월 ${m.saju.day}일 ${h}, MBTI ${m.mbti}`;
+      }).join('\n');
+
+      const prompt = `당신은 사주팔자와 MBTI를 모두 잘 아는 팀 빌딩 전문가입니다.
+다음 팀원들의 정보를 바탕으로, 아래 형식에 맞춰 결과를 작성해 주세요. 반드시 각 섹션을 구분하여 그룹으로 묶어 보여주세요.
+
+【형식】
+1. 비슷한 성향 끼리 묶기
+   - MBTI·사주를 기준으로 비슷한 성향의 팀원들을 그룹으로 묶고, 각 그룹을 간단히 소개해 주세요. (예: "직관형 그룹: A, B / 감정형 그룹: C, D" 등)
+
+2. 조직 내 역할 기질 제안
+   - 각 팀원(또는 성향 그룹)에게 어울리는 조직 내 역할·기질을 1~2문장으로 간단히 제안해 주세요. (예: 리더십, 아이디어 담당, 세부 실행, 조정자 등)
+
+3. 긍정적인 조합
+   - 어떤 성향 조합이 함께 일할 때 시너지를 낼 수 있는지, 구체적인 조합(이름 또는 성향)과 그 이유를 간략히 적어 주세요.
+
+각 섹션은 2~4줄 정도로 간략하게, 자연스러운 한국어로 작성해 주세요. 전체적으로 읽기 쉽게 그룹별로 정리해 주세요.
+
+팀원 정보:
+${membersDesc}`;
+
+      try {
+        const result = await callGemini(prompt);
+        box.textContent = result;
+      } catch (e) {
+        box.innerHTML = `<span class="error">오류: ${e.message}</span>`;
+      }
+    });
+
+    // 팀명 변경 시 누적 팀원 목록 갱신
+    document.getElementById('teamName').addEventListener('blur', () => {
+      const team = document.getElementById('teamName').value?.trim();
+      updateAccumulatedNames(team);
+    });
+
+    // 누적 팀원 삭제 (x 버튼)
+    document.getElementById('accumulatedNames').addEventListener('click', (e) => {
+      const btn = e.target.closest('.tag-delete');
+      if (!btn) return;
+      const key = btn.getAttribute('data-key');
+      if (!key) return;
+      let list = [];
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) list = JSON.parse(raw);
+      } catch (err) {}
+      list = list.filter(x => x.key !== key);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+      const team = document.getElementById('teamName').value?.trim();
+      updateAccumulatedNames(team);
+    });
+
+    // 초기 로드 시 (팀명 없으면 전체 표시)
+    updateAccumulatedNames();
+  </script>
+</body>
+</html>
