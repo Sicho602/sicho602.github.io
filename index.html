@@ -203,50 +203,137 @@
       color: #c97a94;
       margin-bottom: 0.5rem;
     }
-    .my-result-inner {
+    .my-result-section {
+      margin-bottom: 1.25rem;
+    }
+    .my-result-section:last-child {
+      margin-bottom: 0;
+    }
+    .my-result-section-title {
+      font-weight: 700;
+      color: #b85c7a;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+    }
+    .my-result-section-content {
+      white-space: pre-line;
+      line-height: 1.65;
+      color: #5a4a5a;
+    }
+    .my-result-core-inner {
       display: flex;
-      gap: 1.25rem;
+      gap: 1rem;
       align-items: flex-start;
     }
     .ohang-illust {
       flex-shrink: 0;
-      width: 100px;
-      height: 100px;
+      width: 180px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
     }
-    .ohang-illust svg {
+    .ohang-illust img {
       width: 100%;
       height: 100%;
-      display: block;
+      object-fit: contain;
+      object-position: center;
+      mix-blend-mode: multiply;
     }
     .my-result-text {
-      flex: 1;
       white-space: pre-line;
+    }
+    .team-comp-section-title {
+      font-family: 'Hi Melody', cursive;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #c97a94;
+      margin: 1.5rem 0 0.75rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid rgba(212, 132, 156, 0.4);
+    }
+    .team-comp-section-title:first-child {
+      margin-top: 0;
+    }
+    .team-comp-table-wrap {
+      margin-bottom: 1rem;
+      border-radius: 16px;
+      white-space: normal;
+      overflow-x: auto;
+      box-shadow: 0 4px 20px rgba(212, 132, 156, 0.15);
+      border: 1px solid rgba(212, 132, 156, 0.2);
     }
     .team-comp-table {
       width: 100%;
+      min-width: 480px;
       border-collapse: collapse;
-      margin-bottom: 1.25rem;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
+      table-layout: fixed;
     }
+    .team-comp-table col:nth-child(1) { width: 14%; }
+    .team-comp-table col:nth-child(2) { width: 10%; }
+    .team-comp-table col:nth-child(3) { width: 18%; }
+    .team-comp-table col:nth-child(4) { width: 58%; }
     .team-comp-table th,
     .team-comp-table td {
-      border: 1px solid rgba(212, 132, 156, 0.35);
-      padding: 0.5rem 0.7rem;
+      border-bottom: 1px solid rgba(212, 132, 156, 0.2);
+      padding: 0.5rem 0.65rem;
       text-align: left;
+      vertical-align: middle;
     }
     .team-comp-table th {
-      background: linear-gradient(135deg, #ffe4ec, #ffd6e0);
-      color: #b85c7a;
+      background: linear-gradient(135deg, #d4849c, #c97a94);
+      color: #fff;
       font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.02em;
     }
-    .team-comp-table tr:nth-child(even) {
-      background: rgba(255, 249, 251, 0.6);
+    .team-comp-table td {
+      background: #fff;
+      line-height: 1.45;
     }
-    .team-comp-table tr:hover {
-      background: rgba(255, 230, 240, 0.5);
+    .team-comp-table td:first-child {
+      font-weight: 600;
+      color: #b85c7a;
+    }
+    .team-comp-table td:nth-child(2) {
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #5a4a5a;
+    }
+    .team-comp-table td:nth-child(3) {
+      color: #8b6b8b;
+      font-weight: 500;
+    }
+    .team-comp-table td:nth-child(4) {
+      word-break: break-word;
+      overflow-wrap: break-word;
+      color: #5a4a5a;
+      line-height: 1.5;
+    }
+    .team-comp-table tbody tr {
+      border-bottom: 1px solid rgba(212, 132, 156, 0.12);
+    }
+    .team-comp-table tbody tr:last-child {
+      border-bottom: none;
+    }
+    .team-comp-table tbody tr:nth-child(even) td {
+      background: #fffbfc;
+    }
+    .team-comp-table tbody tr:hover td {
+      background: #fff5f8;
     }
     .team-comp-narrative {
       white-space: pre-line;
+      line-height: 1.7;
+    }
+    .team-comp-narrative strong {
+      color: #b85c7a;
+    }
+    .team-comp-content {
+      white-space: normal;
+      overflow: visible;
     }
   </style>
 </head>
@@ -269,7 +356,7 @@
       </div>
 
       <!-- 사주: 생년월일시 -->
-      <h4 style="margin: 1rem 0 0.5rem; font-size: 1rem; color: #8b7a8b;">사주 정보</h4>
+      <h4 style="margin: 1rem 0 0.5rem; font-size: 1rem; color: #8b7a8b;">사주 정보 <span style="font-size: 0.8rem; font-weight: normal; color: #9a8a9a;">(양력으로 입력해주세요)</span></h4>
       <div class="form-row">
         <div class="form-group">
           <label>생년</label>
@@ -368,14 +455,8 @@
     // localStorage 키
     const STORAGE_KEY = 'team_members_data';
 
-    // 오행별 귀여운 SVG 일러스트 (목/화/토/금/수)
-    const OHANG_ILLUST = {
-      수: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="wg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#87CEEB"/><stop offset="100%" style="stop-color:#B0E0E6"/></linearGradient></defs><ellipse cx="50" cy="55" rx="35" ry="25" fill="url(#wg)" opacity="0.9"/><path d="M20 55 Q35 45 50 55 Q65 65 80 55" stroke="#5DADE2" stroke-width="3" fill="none" stroke-linecap="round"/><ellipse cx="30" cy="35" rx="8" ry="10" fill="#AED6F1"/><ellipse cx="70" cy="40" rx="6" ry="8" fill="#AED6F1"/><circle cx="50" cy="25" r="6" fill="#D4E6F1"/></svg>',
-      화: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="fg" x1="50%" y1="100%" x2="50%" y2="0%"><stop offset="0%" style="stop-color:#F39C12"/><stop offset="100%" style="stop-color:#E74C3C"/></linearGradient></defs><path d="M50 20 Q60 35 55 50 Q50 70 50 85 Q50 70 45 50 Q40 35 50 20" fill="url(#fg)"/><path d="M35 45 Q45 40 50 50 Q45 55 35 50" fill="#F5B041" opacity="0.8"/><path d="M65 48 Q55 42 50 52 Q55 58 65 52" fill="#F5B041" opacity="0.8"/><circle cx="50" cy="35" r="5" fill="#FDEBD0"/></svg>',
-      목: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="mg" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#7DCEA0"/><stop offset="100%" style="stop-color:#52BE80"/></linearGradient></defs><ellipse cx="50" cy="70" rx="15" ry="8" fill="#8B7355"/><path d="M50 70 L50 25" stroke="#8B7355" stroke-width="6" stroke-linecap="round"/><ellipse cx="50" cy="35" rx="28" ry="25" fill="url(#mg)"/><ellipse cx="35" cy="45" rx="12" ry="10" fill="#58D68D" opacity="0.9"/><ellipse cx="65" cy="40" rx="10" ry="12" fill="#58D68D" opacity="0.9"/><ellipse cx="50" cy="28" rx="8" ry="10" fill="#82E0AA"/></svg>',
-      금: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="kig" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#F4D03F"/><stop offset="100%" style="stop-color:#D4AC0D"/></linearGradient></defs><polygon points="50 15 65 40 50 35 35 40" fill="url(#kig)"/><polygon points="50 35 70 55 50 50 30 55" fill="url(#kig)" opacity="0.9"/><polygon points="50 50 60 75 50 70 40 75" fill="url(#kig)" opacity="0.85"/><circle cx="50" cy="45" r="8" fill="#FCF3CF"/></svg>',
-      토: '<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="tg" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" style="stop-color:#BB8FCE"/><stop offset="100%" style="stop-color:#D7BDE2"/></linearGradient></defs><path d="M20 75 Q35 55 50 65 Q65 55 80 75 L80 95 L20 95 Z" fill="url(#tg)"/><ellipse cx="50" cy="50" rx="25" ry="18" fill="#E8DAEF"/><path d="M30 85 Q50 70 70 85" stroke="#A569BD" stroke-width="2" fill="none" opacity="0.6"/><circle cx="40" cy="45" r="5" fill="#D2B4DE"/><circle cx="60" cy="48" r="4" fill="#D2B4DE"/></svg>'
-    };
+    // 오행별 이미지 (목/화/토/금/수) - 수:Water, 화:Fire, 목:Wood, 금:Metal, 토:Earth(Eearth)
+    const OHANG_IMAGES = { 수: 'assets/Water.png', 화: 'assets/Fire.png', 목: 'assets/Wood.png', 금: 'assets/Metal.png', 토: 'assets/Eearth.png' };
 
     // MBTI 값 수집
     function getMBTI() {
@@ -396,8 +477,31 @@
       return { year, month, day, hour };
     }
 
-    // Gemini API 호출
-    async function callGemini(prompt) {
+    // 만세력: @fullstackfamily/manseryeok로 일간(日干) 산출 → 오행 (목/화/토/금/수)
+    const STEM_TO_OHANG = { '갑':'목','을':'목','병':'화','정':'화','무':'토','기':'토','경':'금','신':'금','임':'수','계':'수' };
+    const STEM_TO_ILGAN_NAME = { '갑':'갑목(甲木)','을':'을목(乙木)','병':'병화(丙火)','정':'정화(丁火)','무':'무토(戊土)','기':'기토(己土)','경':'경금(庚金)','신':'신금(辛金)','임':'임수(壬水)','계':'계수(癸水)' };
+    const ILGAN_TRAIT_HINT = { '계':'유연함, 지혜, 정밀함', '임':'포용력, 흐름 읽기', '갑':'리더십, 도전정신', '을':'섬세함, 적응력', '병':'열정, 카리스마', '정':'섬세한 통찰', '무':'안정, 신뢰', '기':'배려, 조화', '경':'결단, 정의감', '신':'예리함, 완성도' };
+    const HOUR_MAP = { '자시':0,'축시':2,'인시':4,'묘시':6,'진시':8,'사시':10,'오시':12,'미시':14,'신시':16,'유시':18,'술시':20,'해시':22 };
+
+    let _manseryeok = null;
+    async function getIlganOhang(year, month, day, hourStr) {
+      const y = parseInt(year, 10), m = parseInt(month, 10), d = parseInt(day, 10);
+      if (isNaN(y) || isNaN(m) || isNaN(d) || m < 1 || m > 12 || d < 1 || d > 31) return { ohang: null, stem: null, ilganName: null };
+      try {
+        if (!_manseryeok) _manseryeok = await import('https://unpkg.com/@fullstackfamily/manseryeok@1.0.5/dist/index.esm.js');
+        const h = hourStr && HOUR_MAP[hourStr] !== undefined ? HOUR_MAP[hourStr] : 12;
+        const saju = _manseryeok.calculateSaju(y, m, d, h, 30);
+        const dayStem = (saju.dayPillar || '').charAt(0);
+        const ohang = STEM_TO_OHANG[dayStem] || null;
+        const ilganName = STEM_TO_ILGAN_NAME[dayStem] || null;
+        return { ohang, stem: dayStem, ilganName };
+      } catch (e) {
+        return { ohang: null, stem: null, ilganName: null };
+      }
+    }
+
+    // Gemini API 호출 (temperature: 낮을수록 일관된 결과)
+    async function callGemini(prompt, options = {}) {
       const apiKey = document.getElementById('apiKey').value?.trim();
       if (!apiKey) {
         throw new Error('Gemini API 키를 입력해 주세요. (Google AI Studio에서 발급 가능)');
@@ -411,7 +515,7 @@
             parts: [{ text: prompt }]
           }],
           generationConfig: {
-            temperature: 0.8,
+            temperature: options.temperature !== undefined ? options.temperature : 0.8,
             maxOutputTokens: 2048,
           }
         })
@@ -441,27 +545,55 @@
 
       box.innerHTML = '<span class="loading">✨ 성향을 분석하고 있어요... 잠시만 기다려 주세요</span>';
 
+      const userName = document.getElementById('userName').value?.trim() || '이 사람';
       const hourText = saju.hour ? `${saju.hour}` : '모름';
-      const prompt = `당신은 사주팔자와 MBTI를 모두 잘 아는 전문가입니다.
-다음 정보를 바탕으로 두 가지를 작성해 주세요.
 
-1) 이 사람의 통합 성향을 6~7줄 정도로 자연스러운 한국어로 설명. 사주와 MBTI를 연결한 성격/성향 설명.
-
-2) 사주팔자의 음양오행(목/화/토/금/수) 중 이 사람에게 가장 강하게 나타나는 오행 하나를 판단해 주세요.
-반드시 마지막 줄에 정확히 다음 형식으로만 작성: 【가장 강한 오행: 목】 또는 【가장 강한 오행: 화】 또는 【가장 강한 오행: 토】 또는 【가장 강한 오행: 금】 또는 【가장 강한 오행: 수】
-
-- 생년: ${saju.year}, 생월: ${saju.month}, 생일: ${saju.day}, 태어난 시간: ${hourText}
-- MBTI: ${mbti}
-
-친근하고 이해하기 쉬운 문장으로 작성해 주세요.`;
+      const { ohang, ilganName, stem } = await getIlganOhang(saju.year, saju.month, saju.day, saju.hour || null);
+      const ohangVal = ohang || '수';
+      const ilganDesc = ilganName || `${ohangVal}행`;
+      const traitHint = (stem && ILGAN_TRAIT_HINT[stem]) ? ` (일간 ${ilganDesc}의 특성: ${ILGAN_TRAIT_HINT[stem]}을 강조하세요)` : '';
 
       try {
-        const rawResult = await callGemini(prompt);
-        const match = rawResult.match(/【가장 강한 오행: (목|화|토|금|수)】/);
-        const ohang = (match && OHANG_ILLUST[match[1]]) ? match[1] : null;
-        const textOnly = rawResult.replace(/\s*【가장 강한 오행: (목|화|토|금|수)】\s*$/, '').trim();
-        const illustHtml = ohang ? `<div class="ohang-illust">${OHANG_ILLUST[ohang]}</div>` : '';
-        box.innerHTML = illustHtml ? `<div class="my-result-inner">${illustHtml}<div class="my-result-text">${textOnly.replace(/\n/g, '<br>')}</div></div>` : `<div class="my-result-text">${textOnly.replace(/\n/g, '<br>')}</div>`;
+        const prompt = `당신은 사주팔자와 MBTI를 모두 잘 아는 전문가입니다.
+${userName}님의 사주와 MBTI를 "업무(직장/협업)"와 연결해 아래 형식대로 작성해 주세요.
+
+【중요】이 사람의 일간(日干)은 "${ilganDesc}"입니다. 사주에서 '나'는 반드시 일간(태어난 날의 천간)이며, 년·월·시주가 아닌 일간 기준입니다. 오행은 "${ohangVal}"입니다.${traitHint}
+
+【반드시 아래 형식과 구분자(【】)를 정확히 사용하세요】
+
+【1. 핵심 기운】
+- 예: 🔥 핵심 기운: "꺼지지 않는 지혜의 등불, 정화(丁火)"
+- 일간(태어난 날의 천간) ${ilganDesc}를 자연물에 비유한 제목과 함께 설명
+- 이어서 사주에서 해당 오행이 어떻게 드러나는지 2~3문장으로 설명
+- 마지막에 "업무적 의미:"로 시작해, 이 기운이 직장에서 어떻게 발휘되는지 1~2문장
+
+【2. 강점】
+- [성향] MBTI와 오행이 만났을 때의 성격·사고방식 (한 줄 요약 포함)
+- [강점] 업무에서 빛나는 강점 (한 줄 요약 포함)
+- [업무 스타일] 일하는 방식, 협업 스타일 (한 줄 요약 포함)
+예제처럼 "한 줄 요약:" 형식으로 각각 마무리
+
+【3. 팀 내 필살기】
+- 팀에서 이 사람이 발휘할 수 있는 특별한 능력 2~3가지를 bullet으로
+- 각 항목은 한 문장으로 간결하게
+
+- 생년월일(양력): ${saju.year}년 ${saju.month}월 ${saju.day}일, 태어난 시간: ${hourText}
+- MBTI: ${mbti}`;
+
+        const rawResult = await callGemini(prompt, { temperature: 0.7 });
+        let text = rawResult.replace(/\s*【가장 강한 오행: (목|화|토|금|수)】\s*/g, '').trim();
+        const toHtml = (s) => s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        const sect1 = text.match(/【1\.\s*핵심\s*기운】\s*([\s\S]*?)(?=【2\.|$)/i);
+        const sect2 = text.match(/【2\.\s*강점】\s*([\s\S]*?)(?=【3\.|$)/i);
+        const sect3 = text.match(/【3\.\s*팀\s*내\s*필살기】\s*([\s\S]*?)$/i);
+        const c1 = sect1 ? sect1[1].trim() : '';
+        const c2 = sect2 ? sect2[1].trim() : '';
+        const c3 = sect3 ? sect3[1].trim() : '';
+        const illustHtml = ohang ? `<div class="ohang-illust"><img src="${OHANG_IMAGES[ohang]}" alt="${ohang}"></div>` : '';
+        const html1 = c1 ? `<div class="my-result-section"><div class="my-result-section-title">🔥 1. 핵심 기운</div><div class="my-result-core-inner">${illustHtml}<div class="my-result-section-content">${toHtml(c1)}</div></div></div>` : '';
+        const html2 = c2 ? `<div class="my-result-section"><div class="my-result-section-title">🧪 2. 강점</div><div class="my-result-section-content">${toHtml(c2)}</div></div>` : '';
+        const html3 = c3 ? `<div class="my-result-section"><div class="my-result-section-title">💡 3. 팀 내 필살기</div><div class="my-result-section-content">${toHtml(c3)}</div></div>` : '';
+        box.innerHTML = (html1 || html2 || html3) ? html1 + html2 + html3 : `<div class="my-result-text">${toHtml(text)}</div>`;
       } catch (e) {
         box.innerHTML = `<span class="error">오류: ${e.message}</span>`;
       }
@@ -537,31 +669,42 @@
       container.innerHTML = list.map(x => `<span class="team-name-tag">${x.name}<button type="button" class="tag-delete" data-key="${x.key}" title="삭제">×</button></span>`).join('');
     }
 
-    // 마크다운 표를 HTML 테이블로 변환
-    function parseTeamResult(text) {
+    // 마크다운 표를 HTML로 변환, 섹션 제목 및 볼드 처리
+    function parseTeamResult(text, teamName) {
+      const teamLabel = teamName ? teamName : '팀';
+      text = text.replace(/\s*\[?1단계\]?\s*요약표\s*/g, '');
       const lines = text.split('\n');
       const tableLines = [];
       let i = 0;
       while (i < lines.length && lines[i].includes('|')) {
         const line = lines[i];
-        if (/[가-힣a-zA-Z0-9]/.test(line)) tableLines.push(line);
+        if (/[가-힣a-zA-Z0-9]/.test(line) && !/^\|?\s*\[?1단계\]?\s*요약표\s*\|?/.test(line.trim())) tableLines.push(line);
         i++;
       }
       let tableHtml = '';
       if (tableLines.length >= 1) {
         const headerCells = tableLines[0].split('|').filter(c => c.trim());
+        const colCount = Math.max(headerCells.length, 4);
+        const colgroup = '<colgroup>' + Array(colCount).fill('<col>').join('') + '</colgroup>';
         const headerRow = '<tr>' + headerCells.map(c => `<th>${c.trim()}</th>`).join('') + '</tr>';
         let bodyRows = '';
         for (let j = 1; j < tableLines.length; j++) {
           const cells = tableLines[j].split('|').filter(c => c.trim());
           if (cells.length >= 1) bodyRows += '<tr>' + cells.map(c => `<td>${c.trim()}</td>`).join('') + '</tr>';
         }
-        tableHtml = `<table class="team-comp-table"><thead>${headerRow}</thead><tbody>${bodyRows}</tbody></table>`;
+        tableHtml = `<div class="team-comp-table-wrap"><table class="team-comp-table">${colgroup}<thead>${headerRow}</thead><tbody>${bodyRows}</tbody></table></div>`;
       }
       const narrativeStart = lines.findIndex((l, idx) => idx >= i && l.trim().length > 0);
-      const narrative = narrativeStart >= 0 ? lines.slice(narrativeStart).join('\n').trim() : '';
-      const narrativeHtml = narrative ? `<div class="team-comp-narrative">${narrative.replace(/\n/g, '<br>')}</div>` : '';
-      return tableHtml + narrativeHtml;
+      let narrative = narrativeStart >= 0 ? lines.slice(narrativeStart).join('\n').trim() : '';
+      narrative = narrative.replace(/^알겠습니다\.?[\s\S]*?(?:제공|작성|정리|분석)해\s*드리겠습니다\.?\s*/i, '');
+      narrative = narrative.replace(/^(?:네,?|좋습니다\.?)\s*[\s\S]*?드리겠습니다\.?\s*/i, '');
+      narrative = narrative.replace(/^우리팀의\s*긍정\s*시너지\s*그룹\s*[:\s]*/i, '');
+      narrative = narrative.trim();
+      const boldNarrative = narrative.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      const narrativeHtml = boldNarrative ? `<div class="team-comp-narrative">${boldNarrative.replace(/\n/g, '<br>')}</div>` : '';
+      const section1 = `<div class="team-comp-content"><h3 class="team-comp-section-title">1. ${teamLabel} 내 맞춤 역할 (Role-Play)</h3>${tableHtml}`;
+      const section2 = narrativeHtml ? `<h3 class="team-comp-section-title">2. 우리팀의 긍정 시너지 그룹</h3>${narrativeHtml}` : '';
+      return section1 + section2 + '</div>';
     }
 
     // 팀 궁합 보기
@@ -585,33 +728,39 @@
 
       const membersDesc = list.map((m, i) => {
         const h = m.saju.hour ? m.saju.hour : '모름';
-        return `${i + 1}. ${m.name}: 사주 ${m.saju.year}년 ${m.saju.month}월 ${m.saju.day}일 ${h}, MBTI ${m.mbti}`;
+        return `${i + 1}. ${m.name}: 사주(양력) ${m.saju.year}년 ${m.saju.month}월 ${m.saju.day}일 ${h}, MBTI ${m.mbti}`;
       }).join('\n');
 
       const prompt = `당신은 사주팔자와 MBTI를 모두 잘 아는 팀 빌딩 전문가입니다.
+※ 팀원들의 생년월일은 모두 양력(태양력) 기준입니다. 양력 기준으로 사주를 해석해 주세요.
+
 다음 팀원들의 정보를 바탕으로, 반드시 아래 순서와 형식으로 작성해 주세요.
 
 【1단계】가장 먼저 요약 표를 작성하세요.
-- 마크다운 표 형식으로 작성. 컬럼: 이름 | MBTI | 에너지타입 | 조직 내 역할 기질
-- 에너지타입: 사주 오행(목/화/토/금/수) 또는 MBTI E/I 등에서 판단한 기질을 간단히 (예: 수(水)형, 외향·직관형)
-- 조직 내 역할 기질: 각 팀원에게 어울리는 역할을 한 줄로 (예: 아이디어 리드, 세부 실행 담당)
+- 반드시 마크다운 표 형식( | 로 구분). 컬럼: 이름 | MBTI | 핵심역할 | 업무시너지포인트
+- 핵심역할: 캐릭터처럼 한 단어~두 단어로 표현 (예: 야전 사령관, 아이디어 큐레이터)
+- 업무시너지포인트: 그 역할에서 빛나는 강점을 한 문장으로. 예: "결정적인 순간에 리스크를 감수하고 방향을 결정하는 결단력."
 
 예시:
-| 이름 | MBTI | 에너지타입 | 조직 내 역할 기질 |
-|------|------|------------|------------------|
-| 홍길동 | ENFP | 화(火)형 | 아이디어·리드 |
-| 김철수 | ISTJ | 토(土)형 | 세부 실행 |
+| 이름 | MBTI | 핵심역할 | 업무시너지포인트 |
+|------|------|----------|------------------|
+| 박팀장 | ENTJ | 야전 사령관 | 결정적인 순간에 리스크를 감수하고 방향을 결정하는 결단력. |
+| 김대리 | ISFJ | 안정 수호자 | 꼼꼼하게 디테일을 챙겨 팀의 실수를 미리 막는 신뢰감. |
 
-【2단계】표 다음에 빈 줄 하나 둔 뒤, 비슷한 성향끼리 묶은 결과를 서술해 주세요.
-- MBTI·사주를 기준으로 비슷한 성향의 팀원들을 그룹으로 묶고, 각 그룹을 2~4줄 정도로 자연스럽게 설명해 주세요.
-- 긍정적인 조합(어떤 조합이 시너지를 낼 수 있는지)도 간략히 포함해 주세요.
+【2단계】표 다음에 빈 줄 둔 뒤, 긍정 시너지 그룹 내용을 서술하세요. ("우리팀의 긍정 시너지 그룹"이라는 제목/헤딩은 쓰지 말고, 바로 **그룹명:** 형태부터 시작)
+- MBTI·사주를 기준으로 비슷한 성향의 팀원들을 그룹으로 묶고, 각 그룹을 2~4줄로 설명.
+- 각 소그룹 제목은 반드시 **볼드** 처리. 예: **직관형 리더 그룹:** 김철수, 이영희 ...
+- 긍정적인 조합(시너지)도 포함.
+- "알겠습니다", "팀원 정보를 바탕으로~ 제공해 드리겠습니다", "우리팀의 긍정 시너지 그룹" 같은 인사말/제목은 쓰지 말고, 바로 **그룹명:** 부터 본문만 작성하세요.
+
+【표에】[1단계]요약표 같은 표 제목은 넣지 마세요. 표는 | 이름 | MBTI | 핵심역할 | 업무시너지포인트 | 행부터 바로 시작하고, 그 다음 |---|---| 구분행, 그 다음 데이터 행 순으로 작성하세요. 각 셀은 한 줄로 간결하게.
 
 팀원 정보:
 ${membersDesc}`;
 
       try {
         const rawResult = await callGemini(prompt);
-        const parsed = parseTeamResult(rawResult);
+        const parsed = parseTeamResult(rawResult, team || '우리 팀');
         box.innerHTML = parsed;
       } catch (e) {
         box.innerHTML = `<span class="error">오류: ${e.message}</span>`;
