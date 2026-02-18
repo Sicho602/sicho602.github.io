@@ -240,6 +240,19 @@
       object-fit: contain;
       object-position: center;
       mix-blend-mode: multiply;
+      display: block;
+    }
+    .ohang-illust .ohang-fallback {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      font-weight: 700;
+      color: rgba(184, 92, 122, 0.5);
+      background: rgba(255, 182, 193, 0.15);
+      border-radius: 50%;
     }
     .my-result-text {
       white-space: pre-line;
@@ -334,6 +347,74 @@
     .team-comp-content {
       white-space: normal;
       overflow: visible;
+    }
+
+    /* 모바일 대응 */
+    @media (max-width: 640px) {
+      body { padding: 1rem; }
+      h1 { font-size: 1.4rem; }
+      .card { padding: 1rem; }
+      /* 오행 이미지: 모바일에서 표시 보장 */
+      .my-result-core-inner {
+        flex-direction: column;
+        align-items: center;
+      }
+      .ohang-illust {
+        width: 120px;
+        height: 120px;
+      }
+      .ohang-illust img {
+        max-width: 100%;
+        max-height: 100%;
+        mix-blend-mode: normal;
+      }
+      /* 팀 궁합 표: 모바일 카드형으로 전환 */
+      .team-comp-table-wrap {
+        overflow-x: visible;
+      }
+      .team-comp-table {
+        min-width: 100%;
+        table-layout: auto;
+        display: block;
+      }
+      .team-comp-table thead { display: none; }
+      .team-comp-table tbody { display: block; }
+      .team-comp-table tr {
+        display: block;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid rgba(212, 132, 156, 0.25);
+        box-shadow: 0 2px 8px rgba(212, 132, 156, 0.1);
+      }
+      .team-comp-table td {
+        display: block;
+        padding: 0.4rem 0;
+        border: none;
+        text-align: left;
+      }
+      .team-comp-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #c97a94;
+        margin-bottom: 0.2rem;
+      }
+      .team-comp-table td:nth-child(1)::before { content: '이름'; }
+      .team-comp-table td:nth-child(2)::before { content: 'MBTI'; }
+      .team-comp-table td:nth-child(3)::before { content: '핵심역할'; }
+      .team-comp-table td:nth-child(4)::before { content: '업무시너지포인트'; }
+      .team-comp-table td:first-child {
+        font-size: 1rem;
+        padding-top: 0;
+      }
+      .team-comp-table td:nth-child(4) {
+        word-break: keep-all;
+        overflow-wrap: break-word;
+        line-height: 1.6;
+      }
     }
   </style>
 </head>
@@ -457,6 +538,7 @@
 
     // 오행별 이미지 (목/화/토/금/수) - 수:Water, 화:Fire, 목:Wood, 금:Metal, 토:Earth(Eearth)
     const OHANG_IMAGES = { 수: 'assets/Water.png', 화: 'assets/Fire.png', 목: 'assets/Wood.png', 금: 'assets/Metal.png', 토: 'assets/Eearth.png' };
+    const OHANG_EMOJI = { 수: '💧', 화: '🔥', 목: '🌳', 금: '⚙️', 토: '🌍' };
 
     // MBTI 값 수집
     function getMBTI() {
@@ -589,7 +671,7 @@ ${userName}님의 사주와 MBTI를 "업무(직장/협업)"와 연결해 아래 
         const c1 = sect1 ? sect1[1].trim() : '';
         const c2 = sect2 ? sect2[1].trim() : '';
         const c3 = sect3 ? sect3[1].trim() : '';
-        const illustHtml = ohang ? `<div class="ohang-illust"><img src="${OHANG_IMAGES[ohang]}" alt="${ohang}"></div>` : '';
+        const illustHtml = ohang ? `<div class="ohang-illust"><img src="${OHANG_IMAGES[ohang]}" alt="${ohang}" onerror="this.style.display='none';var s=this.nextElementSibling;s.style.display='flex';s.textContent='${OHANG_EMOJI[ohang]||ohang}'"><span class="ohang-fallback" style="display:none"></span></div>` : '';
         const html1 = c1 ? `<div class="my-result-section"><div class="my-result-section-title">🔥 1. 핵심 기운</div><div class="my-result-core-inner">${illustHtml}<div class="my-result-section-content">${toHtml(c1)}</div></div></div>` : '';
         const html2 = c2 ? `<div class="my-result-section"><div class="my-result-section-title">🧪 2. 강점</div><div class="my-result-section-content">${toHtml(c2)}</div></div>` : '';
         const html3 = c3 ? `<div class="my-result-section"><div class="my-result-section-title">💡 3. 팀 내 필살기</div><div class="my-result-section-content">${toHtml(c3)}</div></div>` : '';
