@@ -232,15 +232,21 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: transparent;
+      background: linear-gradient(135deg, #ffd6e0 0%, #f4a6b8 50%, #e899b0 100%);
+      border-radius: 50%;
+      padding: 8%;
+      box-shadow: 0 4px 16px rgba(212, 132, 156, 0.35);
+      border: 3px solid rgba(255, 255, 255, 0.8);
+      overflow: hidden;
     }
     .ohang-illust img {
       width: 100%;
       height: 100%;
       object-fit: contain;
       object-position: center;
-      mix-blend-mode: multiply;
       display: block;
+      max-width: 100%;
+      max-height: 100%;
     }
     .ohang-illust .ohang-fallback {
       width: 100%;
@@ -250,9 +256,8 @@
       justify-content: center;
       font-size: 3rem;
       font-weight: 700;
-      color: rgba(184, 92, 122, 0.5);
-      background: rgba(255, 182, 193, 0.15);
-      border-radius: 50%;
+      color: rgba(184, 92, 122, 0.6);
+      background: transparent;
     }
     .my-result-text {
       white-space: pre-line;
@@ -349,6 +354,36 @@
       overflow: visible;
     }
 
+    .button-with-ohang {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .button-group {
+      flex: 1;
+      min-width: 200px;
+    }
+    .five-elements-wrap {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .five-elements-img {
+      width: 100px;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(212, 132, 156, 0.2);
+      border: 2px solid rgba(212, 132, 156, 0.25);
+    }
+    .five-elements-caption {
+      font-size: 0.8rem;
+      color: #9a8a9a;
+    }
+
     /* 모바일 대응 */
     @media (max-width: 640px) {
       body { padding: 1rem; }
@@ -366,7 +401,16 @@
       .ohang-illust img {
         max-width: 100%;
         max-height: 100%;
-        mix-blend-mode: normal;
+      }
+      .button-with-ohang {
+        flex-direction: column;
+        align-items: center;
+      }
+      .five-elements-wrap {
+        order: -1;
+      }
+      .five-elements-img {
+        width: 80px;
       }
       /* 팀 궁합 표: 모바일 카드형으로 전환 */
       .team-comp-table-wrap {
@@ -497,13 +541,21 @@
       </div>
     </div>
 
-    <!-- 버튼 영역 -->
+    <!-- 버튼 영역 + 음양오행 안내 -->
     <div class="card">
-      <div style="margin-bottom: 1rem;">
-        <button type="button" class="btn-primary" id="btnMyResult">내 결과보기</button>
-        <button type="button" class="btn-secondary" id="btnAccumulate">팀원값으로 내정보 누적하기</button>
+      <div class="button-with-ohang">
+        <div class="button-group">
+          <div style="margin-bottom: 1rem;">
+            <button type="button" class="btn-primary" id="btnMyResult">내 결과보기</button>
+            <button type="button" class="btn-secondary" id="btnAccumulate">팀원값으로 내정보 누적하기</button>
+          </div>
+          <button type="button" class="btn-primary" id="btnTeamCompatibility">우리 팀의 성향 궁합</button>
+        </div>
+        <div class="five-elements-wrap" title="음양오행">
+          <img src="five_elements.png" alt="음양오행" class="five-elements-img">
+          <span class="five-elements-caption">음양오행</span>
+        </div>
       </div>
-      <button type="button" class="btn-primary" id="btnTeamCompatibility">우리 팀의 성향 궁합</button>
     </div>
 
     <!-- 내 결과 -->
@@ -537,7 +589,7 @@
     const STORAGE_KEY = 'team_members_data';
 
     // 오행별 이미지 (목/화/토/금/수) - 수:Water, 화:Fire, 목:Wood, 금:Metal, 토:Earth(Eearth)
-    const OHANG_IMAGES = { 수: 'assets/Water.png', 화: 'assets/Fire.png', 목: 'assets/Wood.png', 금: 'assets/Metal.png', 토: 'assets/Eearth.png' };
+    const OHANG_IMAGES = { 수: '물.png', 화: '불.png', 목: '나무.png', 금: '금.png', 토: '흙.png' };
     const OHANG_EMOJI = { 수: '💧', 화: '🔥', 목: '🌳', 금: '⚙️', 토: '🌍' };
 
     // MBTI 값 수집
