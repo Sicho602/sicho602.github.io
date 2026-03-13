@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CTMS Pro</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
+  <script>if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') Chart.register(ChartDataLabels);</script>
+  <style>
+    :root {
+      --nav-bg: #fff;
+      --nav-border: #e5e7eb;
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --bg-page: #f9fafb;
+      --card-bg: #fff;
+      --input-bg: #f3f4f6;
+      --input-border: #e5e7eb;
+      --radius: 8px;
+      --success: #10b981;
+      --tag-bg: #dbeafe;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Malgun Gothic', 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg-page); min-height: 100vh; }
+    .top-nav { display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 24px; background: var(--nav-bg); border-bottom: 1px solid var(--nav-border); position: sticky; top: 0; z-index: 100; }
+    .logo { font-weight: 700; font-size: 18px; color: var(--primary); text-decoration: none; }
+    .nav-menu { display: flex; align-items: center; gap: 4px; }
+    .nav-menu a { padding: 8px 16px; text-decoration: none; color: var(--text); border-radius: var(--radius); }
+    .nav-menu a:hover { background: var(--input-bg); }
+    .nav-menu a.active { color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); border-radius: 0; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-right .icon-btn { width: 36px; height: 36px; border: none; background: none; cursor: pointer; border-radius: var(--radius); color: var(--text-muted); position: relative; }
+    .nav-right .icon-btn:hover { background: var(--input-bg); color: var(--text); }
+    .icon-btn .badge { position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; }
+    .main-container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .page-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+    .breadcrumb { color: var(--text-muted); font-size: 13px; }
+    .breadcrumb a { color: var(--text-muted); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--primary); }
+    .page-title { font-size: 20px; font-weight: 600; margin: 0; }
+    .role-select { padding: 8px 12px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--card-bg); font-size: 14px; cursor: pointer; min-width: 120px; }
+    .card { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--nav-border); padding: 20px; margin-bottom: 20px; }
+    .card-title { font-size: 16px; font-weight: 600; margin: 0 0 16px 0; display: flex; align-items: center; justify-content: space-between; }
+    .card-title a { color: var(--primary); text-decoration: none; font-size: 14px; font-weight: 500; }
+    .form-row { display: flex; align-items: flex-start; margin-bottom: 16px; gap: 16px; }
+    .form-row label { flex: 0 0 180px; padding-top: 8px; color: var(--text); font-weight: 500; }
+    .form-row .form-control { flex: 1; min-width: 0; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--input-bg); font-size: 14px; }
+    .form-row textarea.form-control { min-height: 80px; resize: vertical; }
+    .form-row .form-control:focus { outline: none; border-color: var(--primary); background: #fff; }
+    .form-inline { display: flex; align-items: center; gap: 8px; }
+    .radio-group { display: flex; align-items: center; gap: 16px; }
+    .radio-group label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-weight: 400; }
+    .radio-group input { accent-color: var(--primary); }
+    .table-wrap { overflow-x: auto; }
+    table.data-table { width: 100%; border-collapse: collapse; }
+    table.data-table th, table.data-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--nav-border); }
+    table.data-table th { background: var(--input-bg); font-weight: 600; font-size: 13px; }
+    table.data-table td input { width: 100%; padding: 6px 10px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--input-bg); }
+    .tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 12px; background: var(--tag-bg); color: var(--primary); margin-bottom: 8px; }
+    .progress-bar { height: 8px; background: var(--input-bg); border-radius: 4px; overflow: hidden; margin-top: 4px; }
+    .progress-bar-fill { height: 100%; background: var(--success); border-radius: 4px; transition: width 0.3s; }
+    .status-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+    .status-badge.end { background: #d1fae5; color: #065f46; }
+    .status-badge.ongoing { background: #dbeafe; color: #1e40af; }
+    .status-badge.before { background: var(--input-bg); color: var(--text-muted); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 8px 16px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; border: none; text-decoration: none; transition: background 0.2s; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-hover); }
+    .btn-outline { background: transparent; border: 1px solid var(--input-border); color: var(--text); }
+    .btn-outline:hover { background: var(--input-bg); }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .project-layout { display: flex; gap: 24px; align-items: flex-start; }
+    .project-sidebar { flex: 0 0 220px; background: var(--card-bg); border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 8px 0; position: sticky; top: 80px; }
+    .project-sidebar a { display: block; padding: 10px 20px; color: var(--text); text-decoration: none; border-left: 3px solid transparent; }
+    .project-sidebar a:hover { background: var(--input-bg); }
+    .project-sidebar a.active { background: #eff6ff; color: var(--primary); font-weight: 600; border-left-color: var(--primary); }
+    .project-content { flex: 1; min-width: 0; }
+    .section-title { font-size: 16px; font-weight: 700; margin: 0 0 20px 0; padding-bottom: 8px; border-bottom: 1px solid var(--nav-border); }
+    .actual-expected { display: flex; align-items: center; gap: 8px; }
+    .actual-expected input { width: 100px; padding: 6px 10px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--input-bg); }
+    .actual-expected .sep { color: var(--text-muted); }
+    .view-page { display: none; }
+    .view-page.active { display: block; }
+    .sub-section-title { font-size: 15px; font-weight: 600; margin: 24px 0 12px 0; color: var(--text); }
+    .sub-section-title:first-of-type { margin-top: 0; }
+    .panel-block { border: 1px solid var(--nav-border); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; background: var(--card-bg); }
+    .panel-block-title { background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%); padding: 12px 20px; font-size: 15px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--nav-border); }
+    .panel-block-body { padding: 20px; }
+    .rich-text-toolbar { display: flex; align-items: center; gap: 4px; padding: 6px 8px; background: var(--input-bg); border: 1px solid var(--input-border); border-bottom: none; border-radius: var(--radius) var(--radius) 0 0; flex-wrap: wrap; }
+    .rich-text-toolbar button { padding: 4px 10px; border: 1px solid var(--input-border); background: var(--card-bg); border-radius: 4px; cursor: pointer; font-size: 13px; }
+    .rich-text-toolbar button:hover { background: var(--input-bg); }
+    .rich-text-toolbar input[type="color"] { width: 28px; height: 28px; padding: 2px; border: 1px solid var(--input-border); border-radius: 4px; cursor: pointer; background: var(--card-bg); }
+    .rich-text-editor { min-height: 100px; padding: 10px 12px; border: 1px solid var(--input-border); border-radius: 0 0 var(--radius) var(--radius); background: #fff; font-size: 14px; overflow-y: auto; }
+    .rich-text-editor:focus { outline: none; border-color: var(--primary); }
+    .rich-text-editor[contenteditable]:empty::before { content: attr(data-placeholder); color: var(--text-muted); }
+    .rich-text-editor table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+    .rich-text-editor td, .rich-text-editor th { border: 1px solid var(--input-border); padding: 6px 8px; text-align: left; }
+    .rich-text-editor th { background: var(--input-bg); font-weight: 600; }
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.4); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.show { display: flex; }
+    .modal-box { background: var(--card-bg); border-radius: var(--radius); box-shadow: 0 4px 20px rgba(0,0,0,0.15); max-width: 560px; width: 90%; max-height: 90vh; overflow-y: auto; }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--nav-border); font-weight: 600; }
+    .modal-close { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted); padding: 0 4px; line-height: 1; }
+    .modal-body { padding: 20px; }
+    .link-vendor { color: var(--primary); cursor: pointer; text-decoration: underline; }
+    .link-vendor:hover { color: var(--primary-hover); }
+    .vendor-search-panel { background: var(--input-bg); border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+    .vendor-search-panel .form-row { margin-bottom: 12px; }
+    .vendor-search-panel .form-row:last-of-type { margin-bottom: 0; }
+    .vendor-search-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+    .vendor-register-row { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+    .vendor-list-panel { background: var(--input-bg); border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; }
+    .vendor-list-panel .data-table th { white-space: nowrap; }
+    .vendor-list-panel .data-table th .sort-icon { margin-left: 4px; color: var(--text-muted); font-size: 10px; }
+    .vendor-list-panel .data-table td a { color: var(--primary); text-decoration: none; }
+    .vendor-list-panel .data-table td a:hover { text-decoration: underline; }
+    .vendor-pagination { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 16px; }
+    .vendor-pagination button { width: 32px; height: 32px; border: 1px solid var(--input-border); background: var(--card-bg); border-radius: 4px; cursor: pointer; font-size: 14px; color: var(--text-muted); }
+    .vendor-pagination button:hover { background: var(--input-bg); color: var(--text); }
+    .vendor-pagination .page-num { min-width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 14px; font-weight: 600; color: var(--primary); background: #eff6ff; }
+    .site-search-panel { background: var(--input-bg); border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+    .site-search-panel .form-row { margin-bottom: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    .site-search-panel .form-row label { flex: 0 0 auto; }
+    .site-chart-panel { background: var(--card-bg); border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 20px; margin-bottom: 16px; }
+    .site-chart-panel .chart-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+    .site-chart-panel .btn-excel { background: #15803d; color: #fff; }
+    .site-chart-panel .btn-excel:hover { background: #166534; }
+    .site-table-panel { background: var(--input-bg); border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 20px; margin-bottom: 24px; overflow-x: auto; }
+    .site-table-panel .data-table th { white-space: nowrap; font-size: 13px; }
+    .site-table-panel .data-table .row-total { background: #dbeafe; font-weight: 600; }
+    .site-pagination { display: flex; align-items: center; justify-content: center; gap: 4px; margin-top: 16px; }
+    .site-pagination button { width: 32px; height: 32px; border: 1px solid var(--input-border); background: var(--card-bg); border-radius: 4px; cursor: pointer; font-size: 14px; color: var(--text-muted); }
+    .site-pagination button:hover { background: var(--input-bg); color: var(--text); }
+    .site-pagination .page-num { min-width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; border-radius: 4px; font-size: 14px; font-weight: 600; color: var(--primary); background: #eff6ff; }
+    .budget-subnav { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--nav-border); flex-wrap: wrap; }
+    .budget-subnav a { padding: 10px 16px; text-decoration: none; color: var(--text-muted); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .budget-subnav a:hover { color: var(--text); }
+    .budget-subnav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .budget-sub-panel { display: none; }
+    .budget-sub-panel.active { display: block; }
+    .budget-summary-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 20px; }
+    .budget-summary-card { border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 20px; background: var(--card-bg); position: relative; }
+    .budget-summary-card .label { font-size: 14px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px; }
+    .budget-summary-card .value { font-size: 24px; font-weight: 700; color: var(--text); }
+    .budget-table-total-row { background: #dbeafe; font-weight: 600; }
+    .budget-filter-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .budget-filter-row .form-control { max-width: 180px; }
+    .list-actions { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+    .list-actions .per-page { display: flex; align-items: center; gap: 8px; }
+    .reconciliation-month-table { margin-bottom: 24px; }
+    .reconciliation-month-table .data-table th, .reconciliation-month-table .data-table td { text-align: center; min-width: 60px; }
+    .reconciliation-tabs { display: flex; gap: 4px; margin-bottom: 12px; }
+    .reconciliation-tabs a { padding: 8px 16px; text-decoration: none; color: var(--text-muted); border-radius: var(--radius); }
+    .reconciliation-tabs a:hover { background: var(--input-bg); color: var(--text); }
+    .reconciliation-tabs a.active { background: var(--primary); color: #fff; }
+    .timeline-header { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .timeline-header .timeline-title { font-size: 18px; font-weight: 600; margin: 0; margin-right: 16px; }
+    .timeline-header .timeline-search { flex: 1; min-width: 200px; max-width: 320px; }
+    .timeline-header .view-btns { display: flex; gap: 4px; }
+    .timeline-header .view-btns button { padding: 6px 12px; border: 1px solid var(--input-border); background: var(--card-bg); border-radius: var(--radius); font-size: 13px; cursor: pointer; color: var(--text-muted); }
+    .timeline-header .view-btns button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .timeline-header .my-timeline { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-muted); }
+    .timeline-header .my-timeline input { accent-color: var(--primary); }
+    .timeline-header .btn-load-template { background: #15803d; color: #fff; }
+    .timeline-header .btn-load-template:hover { background: #166534; }
+    .timeline-table-wrap { overflow-x: auto; border: 1px solid var(--nav-border); border-radius: var(--radius); background: var(--card-bg); }
+    .timeline-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .timeline-table th, .timeline-table td { padding: 8px 12px; border-bottom: 1px solid var(--nav-border); text-align: left; vertical-align: middle; }
+    .timeline-table th { background: var(--input-bg); font-weight: 600; }
+    .timeline-table th.timeline-month { text-align: center; min-width: 48px; }
+    .timeline-table .row-total { background: #dbeafe; font-weight: 600; }
+    .timeline-table .task-cell { min-width: 240px; }
+    .timeline-table .pct-cell { width: 72px; text-align: center; }
+    .timeline-table .timeline-cell { background: var(--input-bg); min-width: 48px; position: relative; }
+    .timeline-table .timeline-cell.current-month { box-shadow: inset 0 0 0 2px #eab308; }
+    .timeline-table .workgroup-row .task-cell { font-weight: 600; }
+    .timeline-table .workgroup-row .task-cell .wg-icon { margin-right: 6px; color: var(--text-muted); }
+    .timeline-table .subtask-row .task-cell { padding-left: 32px; }
+    .timeline-table .subtask-row .task-cell .cb { margin-right: 8px; accent-color: var(--primary); }
+    .timeline-table .add-workgroup { color: var(--primary); cursor: pointer; padding: 10px 12px; border-top: 1px dashed var(--nav-border); font-size: 13px; }
+    .timeline-table .add-workgroup:hover { background: var(--input-bg); }
+    .member-subnav { display: flex; gap: 4px; margin-bottom: 12px; }
+    .member-subnav button { padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--input-border); background: var(--card-bg); cursor: pointer; font-size: 13px; color: var(--text-muted); }
+    .member-subnav button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .member-panel { display: none; }
+    .member-panel.active { display: block; }
+    .member-status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; background: #e0f2fe; color: #0369a1; min-width: 52px; }
+    .member-status-badge.on { background: #dcfce7; color: #166534; }
+    .member-status-badge.off { background: #fee2e2; color: #b91c1c; }
+    .dashboard-subnav { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--nav-border); }
+    .dashboard-subnav a { padding: 10px 16px; text-decoration: none; color: var(--text-muted); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .dashboard-subnav a:hover { color: var(--text); }
+    .dashboard-subnav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+    .summary-card { border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 24px; background: var(--card-bg); }
+    .summary-card .label { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 12px; line-height: 1.3; }
+    .summary-card .value { font-size: 32px; font-weight: 700; color: var(--text); }
+    .summary-card .change { font-size: 13px; margin-top: 10px; }
+    .summary-card .change.up { color: #059669; }
+    .summary-card .change.alert { color: #dc2626; font-weight: 500; }
+    .project-card { border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 16px; background: var(--card-bg); height: 100%; display: flex; flex-direction: column; }
+    .project-card .card-name-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
+    .project-card .card-name { font-weight: 600; font-size: 15px; flex: 1; min-width: 0; }
+    .project-card .card-tags-inline { flex-shrink: 0; display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; }
+    .project-card .card-meta { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+    .project-card .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; align-items: center; }
+    .project-card .card-status-line { font-size: 13px; margin-bottom: 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .project-card .status-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+    .project-card .status-dot.green { background: #059669; }
+    .project-card .status-dot.orange { background: #ea580c; }
+    .project-card .status-dot.red { background: #dc2626; }
+    .tag-on-track { background: #059669; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+    .tag-pending { background: #eab308; color: #000; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+    .tag-delayed { background: #ea580c; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+    .tag-issue { background: #dc2626; color: #fff; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+    .milestone-wrap { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: auto auto; margin: 12px 0; font-size: 12px; }
+    .milestone-bar { grid-column: 1 / -1; display: flex; align-items: stretch; gap: 0; }
+    .milestone-bar .seg { flex: 1; height: 10px; background: var(--input-bg); position: relative; overflow: hidden; min-width: 0; border-right: 1px solid var(--nav-border); box-sizing: border-box; }
+    .milestone-bar .seg:last-child { border-right: none; }
+    .milestone-bar .seg .seg-fill { height: 100%; background: var(--primary); transition: width 0.2s; }
+    .milestone-bar .seg.done .seg-fill { width: 100% !important; }
+    .milestone-bar .seg.current { outline: 1px solid var(--primary); outline-offset: -1px; }
+    .milestone-wrap .label-wrap { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 6px; font-size: 11px; font-weight: 700; color: var(--text); gap: 0; }
+    .milestone-wrap .label-wrap span { text-align: center; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .project-card .card-meta-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--text); }
+    .milestone-bar .current-marker { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--primary); font-weight: 600; white-space: nowrap; }
+    .milestone-bar .current-marker::after { content: ''; position: absolute; top: 12px; left: 50%; margin-left: -4px; border: 4px solid transparent; border-top-color: var(--primary); }
+    .my-tasks { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--nav-border); }
+    .my-tasks .my-tasks-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+    .my-tasks ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-muted); }
+    .my-tasks li { margin-bottom: 4px; }
+    .my-tasks li .due { font-size: 12px; color: var(--primary); }
+    @media (max-width: 1200px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } .summary-cards { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .grid-4 { grid-template-columns: 1fr; } .grid-3 { grid-template-columns: 1fr; } .form-row { flex-direction: column; } .form-row label { flex: none; } }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="#dashboard" class="logo">CTMS Pro</a>
+    <div class="nav-menu">
+      <a href="#dashboard" data-page="dashboard">대시보드</a>
+      <a href="#program" data-page="program">과제관리</a>
+      <a href="#closed" data-page="closed">종료과제</a>
+      <a href="#cost" data-page="cost">비용 관리</a>
+      <a href="#partner" data-page="partner">파트너 관리</a>
+      <a href="#approval" data-page="approval">결재 관리</a>
+      <a href="#system" data-page="system">시스템 관리</a>
+    </div>
+    <div class="nav-right">
+      <button type="button" class="icon-btn" title="언어">&#127472;&#127479;</button>
+      <button type="button" class="icon-btn" title="알림"><span class="badge"></span>&#128276;</button>
+      <button type="button" class="icon-btn" title="프로필">&#128100;</button>
+      <button type="button" class="icon-btn" title="도움말">&#10067;</button>
+      <select id="roleSelect" class="role-select">
+        <option value="admin">관리자</option>
+        <option value="user">사용자</option>
+      </select>
+    </div>
+  </nav>
+
+  <main class="main-container">
+    <!-- 뷰: 대시보드 (관리자: 종합/과제 탭, 사용자: 과제만) -->
+    <div id="view-dashboard" class="view-page active">
+      <div class="page-header">
+        <div>
+          <div class="breadcrumb" id="dashboard-breadcrumb">대시보드</div>
+          <h1 class="page-title" id="dashboard-main-title">종합 대시보드</h1>
+        </div>
+        <select id="roleSelectHeader" class="role-select">
+          <option value="admin">관리자</option>
+          <option value="user">사용자</option>
+        </select>
+      </div>
+      <!-- 관리자 전용: 종합 / 과제 대시보드 서브 탭 -->
+      <div id="dashboard-subnav-wrap" class="dashboard-subnav" style="display: none;">
+        <a href="#dashboard/overall" id="dashboard-tab-overall" class="active">종합 대시보드</a>
+        <a href="#dashboard/project" id="dashboard-tab-project">과제 대시보드</a>
+      </div>
+
+      <!-- 관리자 - 종합 대시보드 -->
+      <div id="dashboard-admin-overall" style="display: none;">
+        <p style="color: var(--text-muted); margin-bottom: 16px;">전월 대비 변경</p>
+        <div class="summary-cards">
+          <div class="summary-card">
+            <div class="label">Total Active Projects</div>
+            <div class="value">15</div>
+            <div class="change up">&#8593; +2 New</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">IND Submission</div>
+            <div class="value">15</div>
+            <div class="change up">&#8593; +2 New</div>
+          </div>
+          <div class="summary-card">
+            <div class="label">Issues / Red Flags</div>
+            <div class="value">3</div>
+            <div class="change alert">Action Required</div>
+          </div>
+        </div>
+        <h2 class="section-title" style="margin-bottom: 8px;">종합 임상 현황 분석 <span style="font-size: 13px; font-weight: normal; color: #059669;">데이터 실시간 연동 중</span></h2>
+        <div class="grid-4" style="margin-top: 16px;">
+          <div class="card"><h2 class="card-title">제품별 현황</h2><div style="height:260px"><canvas id="chartProduct"></canvas></div></div>
+          <div class="card"><h2 class="card-title">단계별 현황</h2><div style="height:260px"><canvas id="chartPhase"></canvas></div></div>
+          <div class="card"><h2 class="card-title">국내/외 현황</h2><div style="height:260px"><canvas id="chartRegion"></canvas></div></div>
+          <div class="card"><h2 class="card-title">대상질환별 현황</h2><div style="height:260px"><canvas id="chartDisease"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- 관리자 - 과제 대시보드 (품목별 프로젝트 카드, 마일스톤 그래프, 나의 작업 없음) -->
+      <div id="dashboard-admin-project" style="display: none;">
+        <div class="card">
+          <h2 class="card-title">품목별 프로젝트 현황</h2>
+          <div class="form-inline" style="margin-bottom: 16px;">
+            <label style="flex: none;">품목 선택</label>
+            <select class="form-control" id="admin-product-select" style="max-width: 360px;">
+              <option value="all">전체</option>
+              <option value="enblozem" selected>엔블로젬 Enblozem</option>
+              <option value="fexuprazan">Fexuprazan</option>
+              <option value="vactin">V-Actin</option>
+            </select>
+            <span style="color: var(--text-muted); margin-left: 12px;">18건</span>
+          </div>
+          <div class="grid-3" id="admin-project-cards">
+            <!-- JS로 채움 -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 사용자 - 과제 대시보드 (품목 드롭다운, 프로젝트 카드 + 나의 작업) -->
+      <div id="dashboard-user-project" style="display: none;">
+        <div class="card">
+          <h2 class="card-title">내 프로젝트 목록</h2>
+          <p style="color: var(--text-muted); margin: 0 0 16px 0;">품목별 프로젝트 현황</p>
+          <div class="form-inline" style="margin-bottom: 20px;">
+            <label style="flex: none;">품목 선택</label>
+            <select class="form-control" id="user-product-select" style="max-width: 320px;">
+              <option value="enblozem" selected>품목: Enblozem (엔블로젬)</option>
+              <option value="fexuprazan">품목: Fexuprazan</option>
+            </select>
+          </div>
+          <div class="grid-2" id="user-project-cards">
+            <!-- JS로 채움 -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 뷰: 과제관리 (품목별 과제 목록) -->
+    <div id="view-program" class="view-page">
+      <div class="page-header">
+        <div>
+          <div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 과제관리</div>
+          <h1 class="page-title">과제관리</h1>
+        </div>
+      </div>
+      <div class="card">
+        <p style="margin:0 0 16px 0; color: var(--text-muted);">과제(품목별) 목록을 확인할 수 있습니다.</p>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>품목/제품</th><th>과제명</th><th>Phase</th><th>진행 상태</th><th>진행률</th><th></th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>엔블로</td><td>엔블로 매스밸런스 1상</td><td>1상</td><td><span class="status-badge before">시작 전</span></td><td>0%</td>
+                <td><a href="#project/enblo-mb" class="btn btn-outline">상세</a></td>
+              </tr>
+              <tr>
+                <td>엔블로</td><td>엔블로젬 3상</td><td>3상</td><td><span class="status-badge ongoing">진행중</span></td><td>31%</td>
+                <td><a href="#project/enblo-gem" class="btn btn-outline">상세</a></td>
+              </tr>
+              <tr>
+                <td>엔블로</td><td>엔블로 중국 3상</td><td>3상</td><td><span class="status-badge before">시작 전</span></td><td>0%</td>
+                <td><a href="#project/enblo-china" class="btn btn-outline">상세</a></td>
+              </tr>
+              <tr>
+                <td>엔블로</td><td>엔블로 인슐린 3상</td><td>3상</td><td><span class="status-badge before">시작 전</span></td><td>0%</td>
+                <td><a href="#project/enblo-insulin" class="btn btn-outline">상세</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 뷰: 비용/파트너/결재/시스템 (플레이스홀더) -->
+    <div id="view-cost" class="view-page">
+      <div class="page-header">
+        <div><div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 비용 관리</div><h1 class="page-title">비용 관리</h1></div>
+      </div>
+      <div class="card"><p style="color: var(--text-muted); margin:0;">과제별 비용 및 예산을 관리합니다.</p></div>
+    </div>
+    <div id="view-partner" class="view-page">
+      <div class="page-header">
+        <div><div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 파트너 관리</div><h1 class="page-title">파트너 관리</h1></div>
+      </div>
+      <div class="card"><p style="color: var(--text-muted); margin:0;">파트너(협력기관) 정보를 관리합니다.</p></div>
+    </div>
+    <div id="view-approval" class="view-page">
+      <div class="page-header">
+        <div><div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 결재 관리</div><h1 class="page-title">결재 관리</h1></div>
+      </div>
+      <div class="card"><p style="color: var(--text-muted); margin:0;">결재 문서 및 결재 라인을 관리합니다.</p></div>
+    </div>
+    <div id="view-system" class="view-page">
+      <div class="page-header">
+        <div><div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 시스템 관리</div><h1 class="page-title">시스템 관리</h1></div>
+      </div>
+      <div class="card"><p style="color: var(--text-muted); margin:0;">사용자, 권한, 코드 등 시스템 설정을 관리합니다.</p></div>
+    </div>
+
+    <!-- 뷰: 과제관리 - 과제 상세 (사이드바 + 콘텐츠) -->
+    <div id="view-project" class="view-page">
+      <div class="page-header">
+        <div>
+          <div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; <a href="#program">과제관리</a> &gt; <span id="projectTabLabel">Study Info</span></div>
+          <h1 class="page-title" id="projectTitle">엔블로젬 3상</h1>
+        </div>
+      </div>
+      <div class="project-layout">
+        <aside class="project-sidebar" id="sidebar-project">
+          <a href="#" data-project-tab="info" class="active">Study Info</a>
+          <a href="#" data-project-tab="budget">Budget</a>
+          <a href="#" data-project-tab="site">Sites</a>
+          <a href="#" data-project-tab="vendor">Service Provider</a>
+          <a href="#" data-project-tab="milestone">Milestones</a>
+          <a href="#" data-project-tab="studyteam">Study Team Member</a>
+        </aside>
+        <div class="project-content">
+          <div id="project-panel-info" class="project-panel">
+            <div class="card">
+              <h2 class="section-title">기본 정보</h2>
+              <div class="form-row"><label>Protocol No.</label><input type="text" class="form-control" value="DW_DWP16001308"></div>
+              <div class="form-row">
+                <label>Phase (단계)</label>
+                <div style="flex:1; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+                  <input type="text" class="form-control" value="3상" style="max-width:120px">
+                  <span style="color: var(--text-muted);">공시 여부</span>
+                  <div class="radio-group">
+                    <label><input type="radio" name="disclosure" value="yes" checked> 공시 대상</label>
+                    <label><input type="radio" name="disclosure" value="no"> 공시 비대상</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row"><label>임상시험 제목(한글)</label><textarea class="form-control" rows="3">Metformin과 Gemigliptin으로 혈당조절이 불충분한 제 2형 당뇨병 환자에서 DWP16001의 장기적 안전성과 유효성을 평가하기 위한 다기관, 3상, 공개 임상시험</textarea></div>
+              <div class="form-row"><label>임상시험 제목(영문)</label><textarea class="form-control" rows="3">A multi-center, phase3, open-label study to evaluate the long term safety and efficacy of DWP16001 in patients with type 2 diabetes mellitus inadequately controlled on metformin and gemigliptin</textarea></div>
+              <div class="form-row">
+                <label>기간</label>
+                <div style="flex:1; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                  <input type="date" class="form-control" value="2023-07-03" style="max-width:160px"><span>~</span><input type="date" class="form-control" value="2027-02-26" style="max-width:160px">
+                  <span style="color: var(--text-muted); margin-left: 16px;">임상시험 용도</span><input type="text" class="form-control" value="엔블로젬 복합제 허가" style="max-width:200px">
+                </div>
+              </div>
+              <div class="form-row"><label>국가</label><input type="text" class="form-control" value="Korea, South" style="max-width:240px"></div>
+              <div class="form-row"><label>목적</label><textarea class="form-control" rows="4">Metformin과 Gemigliptin으로 혈당조절이 불충분한 제 2형 당뇨병 환자를 대상으로 Metformin과 Gemigliptin과의 병합요법으로써 DWP16001의 장기적 안전성 및 유효성을 평가하고자 한다.</textarea></div>
+            </div>
+            <div class="card">
+              <h2 class="section-title">상세 정보</h2>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px;">
+                <div class="form-row" style="margin-bottom:0"><label>CTMS No.</label><input type="text" class="form-control" value="195_DW_DWP16001308"></div>
+                <div class="form-row" style="margin-bottom:0"><label>Protocol Version</label><input type="text" class="form-control" value="3.0"></div>
+                <div class="form-row" style="margin-bottom:0"><label>Registry No.</label><input type="text" class="form-control" value="NCT06141980"></div>
+                <div class="form-row" style="margin-bottom:0"><label>눈가림 종류</label><select class="form-control"><option value="Open" selected>Open</option><option value="Single">Single</option><option value="Double">Double</option></select></div>
+                <div class="form-row" style="margin-bottom:0"><label>무작위 배정 여부</label><input type="text" class="form-control" value="No"></div>
+                <div class="form-row" style="margin-bottom:0"><label>대상자 수 (Actual/Expected)</label><div class="actual-expected"><input type="text" value="2"><span class="sep">/</span><input type="text" value="134"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>대상질환</label><input type="text" class="form-control" value="내분비, 영양 및 대사 질환"></div>
+                <div class="form-row" style="margin-bottom:0"><label>LPI (Actual/Expected)</label><div class="actual-expected"><input type="date" value="2024-11-29"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>기관 수 (Actual/Expected)</label><div class="actual-expected"><input type="text" value="17"><span class="sep">/</span><input type="text" value="16"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>CSR final (Actual/Expected)</label><div class="actual-expected"><input type="text" placeholder="실제"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>FPI (Actual/Expected)</label><div class="actual-expected"><input type="date" value="2024-02-14"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>LPO (Actual/Expected)</label><div class="actual-expected"><input type="text" placeholder="실제"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>PI/CI</label><input type="text" class="form-control" value="분당서울대병원 임수"></div>
+              </div>
+            </div>
+            <div class="card">
+              <h2 class="section-title">시험군/대조군 정보</h2>
+              <div class="form-row"><label>시험군</label><input type="text" class="form-control" value="DWP16001 0.3mg"></div>
+              <div class="form-row"><label>대조군</label><input type="text" class="form-control" placeholder=""></div>
+            </div>
+            <div class="card">
+              <h2 class="section-title">공시 정보</h2>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>단계</th><th>일자</th><th>링크</th></tr></thead>
+                  <tbody>
+                    <tr><td>IND 신청</td><td><input type="date" value="2023-08-30"></td><td><input type="text" placeholder=""></td></tr>
+                    <tr><td>결과 발표 (Topline)</td><td><input type="date"></td><td><input type="text" placeholder=""></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div id="project-panel-budget" class="project-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Budget</h2>
+              <p style="color: var(--text-muted); margin-bottom: 16px;">과제별 예산 및 집행 현황을 관리합니다.</p>
+              <nav class="budget-subnav" id="budget-subnav">
+                <a href="#" data-budget-sub="overview" class="active">Budget Overview</a>
+                <a href="#" data-budget-sub="allocation">Budget Allocation</a>
+                <a href="#" data-budget-sub="actual">Actual Cost</a>
+                <a href="#" data-budget-sub="reconciliation">Cost Reconciliation</a>
+              </nav>
+
+              <div class="budget-sub-panel active" data-budget-panel="overview">
+                <h3 class="sub-section-title">예산 현황</h3>
+                <div class="budget-summary-cards">
+                  <div class="budget-summary-card"><div class="label">전체 예산</div><div class="value">0</div><span style="position:absolute;top:12px;right:12px;color:var(--text-muted);cursor:pointer">&#9660;</span></div>
+                  <div class="budget-summary-card"><div class="label">누적 집행 금액</div><div class="value">0</div><span style="position:absolute;top:12px;right:12px;color:var(--text-muted);cursor:pointer">&#9660;</span></div>
+                  <div class="budget-summary-card"><div class="label">가용 예산</div><div class="value">0</div><span style="position:absolute;top:12px;right:12px;color:var(--text-muted);cursor:pointer">&#9660;</span></div>
+                  <div class="budget-summary-card"><div class="label">집행률</div><div class="value">0%</div><span style="position:absolute;top:12px;right:12px;color:var(--text-muted);cursor:pointer">&#9660;</span></div>
+                </div>
+                <div class="budget-filter-row">
+                  <label>기준 연월</label>
+                  <input type="month" class="form-control" value="2026-03" style="max-width:140px">
+                  <button type="button" class="btn btn-primary" style="background:#15803d">월별 대시보드</button>
+                </div>
+                <div style="margin-bottom:8px"><button type="button" class="btn btn-outline">행별 보기 -</button></div>
+                <div class="table-wrap" style="overflow-x:auto">
+                  <table class="data-table">
+                    <thead>
+                      <tr><th>예산 항목</th><th>배정 예산</th><th colspan="2">2026년 1월</th><th colspan="2">2026년 2월</th><th colspan="2">2026년 3월</th><th colspan="2">2026년 4월</th><th colspan="2">2026년 5월</th></tr>
+                      <tr><th></th><th></th><th>집행 금액</th><th>누적 집행률</th><th>집행 금액</th><th>누적 집행률</th><th>집행 금액</th><th>누적 집행률</th><th>집행 금액</th><th>누적 집행률</th><th>집행 금액</th><th>누적 집행률</th></tr>
+                    </thead>
+                    <tbody>
+                      <tr class="budget-table-total-row"><td>TOTAL</td><td>1,823,895,679</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td></tr>
+                      <tr><td>연구비</td><td>679,080,140</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td></tr>
+                      <tr><td>CRO</td><td>1,120,454,288</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td></tr>
+                      <tr><td>급여</td><td>129,975,830</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td></tr>
+                      <tr><td>관리비</td><td>9,687,770</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td></tr>
+                      <tr><td>임대료</td><td>4,708,070</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td><td>0</td><td>0%</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="budget-sub-panel" data-budget-panel="allocation">
+                <h3 class="sub-section-title">예산 배정</h3>
+                <div class="vendor-search-panel">
+                  <div class="form-row">
+                    <label style="flex:0 0 90px">예산 항목</label>
+                    <select class="form-control" style="max-width:160px"><option value="">선택</option><option>연구비</option><option>CRO</option></select>
+                    <label style="flex:0 0 70px;margin-left:12px">벤더명</label>
+                    <input type="text" class="form-control" placeholder="검색어를 입력하세요" style="max-width:200px">
+                    <label style="flex:0 0 100px;margin-left:12px">예산 사용 기간</label>
+                    <input type="text" class="form-control" placeholder="시작일 선택하세요" style="max-width:140px">
+                    <input type="text" class="form-control" placeholder="종료일 선택하세요" style="max-width:140px">
+                    <label style="flex:0 0 70px;margin-left:12px">사용 여부</label>
+                    <select class="form-control" style="max-width:120px"><option value="Y">사용</option><option value="N">미사용</option></select>
+                    <button type="button" class="btn btn-primary">&#128269; 검색</button>
+                    <button type="button" class="btn btn-outline">초기화</button>
+                  </div>
+                </div>
+                <div class="list-actions">
+                  <div class="per-page"><select class="form-control" style="max-width:120px"><option>10개씩 보기</option></select></div>
+                  <button type="button" class="btn btn-primary">+ 등록</button>
+                </div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>No.</th><th>예산 항목</th><th>예산명</th><th>계획 예산</th><th>예산 사용 기간</th><th>최종 수정일시</th><th>사용 여부</th></tr></thead>
+                    <tbody>
+                      <tr><td>1</td><td>연구비</td><td>연구비</td><td>579,069,580</td><td>2023.04-2025.09</td><td>2025-06-30 09:16:41</td><td>사용</td></tr>
+                      <tr><td>2</td><td>CRO</td><td>CRO</td><td>1,100,454,268</td><td>2023.04-2025.09</td><td>2025-06-30 09:16:41</td><td>사용</td></tr>
+                      <tr><td>3</td><td>임상</td><td>임상</td><td>129,975,830</td><td>2023.04-2025.09</td><td>2025-06-30 09:16:41</td><td>사용</td></tr>
+                      <tr><td>4</td><td>사업</td><td>사업</td><td>4,708,670</td><td>2023.04-2025.09</td><td>2025-06-30 09:16:41</td><td>사용</td></tr>
+                      <tr><td>5</td><td>기타</td><td>기타</td><td>9,667,770</td><td>2023.04-2025.09</td><td>2025-06-30 09:16:41</td><td>사용</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="site-pagination"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">&#8594;</button></div>
+              </div>
+
+              <div class="budget-sub-panel" data-budget-panel="actual">
+                <h3 class="sub-section-title">집행 관리 (Actual Cost)</h3>
+                <div class="vendor-search-panel">
+                  <div class="form-row">
+                    <label style="flex:0 0 50px">상태</label>
+                    <select class="form-control" style="max-width:120px"><option value="">전체</option></select>
+                    <label style="flex:0 0 70px;margin-left:12px">예산명</label>
+                    <input type="text" class="form-control" placeholder="검색어를 입력하세요" style="max-width:180px">
+                    <label style="flex:0 0 70px;margin-left:12px">예산형</label>
+                    <input type="text" class="form-control" placeholder="검색어를 입력하세요" style="max-width:180px">
+                    <button type="button" class="btn btn-primary">&#128269; 검색</button>
+                    <button type="button" class="btn btn-outline">&#8634; 초기화</button>
+                  </div>
+                  <div class="form-row">
+                    <label style="flex:0 0 120px">기관/Vendor명</label>
+                    <input type="text" class="form-control" placeholder="검색어를 입력하세요" style="max-width:200px">
+                    <label style="flex:0 0 90px;margin-left:12px">실행일정</label>
+                    <input type="text" class="form-control" placeholder="시작일정 선택하세요" style="max-width:140px">
+                    <input type="text" class="form-control" placeholder="종료일정 선택하세요" style="max-width:140px">
+                    <label style="flex:0 0 70px;margin-left:12px">담당자</label>
+                    <input type="text" class="form-control" value="김수인" style="max-width:120px">
+                  </div>
+                </div>
+                <div class="list-actions">
+                  <div class="per-page"><select class="form-control" style="max-width:120px"><option>10개씩 보기</option></select></div>
+                  <div style="display:flex;gap:8px">
+                    <button type="button" class="btn btn-primary" style="background:#15803d">+ 엑셀 다운로드</button>
+                    <button type="button" class="btn btn-primary">+ 등록</button>
+                  </div>
+                </div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>No.</th><th>상태</th><th>차수 / 총 차수</th><th>집행명</th><th>예산명</th><th>기관 / Vendor명</th><th>실집행</th><th>누적 집행 금액</th><th>예상 집행일</th><th>담당자</th></tr></thead>
+                    <tbody><tr><td colspan="10" style="text-align:center;padding:40px;color:var(--text-muted)">데이터는 없습니다</td></tr></tbody>
+                  </table>
+                </div>
+                <div class="site-pagination"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">&#8594;</button></div>
+              </div>
+
+              <div class="budget-sub-panel" data-budget-panel="reconciliation">
+                <h3 class="sub-section-title">마감 관리 (Cost Reconciliation)</h3>
+                <div class="reconciliation-month-table">
+                  <div class="budget-filter-row" style="justify-content:space-between">
+                    <select class="form-control" style="max-width:120px"><option>전체 보기</option></select>
+                    <div style="display:flex;align-items:center;gap:8px"><label>기준 연도</label><select class="form-control" style="max-width:100px"><option>2006</option></select></div>
+                  </div>
+                  <div class="table-wrap" style="margin-top:12px">
+                    <table class="data-table reconciliation-month-table">
+                      <thead><tr><th>구분</th><th>1월</th><th>2월</th><th>3월</th><th>4월</th><th>5월</th><th>6월</th><th>7월</th><th>8월</th><th>9월</th><th>10월</th><th>11월</th><th>12월</th></tr></thead>
+                      <tbody>
+                        <tr><td>총 금액</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                        <tr><td>상태</td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div class="list-actions" style="margin-bottom:12px">
+                  <div class="per-page"><select class="form-control" style="max-width:120px"><option>10개씩 보기</option></select></div>
+                  <input type="text" class="form-control" placeholder="YYYY-MM" style="max-width:100px">
+                  <button type="button" class="btn btn-primary">마감하기</button>
+                </div>
+                <div class="reconciliation-tabs">
+                  <a href="#" data-recon-tab="before" class="active">마감 전</a>
+                  <a href="#" data-recon-tab="done">마감 완료</a>
+                </div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead><tr><th>No.</th><th>실행월</th><th>수</th><th>예산명</th><th>기관/Vendor명</th><th>담당자</th></tr></thead>
+                    <tbody><tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-muted)">해당하는 데이터가 없습니다.</td></tr></tbody>
+                  </table>
+                </div>
+                <div class="site-pagination"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">&#8594;</button></div>
+              </div>
+            </div>
+          </div>
+          <div id="project-panel-site" class="project-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Sites</h2>
+              <p style="color: var(--text-muted); margin-bottom: 16px;">과제 참여 기관(Site) 목록 및 현황을 관리합니다.</p>
+
+              <div class="site-search-panel">
+                <div class="form-row">
+                  <label style="flex: 0 0 70px;">기관명</label>
+                  <input type="text" class="form-control" placeholder="기관명" style="max-width: 180px;">
+                  <select class="form-control" style="max-width: 160px;"><option value="">선택</option></select>
+                  <input type="text" class="form-control" placeholder="검색어를 입력하세요" style="max-width: 220px;">
+                  <button type="button" class="btn btn-primary">&#128269; 검색</button>
+                  <button type="button" class="btn btn-outline">&#8634; 초기화</button>
+                </div>
+              </div>
+
+              <div class="site-chart-panel">
+                <div style="height: 280px;"><canvas id="chartSites"></canvas></div>
+                <div class="chart-actions">
+                  <button type="button" class="btn btn-excel">&#8595; 엑셀 다운로드</button>
+                  <button type="button" class="btn btn-primary">+ 등록</button>
+                </div>
+              </div>
+
+              <div class="site-table-panel">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>기관</th>
+                        <th>PI</th>
+                        <th>소속</th>
+                        <th>등록률 (%)</th>
+                        <th colspan="3">Screening</th>
+                        <th colspan="2">Random</th>
+                        <th>Ongoing</th>
+                        <th>Drop out</th>
+                        <th>Completion</th>
+                      </tr>
+                      <tr>
+                        <th></th><th></th><th></th><th></th><th></th>
+                        <th>Planned</th><th>Actual</th><th>S/F</th>
+                        <th>Planned</th><th>Actual</th>
+                        <th></th><th></th><th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="row-total">
+                        <td>-</td><td>-</td><td>-</td><td>-</td>
+                        <td>90%</td>
+                        <td>20</td><td>13</td><td>2</td>
+                        <td>13</td><td>11</td>
+                        <td>8</td><td>1</td><td>2</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>가천대학교 인천 길병원</td>
+                        <td></td>
+                        <td>핵의학과</td>
+                        <td>100%</td>
+                        <td>10</td><td>4</td><td>1</td>
+                        <td>3</td><td>3</td>
+                        <td>3</td><td>0</td><td>0</td>
+                      </tr>
+                      <tr>
+                        <td>1</td>
+                        <td>Shanghai Kuku Central Hospital</td>
+                        <td></td>
+                        <td>인신외과</td>
+                        <td>80%</td>
+                        <td>10</td><td>9</td><td>1</td>
+                        <td>10</td><td>8</td>
+                        <td>5</td><td>1</td><td>2</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="site-pagination">
+                  <button type="button" title="이전">&#8592;</button>
+                  <span class="page-num">1</span>
+                  <button type="button" title="다음">&#8594;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="project-panel-vendor" class="project-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Service Provider</h2>
+              <p style="color: var(--text-muted); margin-bottom: 16px;">과제 관련 Vendor(업체) 계약 및 현황을 관리합니다. 벤더명을 클릭하면 상세 평가표를 입력·조회할 수 있습니다.</p>
+
+              <div class="vendor-search-panel">
+                <div class="form-row">
+                  <label style="flex: 0 0 80px;">구분</label>
+                  <select class="form-control" style="max-width: 200px;"><option value="">선택</option><option value="CO">CO (Clinical Operation)</option><option value="STAT">STAT (Statistics)</option><option value="DM">DM</option><option value="PV">PV</option></select>
+                  <label style="flex: 0 0 80px; margin-left: 16px;">국가</label>
+                  <select class="form-control" style="max-width: 200px;"><option value="">선택</option><option value="KR">Korea, South</option></select>
+                </div>
+                <div class="form-row">
+                  <label style="flex: 0 0 80px;">Vendor명</label>
+                  <input type="text" class="form-control" placeholder="Vendor명" style="max-width: 240px;">
+                  <label style="flex: 0 0 80px; margin-left: 16px;">주소</label>
+                  <input type="text" class="form-control" placeholder="주소" style="flex: 1; min-width: 200px;">
+                </div>
+                <div class="vendor-search-actions">
+                  <button type="button" class="btn btn-primary">&#128269; 검색</button>
+                  <button type="button" class="btn btn-outline">초기화</button>
+                </div>
+              </div>
+              <div class="vendor-register-row">
+                <button type="button" class="btn btn-primary">+ 등록</button>
+              </div>
+              <div class="vendor-list-panel">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>No.<span class="sort-icon">&#8645;</span></th>
+                        <th>구분<span class="sort-icon">&#8645;</span></th>
+                        <th>Vendor명<span class="sort-icon">&#8645;</span></th>
+                        <th>국가<span class="sort-icon">&#8645;</span></th>
+                        <th>주소<span class="sort-icon">&#8645;</span></th>
+                        <th>비고<span class="sort-icon">&#8645;</span></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>2</td>
+                        <td>STAT (Statistics)</td>
+                        <td><a href="#" class="link-vendor" data-vendor="나노스페이스" data-type="STAT">나노스페이스</a></td>
+                        <td>Korea, South</td>
+                        <td>엔지니어링 오피스 엔지니어링 20, 엔지니어링 1번 234호</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>1</td>
+                        <td>CO (Clinical Operation)</td>
+                        <td><a href="#" class="link-vendor" data-vendor="DreamCIS" data-type="CO">DreamCIS</a></td>
+                        <td>Korea, South</td>
+                        <td>서울시 종로구 사직로 130, 파인대행빌딩 9층</td>
+                        <td>-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="vendor-pagination">
+                  <button type="button" title="이전">&#8592;</button>
+                  <span class="page-num">1</span>
+                  <button type="button" title="다음">&#8594;</button>
+                </div>
+              </div>
+
+              <h3 class="sub-section-title">Vendor 평가표</h3>
+              <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Vendor Type: Clinical CRO, DM CRO, STAT CRO, PV CRO, Central Lab, Imaging Vendor, Translation Vendor, eTMF Vendor, IWRS Vendor, EDC Vendor</p>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>Vendor Type</th><th>Vendor Name</th><th>Evaluation Score</th></tr></thead>
+                  <tbody>
+                    <tr><td>Clinical CRO</td><td><span class="link-vendor" data-vendor="LSK Global" data-type="Clinical CRO">LSK Global</span></td><td>87</td></tr>
+                    <tr><td>DM CRO</td><td><span class="link-vendor" data-vendor="LSK" data-type="DM CRO">LSK</span></td><td>82</td></tr>
+                    <tr><td>STAT CRO</td><td><span class="link-vendor" data-vendor="LSK" data-type="STAT CRO">LSK</span></td><td>90</td></tr>
+                    <tr><td>PV CRO</td><td><span class="link-vendor" data-vendor="XXX" data-type="PV CRO">XXX</span></td><td>85</td></tr>
+                    <tr><td>Central Lab</td><td><span class="link-vendor" data-vendor="YYY" data-type="Central Lab">YYY</span></td><td>78</td></tr>
+                    <tr><td>Imaging Vendor</td><td><span class="link-vendor" data-vendor="ZZZ" data-type="Imaging Vendor">ZZZ</span></td><td>83</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p style="color: var(--text-muted); font-size: 13px; margin-top: 12px;">평가 항목 (1~10점): Quality(deliverable quality), Timeline(일정 준수), Communication, Issue management(issue 대응), Expertise(전문성), Sponsor satisfaction</p>
+            </div>
+          </div>
+          <div id="project-panel-milestone" class="project-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Milestones</h2>
+              <p style="color: var(--text-muted); margin-bottom: 16px;">과제 일정 및 마일스톤을 관리합니다.</p>
+              <div class="timeline-header">
+                <h3 class="timeline-title">타임라인</h3>
+                <input type="text" class="form-control timeline-search" placeholder="검색어를 입력하세요">
+                <div class="view-btns">
+                  <button type="button">일간</button>
+                  <button type="button">주간</button>
+                  <button type="button" class="active">월간</button>
+                </div>
+                <label class="my-timeline"><input type="checkbox"> 나의 타임라인</label>
+                <button type="button" class="btn btn-primary btn-load-template">새 템플릿 불러오기</button>
+              </div>
+              <div class="timeline-table-wrap">
+                <table class="timeline-table">
+                  <thead>
+                    <tr>
+                      <th class="task-cell">업무 / 마일스톤</th>
+                      <th class="pct-cell">계획 (%)</th>
+                      <th class="pct-cell">실적 (%)</th>
+                      <th class="timeline-month">10월</th>
+                      <th class="timeline-month">11월</th>
+                      <th class="timeline-month">12월</th>
+                      <th class="timeline-month">1월</th>
+                      <th class="timeline-month">2월</th>
+                      <th class="timeline-month timeline-cell current-month">3월</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="row-total">
+                      <td class="task-cell">TOTAL</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell current-month"></td>
+                    </tr>
+                    <tr class="workgroup-row">
+                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; 프로젝트 준비</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell current-month"></td>
+                    </tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> 전체예산</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> Vendor 확정</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 전체예산 결재문서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> 계약</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> CRO 계약서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 기관(CORE) 계약서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="workgroup-row">
+                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; Start-up</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell current-month"></td>
+                    </tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> IND submission</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> IND 제출(Protocol)</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> IND approval</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> IND 승인서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> SIV</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 1st SIV 자료</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="workgroup-row">
+                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; 추적 및 F/U</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td>
+                      <td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td>
+                    </tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> FPI</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 최종 시험대상자 현황보고</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> LPO</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 최종 시험대상자 현황보고</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="workgroup-row">
+                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; 데이터분석</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td>
+                    </tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> DM/STAT</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> SAP</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> DBL 승인 문서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="workgroup-row">
+                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; 프로젝트 종료</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="pct-cell">0%</td>
+                      <td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td>
+                    </tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> CSR</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> CSR</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr><td colspan="9" class="add-workgroup">+ 워크그룹 만들기</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div id="project-panel-studyteam" class="project-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Study Team Member</h2>
+              <p style="color: var(--text-muted); margin-bottom: 16px;">과제 참여 스터디팀 구성원을 관리합니다.</p>
+              <div class="member-subnav">
+                <button type="button" class="active" data-member-tab="list">구성원 목록</button>
+                <button type="button" data-member-tab="history">구성원 이력</button>
+              </div>
+              <div class="member-panel active" data-member-panel="list">
+                <div class="list-actions">
+                  <div class="per-page">
+                    <select class="form-control" style="max-width:120px">
+                      <option>10개씩 보기</option>
+                    </select>
+                  </div>
+                  <div style="display:flex; gap:8px">
+                    <button type="button" class="btn btn-primary" style="background:#15803d">엑셀 내려받기</button>
+                    <button type="button" class="btn btn-primary">구성원 추가</button>
+                  </div>
+                </div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>이름</th>
+                        <th>담당업무</th>
+                        <th>이메일</th>
+                        <th>역할</th>
+                        <th>상태</th>
+                        <th>시작일</th>
+                        <th>종료일</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>5</td>
+                        <td>홍길동</td>
+                        <td>PMS</td>
+                        <td>pms@example.co.kr</td>
+                        <td>PM</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>김연구</td>
+                        <td>CTM</td>
+                        <td>ctm@example.co.kr</td>
+                        <td>Member</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>이모니터</td>
+                        <td>CRA</td>
+                        <td>cra@example.co.kr</td>
+                        <td>Viewer</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>박데이터</td>
+                        <td>DM</td>
+                        <td>dm@example.co.kr</td>
+                        <td>Viewer</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>1</td>
+                        <td>최통계</td>
+                        <td>STAT</td>
+                        <td>stat@example.co.kr</td>
+                        <td>Viewer</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="site-pagination">
+                  <button type="button">&#8592;</button>
+                  <span class="page-num">1</span>
+                  <button type="button">&#8594;</button>
+                </div>
+              </div>
+              <div class="member-panel" data-member-panel="history">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>이름</th>
+                        <th>담당업무</th>
+                        <th>역할</th>
+                        <th>상태</th>
+                        <th>시작일</th>
+                        <th>종료일</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="7" style="text-align:center; padding:40px; color:var(--text-muted)">구성원 이력 데이터가 없습니다.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 뷰: 종료과제 목록 -->
+    <div id="view-closed" class="view-page">
+      <div class="page-header">
+        <div>
+          <div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 종료과제</div>
+          <h1 class="page-title">종료과제</h1>
+        </div>
+      </div>
+      <div class="card">
+        <p style="margin:0 0 16px 0; color: var(--text-muted);">종료된 과제 목록입니다. 상세를 선택하면 과제 종료 후 데이터를 추가·조회할 수 있습니다.</p>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>품목/제품</th><th>과제명</th><th>Phase</th><th>종료일</th><th></th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>엔블로</td><td>엔블로 DWP16001 3상 (종료)</td><td>3상</td><td>2024-12-31</td>
+                <td><a href="#closed/closed-01" class="btn btn-outline">상세</a></td>
+              </tr>
+              <tr>
+                <td>엔블로</td><td>엔블로 단일제 2상 (종료)</td><td>2상</td><td>2024-06-30</td>
+                <td><a href="#closed/closed-02" class="btn btn-outline">상세</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 뷰: 종료과제 상세 (사이드바 8개: Study Info~Study Team Member + 결과, Operational Performance) -->
+    <div id="view-closed-project" class="view-page">
+      <div class="page-header">
+        <div>
+          <div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; <a href="#closed">종료과제</a> &gt; <span id="closedTabLabel">Study Info</span></div>
+          <h1 class="page-title" id="closedProjectTitle">엔블로 DWP16001 3상 (종료)</h1>
+        </div>
+      </div>
+      <div class="project-layout">
+        <aside class="project-sidebar" id="sidebar-closed-project">
+          <a href="#" data-closed-tab="info">Study Info</a>
+          <a href="#" data-closed-tab="budget">Budget</a>
+          <a href="#" data-closed-tab="site">Sites</a>
+          <a href="#" data-closed-tab="vendor">Service Provider</a>
+          <a href="#" data-closed-tab="milestone">Milestones</a>
+          <a href="#" data-closed-tab="studyteam">Study Team Member</a>
+          <a href="#" data-closed-tab="results">결과(Results)</a>
+          <a href="#" data-closed-tab="operational">Operational Performance</a>
+        </aside>
+        <div class="project-content">
+          <div id="closed-panel-info" class="closed-panel">
+            <div class="card">
+              <h2 class="section-title">기본 정보</h2>
+              <div class="form-row"><label>Protocol No.</label><input type="text" class="form-control" value="DW_DWP16001308"></div>
+              <div class="form-row">
+                <label>Phase (단계)</label>
+                <div style="flex:1; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;">
+                  <input type="text" class="form-control" value="3상" style="max-width:120px">
+                  <span style="color: var(--text-muted);">공시 여부</span>
+                  <div class="radio-group">
+                    <label><input type="radio" name="disclosure-closed" value="yes" checked> 공시 대상</label>
+                    <label><input type="radio" name="disclosure-closed" value="no"> 공시 비대상</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form-row"><label>임상시험 제목(한글)</label><textarea class="form-control" rows="3">Metformin과 Gemigliptin으로 혈당조절이 불충분한 제 2형 당뇨병 환자에서 DWP16001의 장기적 안전성과 유효성을 평가하기 위한 다기관, 3상, 공개 임상시험</textarea></div>
+              <div class="form-row"><label>임상시험 제목(영문)</label><textarea class="form-control" rows="3">A multi-center, phase3, open-label study to evaluate the long term safety and efficacy of DWP16001 in patients with type 2 diabetes mellitus inadequately controlled on metformin and gemigliptin</textarea></div>
+              <div class="form-row">
+                <label>기간</label>
+                <div style="flex:1; display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
+                  <input type="date" class="form-control" value="2023-07-03" style="max-width:160px"><span>~</span><input type="date" class="form-control" value="2027-02-26" style="max-width:160px">
+                  <span style="color: var(--text-muted); margin-left: 16px;">임상시험 용도</span><input type="text" class="form-control" value="엔블로젬 복합제 허가" style="max-width:200px">
+                </div>
+              </div>
+              <div class="form-row"><label>국가</label><input type="text" class="form-control" value="Korea, South" style="max-width:240px"></div>
+              <div class="form-row"><label>목적</label><textarea class="form-control" rows="4">Metformin과 Gemigliptin으로 혈당조절이 불충분한 제 2형 당뇨병 환자를 대상으로 Metformin과 Gemigliptin과의 병합요법으로써 DWP16001의 장기적 안전성 및 유효성을 평가하고자 한다.</textarea></div>
+            </div>
+            <div class="card">
+              <h2 class="section-title">상세 정보</h2>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px;">
+                <div class="form-row" style="margin-bottom:0"><label>CTMS No.</label><input type="text" class="form-control" value="195_DW_DWP16001308"></div>
+                <div class="form-row" style="margin-bottom:0"><label>Protocol Version</label><input type="text" class="form-control" value="3.0"></div>
+                <div class="form-row" style="margin-bottom:0"><label>Registry No.</label><input type="text" class="form-control" value="NCT06141980"></div>
+                <div class="form-row" style="margin-bottom:0"><label>눈가림 종류</label><select class="form-control"><option value="Open" selected>Open</option><option value="Single">Single</option><option value="Double">Double</option></select></div>
+                <div class="form-row" style="margin-bottom:0"><label>무작위 배정 여부</label><input type="text" class="form-control" value="No"></div>
+                <div class="form-row" style="margin-bottom:0"><label>대상자 수 (Actual/Expected)</label><div class="actual-expected"><input type="text" value="2"><span class="sep">/</span><input type="text" value="134"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>대상질환</label><input type="text" class="form-control" value="내분비, 영양 및 대사 질환"></div>
+                <div class="form-row" style="margin-bottom:0"><label>LPI (Actual/Expected)</label><div class="actual-expected"><input type="date" value="2024-11-29"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>기관 수 (Actual/Expected)</label><div class="actual-expected"><input type="text" value="17"><span class="sep">/</span><input type="text" value="16"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>CSR final (Actual/Expected)</label><div class="actual-expected"><input type="text" placeholder="실제"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>FPI (Actual/Expected)</label><div class="actual-expected"><input type="date" value="2024-02-14"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>LPO (Actual/Expected)</label><div class="actual-expected"><input type="text" placeholder="실제"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>PI/CI</label><input type="text" class="form-control" value="분당서울대병원 임수"></div>
+              </div>
+            </div>
+            <div class="card">
+              <h2 class="section-title">시험군/대조군 정보</h2>
+              <div class="form-row"><label>시험군</label><input type="text" class="form-control" value="DWP16001 0.3mg"></div>
+              <div class="form-row"><label>대조군</label><input type="text" class="form-control" placeholder=""></div>
+            </div>
+            <div class="card">
+              <h2 class="section-title">공시 정보</h2>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>단계</th><th>일자</th><th>링크</th></tr></thead>
+                  <tbody>
+                    <tr><td>IND 신청</td><td><input type="date" value="2023-08-30"></td><td><input type="text" placeholder=""></td></tr>
+                    <tr><td>결과 발표 (Topline)</td><td><input type="date"></td><td><input type="text" placeholder=""></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div id="closed-panel-budget" class="closed-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Budget</h2>
+              <p style="color: var(--text-muted); margin-bottom: 16px;">과제별 예산 및 집행 현황을 관리합니다.</p>
+              <nav class="budget-subnav"><a href="#" data-budget-sub="overview" class="active">Budget Overview</a><a href="#" data-budget-sub="allocation">Budget Allocation</a><a href="#" data-budget-sub="actual">Actual Cost</a><a href="#" data-budget-sub="reconciliation">Cost Reconciliation</a></nav>
+              <div class="budget-sub-panel active" data-budget-panel="overview"><h3 class="sub-section-title">예산 현황</h3><div class="budget-summary-cards"><div class="budget-summary-card"><div class="label">전체 예산</div><div class="value">0</div></div><div class="budget-summary-card"><div class="label">누적 집행 금액</div><div class="value">0</div></div><div class="budget-summary-card"><div class="label">가용 예산</div><div class="value">0</div></div><div class="budget-summary-card"><div class="label">집행률</div><div class="value">0%</div></div></div><div class="budget-filter-row"><label>기준 연월</label><input type="month" class="form-control" value="2026-03" style="max-width:140px"><button type="button" class="btn btn-primary" style="background:#15803d">월별 대시보드</button></div><div class="table-wrap" style="overflow-x:auto"><table class="data-table"><thead><tr><th>예산 항목</th><th>배정 예산</th><th colspan="2">2026년 1월</th><th colspan="2">2026년 2월</th></tr><tr><th></th><th></th><th>집행 금액</th><th>누적 집행률</th><th>집행 금액</th><th>누적 집행률</th></tr></thead><tbody><tr class="budget-table-total-row"><td>TOTAL</td><td>1,823,895,679</td><td>0</td><td>0%</td><td>0</td><td>0%</td></tr></tbody></table></div></div>
+              <div class="budget-sub-panel" data-budget-panel="allocation"><h3 class="sub-section-title">예산 배정</h3><div class="vendor-search-panel"><div class="form-row"><label style="flex:0 0 90px">예산 항목</label><select class="form-control" style="max-width:160px"><option value="">선택</option></select><button type="button" class="btn btn-primary">&#128269; 검색</button><button type="button" class="btn btn-outline">초기화</button></div></div><div class="list-actions"><div class="per-page"><select class="form-control" style="max-width:120px"><option>10개씩 보기</option></select></div><button type="button" class="btn btn-primary">+ 등록</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>No.</th><th>예산 항목</th><th>예산명</th><th>계획 예산</th><th>사용 여부</th></tr></thead><tbody><tr><td>1</td><td>연구비</td><td>연구비</td><td>579,069,580</td><td>사용</td></tr></tbody></table></div><div class="site-pagination"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">&#8594;</button></div></div>
+              <div class="budget-sub-panel" data-budget-panel="actual"><h3 class="sub-section-title">집행 관리 (Actual Cost)</h3><div class="vendor-search-panel"><div class="form-row"><label>상태</label><select class="form-control" style="max-width:120px"><option value="">전체</option></select><label>예산명</label><input type="text" class="form-control" placeholder="검색어를 입력하세요"><button type="button" class="btn btn-primary">&#128269; 검색</button><button type="button" class="btn btn-outline">초기화</button></div></div><div class="list-actions"><div class="per-page"><select class="form-control" style="max-width:120px"><option>10개씩 보기</option></select></div><button type="button" class="btn btn-primary">+ 등록</button></div><div class="table-wrap"><table class="data-table"><thead><tr><th>No.</th><th>집행명</th><th>예산명</th><th>실집행</th><th>담당자</th></tr></thead><tbody><tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-muted)">데이터는 없습니다</td></tr></tbody></table></div><div class="site-pagination"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">&#8594;</button></div></div>
+              <div class="budget-sub-panel" data-budget-panel="reconciliation"><h3 class="sub-section-title">마감 관리 (Cost Reconciliation)</h3><div class="reconciliation-month-table"><div class="budget-filter-row" style="justify-content:space-between"><select class="form-control" style="max-width:120px"><option>전체 보기</option></select><div style="display:flex;align-items:center;gap:8px"><label>기준 연도</label><select class="form-control" style="max-width:100px"><option>2006</option></select></div></div><div class="table-wrap" style="margin-top:12px"><table class="data-table"><thead><tr><th>구분</th><th>1월</th><th>2월</th><th>3월</th><th>4월</th><th>5월</th><th>6월</th><th>7월</th><th>8월</th><th>9월</th><th>10월</th><th>11월</th><th>12월</th></tr></thead><tbody><tr><td>총 금액</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>상태</td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td></tr></tbody></table></div></div><div class="list-actions" style="margin-bottom:12px"><input type="text" class="form-control" placeholder="YYYY-MM" style="max-width:100px"><button type="button" class="btn btn-primary">마감하기</button></div><div class="reconciliation-tabs"><a href="#" data-recon-tab="before" class="active">마감 전</a><a href="#" data-recon-tab="done">마감 완료</a></div><div class="table-wrap"><table class="data-table"><thead><tr><th>No.</th><th>실행월</th><th>예산명</th><th>담당자</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted)">해당하는 데이터가 없습니다.</td></tr></tbody></table></div><div class="site-pagination"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">&#8594;</button></div></div>
+            </div>
+          </div>
+          <div id="closed-panel-site" class="closed-panel" style="display:none;">
+            <div class="card"><h2 class="card-title">Sites</h2><p style="color: var(--text-muted);">과제 참여 기관(Site) 목록 및 현황을 관리합니다.</p></div>
+          </div>
+          <div id="closed-panel-vendor" class="closed-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Service Provider</h2>
+              <p style="color: var(--text-muted); margin-bottom: 16px;">과제 관련 Vendor(업체) 계약 및 현황을 관리합니다. 벤더명을 클릭하면 상세 평가표를 입력·조회할 수 있습니다.</p>
+
+              <div class="vendor-search-panel">
+                <div class="form-row">
+                  <label style="flex: 0 0 80px;">구분</label>
+                  <select class="form-control" style="max-width: 200px;"><option value="">선택</option><option value="CO">CO (Clinical Operation)</option><option value="STAT">STAT (Statistics)</option><option value="DM">DM</option><option value="PV">PV</option></select>
+                  <label style="flex: 0 0 80px; margin-left: 16px;">국가</label>
+                  <select class="form-control" style="max-width: 200px;"><option value="">선택</option><option value="KR">Korea, South</option></select>
+                </div>
+                <div class="form-row">
+                  <label style="flex: 0 0 80px;">Vendor명</label>
+                  <input type="text" class="form-control" placeholder="Vendor명" style="max-width: 240px;">
+                  <label style="flex: 0 0 80px; margin-left: 16px;">주소</label>
+                  <input type="text" class="form-control" placeholder="주소" style="flex: 1; min-width: 200px;">
+                </div>
+                <div class="vendor-search-actions">
+                  <button type="button" class="btn btn-primary">&#128269; 검색</button>
+                  <button type="button" class="btn btn-outline">초기화</button>
+                </div>
+              </div>
+              <div class="vendor-register-row">
+                <button type="button" class="btn btn-primary">+ 등록</button>
+              </div>
+              <div class="vendor-list-panel">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>No.<span class="sort-icon">&#8645;</span></th>
+                        <th>구분<span class="sort-icon">&#8645;</span></th>
+                        <th>Vendor명<span class="sort-icon">&#8645;</span></th>
+                        <th>국가<span class="sort-icon">&#8645;</span></th>
+                        <th>주소<span class="sort-icon">&#8645;</span></th>
+                        <th>비고<span class="sort-icon">&#8645;</span></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>2</td>
+                        <td>STAT (Statistics)</td>
+                        <td><a href="#" class="link-vendor" data-vendor="나노스페이스" data-type="STAT">나노스페이스</a></td>
+                        <td>Korea, South</td>
+                        <td>엔지니어링 오피스 엔지니어링 20, 엔지니어링 1번 234호</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>1</td>
+                        <td>CO (Clinical Operation)</td>
+                        <td><a href="#" class="link-vendor" data-vendor="DreamCIS" data-type="CO">DreamCIS</a></td>
+                        <td>Korea, South</td>
+                        <td>서울시 종로구 사직로 130, 파인대행빌딩 9층</td>
+                        <td>-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="vendor-pagination">
+                  <button type="button" title="이전">&#8592;</button>
+                  <span class="page-num">1</span>
+                  <button type="button" title="다음">&#8594;</button>
+                </div>
+              </div>
+
+              <h3 class="sub-section-title">Vendor 평가표</h3>
+              <p style="color: var(--text-muted); font-size: 13px; margin-bottom: 12px;">Vendor Type: Clinical CRO, DM CRO, STAT CRO, PV CRO, Central Lab, Imaging Vendor, Translation Vendor, eTMF Vendor, IWRS Vendor, EDC Vendor</p>
+              <div class="table-wrap">
+                <table class="data-table">
+                  <thead><tr><th>Vendor Type</th><th>Vendor Name</th><th>Evaluation Score</th></tr></thead>
+                  <tbody>
+                    <tr><td>Clinical CRO</td><td><span class="link-vendor" data-vendor="LSK Global" data-type="Clinical CRO">LSK Global</span></td><td>87</td></tr>
+                    <tr><td>DM CRO</td><td><span class="link-vendor" data-vendor="LSK" data-type="DM CRO">LSK</span></td><td>82</td></tr>
+                    <tr><td>STAT CRO</td><td><span class="link-vendor" data-vendor="LSK" data-type="STAT CRO">LSK</span></td><td>90</td></tr>
+                    <tr><td>PV CRO</td><td><span class="link-vendor" data-vendor="XXX" data-type="PV CRO">XXX</span></td><td>85</td></tr>
+                    <tr><td>Central Lab</td><td><span class="link-vendor" data-vendor="YYY" data-type="Central Lab">YYY</span></td><td>78</td></tr>
+                    <tr><td>Imaging Vendor</td><td><span class="link-vendor" data-vendor="ZZZ" data-type="Imaging Vendor">ZZZ</span></td><td>83</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p style="color: var(--text-muted); font-size: 13px; margin-top: 12px;">평가 항목 (1~10점): Quality(deliverable quality), Timeline(일정 준수), Communication, Issue management(issue 대응), Expertise(전문성), Sponsor satisfaction</p>
+            </div>
+          </div>
+          <div id="closed-panel-milestone" class="closed-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Milestones</h2>
+              <p style="color: var(--text-muted); margin-bottom: 16px;">과제 일정 및 마일스톤을 관리합니다.</p>
+              <div class="timeline-header">
+                <h3 class="timeline-title">타임라인</h3>
+                <input type="text" class="form-control timeline-search" placeholder="검색어를 입력하세요">
+                <div class="view-btns"><button type="button">일간</button><button type="button">주간</button><button type="button" class="active">월간</button></div>
+                <label class="my-timeline"><input type="checkbox"> 나의 타임라인</label>
+                <button type="button" class="btn btn-primary btn-load-template">새 템플릿 불러오기</button>
+              </div>
+              <div class="timeline-table-wrap">
+                <table class="timeline-table">
+                  <thead>
+                    <tr><th class="task-cell">업무 / 마일스톤</th><th class="pct-cell">계획 (%)</th><th class="pct-cell">실적 (%)</th><th class="timeline-month">10월</th><th class="timeline-month">11월</th><th class="timeline-month">12월</th><th class="timeline-month">1월</th><th class="timeline-month">2월</th><th class="timeline-month timeline-cell current-month">3월</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr class="row-total"><td class="task-cell">TOTAL</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="workgroup-row"><td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; 프로젝트 준비</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> CRO 계약서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="workgroup-row"><td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; Start-up</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> IND 제출(Protocol)</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
+                    <tr><td colspan="9" class="add-workgroup">+ 워크그룹 만들기</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div id="closed-panel-studyteam" class="closed-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Study Team Member</h2>
+              <p style="color: var(--text-muted); margin-bottom: 16px;">과제 참여 스터디팀 구성원을 관리합니다.</p>
+              <div class="member-subnav">
+                <button type="button" class="active" data-member-tab="list">구성원 목록</button>
+                <button type="button" data-member-tab="history">구성원 이력</button>
+              </div>
+              <div class="member-panel active" data-member-panel="list">
+                <div class="list-actions">
+                  <div class="per-page">
+                    <select class="form-control" style="max-width:120px">
+                      <option>10개씩 보기</option>
+                    </select>
+                  </div>
+                  <div style="display:flex; gap:8px">
+                    <button type="button" class="btn btn-primary" style="background:#15803d">엑셀 내려받기</button>
+                    <button type="button" class="btn btn-primary">구성원 추가</button>
+                  </div>
+                </div>
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>이름</th>
+                        <th>담당업무</th>
+                        <th>이메일</th>
+                        <th>역할</th>
+                        <th>상태</th>
+                        <th>시작일</th>
+                        <th>종료일</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>5</td>
+                        <td>홍길동</td>
+                        <td>PMS</td>
+                        <td>pms@example.co.kr</td>
+                        <td>PM</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>4</td>
+                        <td>김연구</td>
+                        <td>CTM</td>
+                        <td>ctm@example.co.kr</td>
+                        <td>Member</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>3</td>
+                        <td>이모니터</td>
+                        <td>CRA</td>
+                        <td>cra@example.co.kr</td>
+                        <td>Viewer</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>2</td>
+                        <td>박데이터</td>
+                        <td>DM</td>
+                        <td>dm@example.co.kr</td>
+                        <td>Viewer</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                      <tr>
+                        <td>1</td>
+                        <td>최통계</td>
+                        <td>STAT</td>
+                        <td>stat@example.co.kr</td>
+                        <td>Viewer</td>
+                        <td><span class="member-status-badge on">진행</span></td>
+                        <td>2025-08-30</td>
+                        <td>-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="site-pagination">
+                  <button type="button">&#8592;</button>
+                  <span class="page-num">1</span>
+                  <button type="button">&#8594;</button>
+                </div>
+              </div>
+              <div class="member-panel" data-member-panel="history">
+                <div class="table-wrap">
+                  <table class="data-table">
+                    <thead>
+                      <tr>
+                        <th>No.</th>
+                        <th>이름</th>
+                        <th>담당업무</th>
+                        <th>역할</th>
+                        <th>상태</th>
+                        <th>시작일</th>
+                        <th>종료일</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="7" style="text-align:center; padding:40px; color:var(--text-muted)">구성원 이력 데이터가 없습니다.</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="closed-panel-results" class="closed-panel" style="display:none;">
+            <div class="card">
+              <h2 class="section-title">결과(Results)</h2>
+              <p style="color: var(--text-muted); margin-bottom: 20px;">과제 종료 후 결과 데이터를 추가·수정할 수 있습니다. 텍스트 항목은 볼드, 기울임, 색상, 표를 사용할 수 있습니다.</p>
+
+              <div class="panel-block">
+                <div class="panel-block-title">1. Primary Endpoint</div>
+                <div class="panel-block-body">
+                  <div class="form-row">
+                    <label>Primary endpoint name</label>
+                    <input type="text" class="form-control" id="results-primary-name" placeholder="Primary endpoint 명 입력">
+                  </div>
+                  <div class="form-row">
+                    <label>Endpoint result summary</label>
+                    <div style="flex:1; min-width:0;">
+                      <div class="rich-text-toolbar" data-for="results-summary">
+                        <button type="button" title="굵게" onclick="applyFormat('results-summary','bold')"><b>B</b></button>
+                        <button type="button" title="기울임" onclick="applyFormat('results-summary','italic')"><i>I</i></button>
+                        <button type="button" title="글자 색" onclick="document.getElementById('results-summary-color').click()">A</button>
+                        <input type="color" id="results-summary-color" value="#000000" style="display:none" onchange="applyFormat('results-summary','foreColor',this.value)">
+                        <button type="button" title="표 삽입" onclick="insertTable('results-summary')">표</button>
+                      </div>
+                      <div id="results-summary" class="rich-text-editor" contenteditable="true" data-placeholder="결과 요약 입력 (서식 사용 가능)"></div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label>Effect size</label>
+                    <input type="number" class="form-control" id="results-effect-size" placeholder="optional" step="any" style="max-width:200px">
+                  </div>
+                  <div class="form-row">
+                    <label>p-value</label>
+                    <input type="number" class="form-control" id="results-pvalue" placeholder="optional" step="any" min="0" max="1" style="max-width:200px">
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-block">
+                <div class="panel-block-title">2. Study Outcome</div>
+                <div class="panel-block-body">
+                  <div class="form-row">
+                    <label>Study success</label>
+                    <select class="form-control" id="results-study-success" style="max-width:240px">
+                      <option value="">선택</option>
+                      <option value="Success">Success</option>
+                      <option value="Fail">Fail</option>
+                      <option value="Partially met">Partially met</option>
+                      <option value="Not applicable">Not applicable</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-block">
+                <div class="panel-block-title">3. Safety Summary</div>
+                <div class="panel-block-body">
+                  <div class="form-row">
+                    <label>Safety summary</label>
+                    <div style="flex:1; min-width:0;">
+                      <div class="rich-text-toolbar" data-for="results-safety">
+                        <button type="button" title="굵게" onclick="applyFormat('results-safety','bold')"><b>B</b></button>
+                        <button type="button" title="기울임" onclick="applyFormat('results-safety','italic')"><i>I</i></button>
+                        <button type="button" title="글자 색" onclick="document.getElementById('results-safety-color').click()">A</button>
+                        <input type="color" id="results-safety-color" value="#000000" style="display:none" onchange="applyFormat('results-safety','foreColor',this.value)">
+                        <button type="button" title="표 삽입" onclick="insertTable('results-safety')">표</button>
+                      </div>
+                      <div id="results-safety" class="rich-text-editor" contenteditable="true" data-placeholder="주요 Safety 결과 요약 (서식 사용 가능)"></div>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label>SAE 발생 여부</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="results-sae" value="Yes"> Yes</label>
+                      <label><input type="radio" name="results-sae" value="No"> No</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-block">
+                <div class="panel-block-title">4. Publication</div>
+                <div class="panel-block-body">
+                  <div class="form-row">
+                    <label>Publication 여부</label>
+                    <div class="radio-group">
+                      <label><input type="radio" name="results-pub-yn" value="Yes"> Yes</label>
+                      <label><input type="radio" name="results-pub-yn" value="No"> No</label>
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <label>Publication type</label>
+                    <select class="form-control" id="results-pub-type" style="max-width:280px">
+                      <option value="">선택</option>
+                      <option value="Journal article">Journal article</option>
+                      <option value="Conference presentation">Conference presentation</option>
+                      <option value="Poster">Poster</option>
+                      <option value="None">None</option>
+                    </select>
+                  </div>
+                  <div class="form-row">
+                    <label>Journal</label>
+                    <input type="text" class="form-control" id="results-journal" placeholder="저널명">
+                  </div>
+                  <div class="form-row">
+                    <label>DOI / link</label>
+                    <input type="text" class="form-control" id="results-doi" placeholder="DOI 또는 링크 URL">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row" style="margin-top:24px">
+                <label></label>
+                <button type="button" class="btn btn-primary" id="results-save-btn">저장</button>
+              </div>
+            </div>
+          </div>
+          <div id="closed-panel-operational" class="closed-panel" style="display:none;">
+            <div class="card">
+              <h2 class="section-title">운영 성과(Operational Performance)</h2>
+              <p style="color: var(--text-muted); margin-bottom: 20px;">과제 종료 후 운영 성과 데이터를 추가·수정할 수 있습니다.</p>
+
+              <div class="panel-block">
+                <div class="panel-block-title">Recruitment Performance</div>
+                <div class="panel-block-body">
+                  <div class="form-row">
+                    <label>Planned enrollment</label>
+                    <input type="number" class="form-control" id="op-planned-enrollment" placeholder="목표 입원자 수" style="max-width:160px" min="0">
+                  </div>
+                  <div class="form-row">
+                    <label>Actual enrollment</label>
+                    <input type="number" class="form-control" id="op-actual-enrollment" placeholder="실제 입원자 수" style="max-width:160px" min="0">
+                  </div>
+                  <div class="form-row">
+                    <label>Recruitment period</label>
+                    <span class="form-control" style="max-width:240px; background:var(--input-bg);" id="op-recruitment-period">auto (FPI~LPI)</span>
+                  </div>
+                  <div class="form-row">
+                    <label>Planned recruitment period</label>
+                    <input type="number" class="form-control" id="op-planned-period" placeholder="목표 모집 기간 (일)" style="max-width:160px" min="0">
+                  </div>
+                  <div class="form-row">
+                    <label>Recruitment performance</label>
+                    <span class="form-control" style="max-width:160px; background:var(--input-bg);" id="op-recruitment-perf">auto 계산</span>
+                  </div>
+                  <div class="form-row">
+                    <label>Recruitment difficulty</label>
+                    <select class="form-control" id="op-recruitment-difficulty" style="max-width:200px">
+                      <option value="">선택</option>
+                      <option value="Easy">Easy</option>
+                      <option value="Moderate">Moderate</option>
+                      <option value="Difficult">Difficult</option>
+                      <option value="Very difficult">Very difficult</option>
+                    </select>
+                  </div>
+                  <div class="form-row">
+                    <label>Major recruitment issue</label>
+                    <input type="text" class="form-control" id="op-major-recruitment-issue" placeholder="주요 모집 이슈">
+                  </div>
+                </div>
+              </div>
+
+              <div class="panel-block">
+                <div class="panel-block-title">Vendor Performance</div>
+                <div class="panel-block-body">
+                  <div class="table-wrap">
+                    <table class="data-table">
+                      <thead><tr><th>Vendor Type</th><th>Vendor Name</th><th>Evaluation Score</th></tr></thead>
+                      <tbody id="op-vendor-table-body">
+                        <tr><td>Clinical CRO</td><td><span class="link-vendor" data-vendor="LSK Global" data-type="Clinical CRO">LSK Global</span></td><td>87</td></tr>
+                        <tr><td>DM CRO</td><td><span class="link-vendor" data-vendor="LSK" data-type="DM CRO">LSK</span></td><td>82</td></tr>
+                        <tr><td>STAT CRO</td><td><span class="link-vendor" data-vendor="LSK" data-type="STAT CRO">LSK</span></td><td>90</td></tr>
+                        <tr><td>PV CRO</td><td><span class="link-vendor" data-vendor="XXX" data-type="PV CRO">XXX</span></td><td>85</td></tr>
+                        <tr><td>Central Lab</td><td><span class="link-vendor" data-vendor="YYY" data-type="Central Lab">YYY</span></td><td>78</td></tr>
+                        <tr><td>Imaging Vendor</td><td><span class="link-vendor" data-vendor="ZZZ" data-type="Imaging Vendor">ZZZ</span></td><td>83</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="form-row"><label>Overall Vendor Score</label><span id="op-overall-vendor-score" style="font-weight:600;">85</span></div>
+                </div>
+              </div>
+
+              <div class="panel-block">
+                <div class="panel-block-title">Major Issues</div>
+                <div class="panel-block-body">
+                  <div id="op-major-issues-list">
+                    <div class="form-row op-issue-row">
+                      <label>Issue</label>
+                      <div style="flex:1; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start;">
+                        <select class="form-control op-issue-category" style="max-width:200px">
+                          <option value="">Issue category</option>
+                          <option value="Recruitment">Recruitment</option>
+                          <option value="Protocol deviation">Protocol deviation</option>
+                          <option value="Safety issue">Safety issue</option>
+                          <option value="Vendor issue">Vendor issue</option>
+                          <option value="Regulatory issue">Regulatory issue</option>
+                          <option value="Site performance">Site performance</option>
+                        </select>
+                        <input type="text" class="form-control op-issue-desc" placeholder="Issue description" style="min-width:200px">
+                        <select class="form-control op-issue-impact" style="max-width:140px">
+                          <option value="">Impact level</option>
+                          <option value="Low">Low</option>
+                          <option value="Moderate">Moderate</option>
+                          <option value="High">High</option>
+                          <option value="Critical">Critical</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row"><label></label><button type="button" class="btn btn-outline" id="op-add-issue">+ Issue 추가</button></div>
+                </div>
+              </div>
+
+              <div class="panel-block">
+                <div class="panel-block-title">Lessons Learned</div>
+                <div class="panel-block-body">
+                  <div id="op-lessons-list">
+                    <div class="form-row op-lesson-row">
+                      <label>Lesson</label>
+                      <div style="flex:1; display:flex; gap:12px; flex-wrap:wrap;">
+                        <select class="form-control op-lesson-category" style="max-width:200px">
+                          <option value="">Lesson category</option>
+                          <option value="Protocol design">Protocol design</option>
+                          <option value="Recruitment strategy">Recruitment strategy</option>
+                          <option value="Vendor management">Vendor management</option>
+                          <option value="Site selection">Site selection</option>
+                          <option value="Operational planning">Operational planning</option>
+                        </select>
+                        <input type="text" class="form-control op-lesson-desc" placeholder="Lesson description" style="min-width:240px">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-row"><label></label><button type="button" class="btn btn-outline" id="op-add-lesson">+ Lesson 추가</button></div>
+                </div>
+              </div>
+
+              <div class="form-row" style="margin-top:24px"><label></label><button type="button" class="btn btn-primary" id="op-save-btn">저장</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 벤더 상세 평가표 팝업 -->
+  <div id="vendor-eval-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span id="vendor-eval-modal-title">Vendor 평가표</span>
+        <button type="button" class="modal-close" onclick="closeVendorEvalModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="vendor-eval-vendor-name" value="">
+        <input type="hidden" id="vendor-eval-vendor-type" value="">
+        <table class="data-table">
+          <thead><tr><th>Category</th><th>항목</th><th>Score (1~10)</th></tr></thead>
+          <tbody>
+            <tr><td>Quality</td><td>deliverable quality</td><td><input type="number" class="form-control vendor-eval-score" min="1" max="10" value="8" style="max-width:80px"></td></tr>
+            <tr><td>Timeline</td><td>일정 준수</td><td><input type="number" class="form-control vendor-eval-score" min="1" max="10" value="8" style="max-width:80px"></td></tr>
+            <tr><td>Communication</td><td>communication</td><td><input type="number" class="form-control vendor-eval-score" min="1" max="10" value="9" style="max-width:80px"></td></tr>
+            <tr><td>Issue management</td><td>issue 대응</td><td><input type="number" class="form-control vendor-eval-score" min="1" max="10" value="8" style="max-width:80px"></td></tr>
+            <tr><td>Expertise</td><td>전문성</td><td><input type="number" class="form-control vendor-eval-score" min="1" max="10" value="9" style="max-width:80px"></td></tr>
+            <tr><td>Sponsor satisfaction</td><td>Sponsor satisfaction</td><td><input type="number" class="form-control vendor-eval-score" min="1" max="10" value="8" style="max-width:80px"></td></tr>
+          </tbody>
+        </table>
+        <div style="margin-top:12px"><button type="button" class="btn btn-primary" onclick="closeVendorEvalModal()">닫기</button></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+function applyFormat(editorId, command, value) {
+  var el = document.getElementById(editorId);
+  if (!el) return;
+  el.focus();
+  if (command === 'foreColor' && value) document.execCommand('foreColor', false, value);
+  else document.execCommand(command, false, null);
+}
+function insertTable(editorId) {
+  var el = document.getElementById(editorId);
+  if (!el) return;
+  el.focus();
+  var rows = prompt('행 수', '3');
+  var cols = prompt('열 수', '3');
+  if (rows == null || cols == null) return;
+  rows = parseInt(rows, 10) || 3;
+  cols = parseInt(cols, 10) || 3;
+  var html = '<table border="1" style="border-collapse:collapse"><tbody>';
+  for (var r = 0; r < rows; r++) {
+    html += '<tr>';
+    for (var c = 0; c < cols; c++) html += '<td>&nbsp;</td>';
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  document.execCommand('insertHTML', false, html);
+}
+function openVendorEvalModal(vendorName, vendorType) {
+  document.getElementById('vendor-eval-modal-title').textContent = 'Vendor 평가표 - ' + (vendorName || '');
+  document.getElementById('vendor-eval-vendor-name').value = vendorName || '';
+  document.getElementById('vendor-eval-vendor-type').value = vendorType || '';
+  document.getElementById('vendor-eval-modal').classList.add('show');
+}
+function closeVendorEvalModal() {
+  document.getElementById('vendor-eval-modal').classList.remove('show');
+}
+(function() {
+  var ROLE_KEY = 'ctms_role';
+  var PROJECT_IDS = ['enblo-mb', 'enblo-gem', 'enblo-china', 'enblo-insulin'];
+  var PROJECT_TITLES = { 'enblo-mb': '엔블로 매스밸런스 1상', 'enblo-gem': '엔블로젬 3상', 'enblo-china': '엔블로 중국 3상', 'enblo-insulin': '엔블로 인슐린 3상' };
+  var CLOSED_TITLES = { 'closed-01': '엔블로 DWP16001 3상 (종료)', 'closed-02': '엔블로 단일제 2상 (종료)' };
+  var TAB_LABELS = { info: 'Study Info', budget: 'Budget', site: 'Sites', vendor: 'Service Provider', milestone: 'Milestones', studyteam: 'Study Team Member' };
+  var CLOSED_TAB_LABELS = { info: 'Study Info', budget: 'Budget', site: 'Sites', vendor: 'Service Provider', milestone: 'Milestones', studyteam: 'Study Team Member', results: '결과(Results)', operational: 'Operational Performance' };
+  var myProjects = [
+    { id: 'enblo-mb', tag: '엔블로', name: '엔블로 매스밸런스 1상', status: 'before', pct: 0 },
+    { id: 'enblo-gem', tag: '엔블로', name: '엔블로젬 3상', status: 'ongoing', pct: 31 },
+    { id: 'enblo-china', tag: '엔블로', name: '엔블로 중국 3상', status: 'before', pct: 0 },
+    { id: 'enblo-insulin', tag: '엔블로', name: '엔블로 인슐린 3상', status: 'before', pct: 0 }
+  ];
+  var charts = {};
+
+  function getRole() { return localStorage.getItem(ROLE_KEY) || 'user'; }
+  function setRole(role) {
+    localStorage.setItem(ROLE_KEY, role);
+    document.querySelectorAll('#roleSelect, #roleSelectHeader').forEach(function(s) { if (s) s.value = role; });
+    if (currentPage === 'dashboard') renderDashboard();
+    updateNavActive();
+  }
+
+  function parseHash() {
+    var h = (window.location.hash || '#dashboard').slice(1);
+    if (h.indexOf('project/') === 0) {
+      var parts = h.split('/');
+      return { page: 'project', projectId: parts[1] || 'enblo-gem', tab: parts[2] || 'info', dashboardSub: null };
+    }
+    if (h.indexOf('closed/') === 0) {
+      var parts = h.split('/');
+      return { page: 'closed-project', projectId: parts[1] || 'closed-01', tab: parts[2] || 'info', dashboardSub: null };
+    }
+    if (h === 'dashboard' || h.indexOf('dashboard/') === 0) {
+      var sub = h === 'dashboard' ? null : h.split('/')[1];
+      return { page: 'dashboard', projectId: null, tab: 'info', dashboardSub: sub || 'overall' };
+    }
+    return { page: h || 'dashboard', projectId: null, tab: 'info', dashboardSub: 'overall' };
+  }
+
+  var currentPage = 'dashboard';
+  var currentProjectId = 'enblo-gem';
+  var currentProjectTab = 'info';
+  var currentDashboardSub = 'overall';
+
+  function showPage(page, projectId, tab, dashboardSub) {
+    currentPage = page;
+    currentProjectId = projectId || currentProjectId;
+    currentProjectTab = tab || 'info';
+    currentDashboardSub = dashboardSub !== undefined && dashboardSub !== null ? dashboardSub : (page === 'dashboard' ? 'overall' : currentDashboardSub);
+    document.querySelectorAll('.view-page').forEach(function(el) { el.classList.remove('active'); });
+    var view = document.getElementById('view-' + page);
+    if (view) view.classList.add('active');
+    document.title = (page === 'project' && PROJECT_TITLES[currentProjectId]) ? PROJECT_TITLES[currentProjectId] + ' - CTMS Pro' : (page === 'closed-project' && CLOSED_TITLES[currentProjectId]) ? CLOSED_TITLES[currentProjectId] + ' - CTMS Pro' : 'CTMS Pro';
+
+    if (page === 'dashboard') {
+      renderDashboard(currentDashboardSub);
+      var header = document.getElementById('roleSelectHeader');
+      if (header) header.style.display = '';
+    } else if (page === 'project') {
+      document.getElementById('projectTitle').textContent = PROJECT_TITLES[currentProjectId] || '';
+      document.getElementById('projectTabLabel').textContent = TAB_LABELS[currentProjectTab] || 'Study Info';
+      var sidebarProject = document.getElementById('sidebar-project');
+      if (sidebarProject) sidebarProject.querySelectorAll('a').forEach(function(a) {
+        var t = a.getAttribute('data-project-tab');
+        a.classList.toggle('active', t === currentProjectTab);
+        a.href = '#project/' + currentProjectId + '/' + t;
+      });
+      document.querySelectorAll('.project-panel').forEach(function(p) { p.style.display = 'none'; });
+      var panel = document.getElementById('project-panel-' + currentProjectTab);
+      if (panel) panel.style.display = 'block';
+      if (currentProjectTab === 'site') initSitesChart();
+    } else if (page === 'closed-project') {
+      document.getElementById('closedProjectTitle').textContent = CLOSED_TITLES[currentProjectId] || '';
+      document.getElementById('closedTabLabel').textContent = CLOSED_TAB_LABELS[currentProjectTab] || 'Study Info';
+      var sidebarClosed = document.getElementById('sidebar-closed-project');
+      if (sidebarClosed) sidebarClosed.querySelectorAll('a').forEach(function(a) {
+        var t = a.getAttribute('data-closed-tab');
+        a.classList.toggle('active', t === currentProjectTab);
+        a.href = '#closed/' + currentProjectId + '/' + t;
+      });
+      document.querySelectorAll('.closed-panel').forEach(function(p) { p.style.display = 'none'; });
+      var closedPanel = document.getElementById('closed-panel-' + currentProjectTab);
+      if (closedPanel) closedPanel.style.display = 'block';
+    }
+    updateNavActive();
+  }
+
+  var adminProjectCards = [
+    { name: '엔블로젬 Enblozem', sub: '', pct: 30, status: 'on_track', issue: 0, pi: '김철수', date: '2024-05-20', currentMilestone: 1, enrollmentPct: 35 },
+    { name: '엔블로젬 2/3상', sub: '', pct: 30, status: 'on_track', issue: 0, pi: '김철수', date: '2024-05-20', currentMilestone: 1, enrollmentPct: 28 },
+    { name: 'Nabota 연구자 임상', sub: '', pct: 30, status: 'pending', issue: 0, pi: '김철수', date: '2024-05-20', currentMilestone: 0, enrollmentPct: 0 },
+    { name: '엔블로젬 3상', sub: '', pct: 30, status: 'on_track', issue: 2, pi: '김철수', date: '2024-05-20', currentMilestone: 1, enrollmentPct: 42 },
+    { name: '엔블로젬 IIT', sub: '', pct: 30, status: 'pending', issue: 0, pi: '김철수', date: '2024-05-20', currentMilestone: 2, enrollmentPct: 100 },
+    { name: '엔블로 단일제 2상', sub: '', pct: 30, status: 'on_track', issue: 3, pi: '김철수', date: '2024-05-20', currentMilestone: 1, enrollmentPct: 55 }
+  ];
+  var userProjectCards = [
+    { name: '엔블로젬 3상 (Enblo-003)', pct: 30, status: 'on_track', issue: 2, pi: '김칠수 교수', currentMilestone: 1, enrollmentPct: 35, tasks: [{ title: 'EDC 데이터 검토 (Site 101)', due: 'Oct 15' }, { title: '모니터링 보고서 작성 (Site 102)', due: 'Oct 20' }] },
+    { name: '엔블로젬 연구자 주도 임상 (Enblo-IIT)', pct: 60, status: 'delayed', issue: 1, pi: '이영희 박사', currentMilestone: 2, enrollmentPct: 100, tasks: [{ title: '연구자 미팅 준비 (Site 105)', due: 'Oct 28' }, { title: 'AE/SAE 보고서 확인', due: 'Oct 30' }] }
+  ];
+  var milestones = ['IND', 'FPI', 'LPO', 'DBL', 'CSR'];
+
+  function renderDashboard(dashboardSub) {
+    var role = getRole();
+    var sub = role === 'admin' ? (dashboardSub || 'overall') : 'project';
+    var subnavWrap = document.getElementById('dashboard-subnav-wrap');
+    var breadcrumb = document.getElementById('dashboard-breadcrumb');
+    var titleEl = document.getElementById('dashboard-main-title');
+    if (subnavWrap) subnavWrap.style.display = role === 'admin' ? 'flex' : 'none';
+    if (breadcrumb) breadcrumb.textContent = '대시보드' + (role === 'admin' && sub === 'project' ? ' &gt; 과제 대시보드' : role === 'admin' ? ' &gt; 종합 대시보드' : ' &gt; 과제 대시보드');
+    if (titleEl) titleEl.textContent = role === 'admin' ? (sub === 'overall' ? 'DW Clinical Overview Dashboard' : '품목별 프로젝트 현황') : '프로젝트 대시보드 - 사용자';
+    document.getElementById('dashboard-admin-overall').style.display = role === 'admin' && sub === 'overall' ? 'block' : 'none';
+    document.getElementById('dashboard-admin-project').style.display = role === 'admin' && sub === 'project' ? 'block' : 'none';
+    document.getElementById('dashboard-user-project').style.display = role === 'user' ? 'block' : 'none';
+    document.querySelectorAll('#dashboard-tab-overall, #dashboard-tab-project').forEach(function(a) {
+      if (a) a.classList.toggle('active', (a.id === 'dashboard-tab-overall' && sub === 'overall') || (a.id === 'dashboard-tab-project' && sub === 'project'));
+    });
+    var header = document.getElementById('roleSelectHeader');
+    if (header) header.style.display = role === 'user' ? '' : 'none';
+    if (role === 'admin' && sub === 'overall') renderCharts();
+    if (role === 'admin' && sub === 'project') renderAdminProjectCards();
+    if (role === 'user') renderUserProjectCards();
+  }
+
+  function milestoneBar(currentIdx, enrollmentPct) {
+    enrollmentPct = enrollmentPct != null ? enrollmentPct : 0;
+    var n = 5;
+    var html = '<div class="milestone-bar">';
+    for (var i = 0; i < n; i++) {
+      var isRecruitmentSeg = (i === 1);
+      var fillPct = 100;
+      if (i < currentIdx) fillPct = 100;
+      else if (i === currentIdx && isRecruitmentSeg) fillPct = Math.min(100, Math.max(0, enrollmentPct));
+      else if (i === currentIdx) fillPct = 100;
+      else fillPct = 0;
+      var cls = 'seg' + (fillPct >= 100 ? ' done' : '') + (i === currentIdx ? ' current' : '');
+      html += '<div class="' + cls + '">' + (i === currentIdx ? '<span class="current-marker">Current</span>' : '') + '<div class="seg-fill" style="width:' + fillPct + '%"></div></div>';
+    }
+    html += '</div><div class="label-wrap">';
+    milestones.forEach(function(m) { html += '<span>' + m + '</span>'; });
+    html += '</div>';
+    return '<div class="milestone-wrap">' + html + '</div>';
+  }
+
+  function renderAdminProjectCards() {
+    var el = document.getElementById('admin-project-cards');
+    if (!el) return;
+    el.innerHTML = adminProjectCards.map(function(p) {
+      var statusTag = p.status === 'on_track' ? '<span class="tag-on-track">On Track</span>' : '<span class="tag-pending">Pending</span>';
+      var issueTag = p.issue > 0 ? '<span class="tag-issue">Issue: ' + p.issue + '</span>' : '';
+      var nameLine = p.sub ? p.name + '<br><span style="font-size:13px;color:var(--text-muted)">' + p.sub + '</span>' : p.name;
+      var tagsInline = '<div class="card-tags-inline">' + statusTag + (p.issue > 0 ? ' ' + issueTag : '') + '</div>';
+      return '<a href="#program" style="text-decoration:none;color:inherit"><div class="project-card"><div class="card-name-row"><div class="card-name">' + nameLine + '</div>' + tagsInline + '</div><div class="card-meta">등록 현황 (목표 대비) ' + (p.enrollmentPct || 0) + '%</div><div class="progress-bar" style="margin:4px 0 8px 0"><div class="progress-bar-fill" style="width:' + (p.enrollmentPct || 0) + '%"></div></div><div class="card-meta-row">담당자: ' + p.pi + ' PI<span>' + p.date + ' 업데이트</span></div>' + milestoneBar(p.currentMilestone, p.enrollmentPct) + '</div></a>';
+    }).join('');
+  }
+
+  function renderUserProjectCards() {
+    var el = document.getElementById('user-project-cards');
+    if (!el) return;
+    el.innerHTML = userProjectCards.map(function(p) {
+      var statusText = p.status === 'on_track' ? 'On Track' : 'Delayed';
+      var statusDotCls = p.status === 'on_track' ? 'green' : 'orange';
+      var statusLine = 'Overall Status: <span class="status-dot ' + statusDotCls + '"></span><span style="color:' + (p.status === 'on_track' ? '#059669' : '#ea580c') + '; font-weight:500">' + statusText + '</span>';
+      var issueLine = 'Issue: ' + (p.issue || 0) + ' <span class="status-dot red"></span>';
+      var currentLabel = 'Current at ' + milestones[p.currentMilestone];
+      var tasksHtml = p.tasks && p.tasks.length ? '<div class="my-tasks"><div class="my-tasks-title">내 작업 (My Tasks)</div><ul>' + p.tasks.map(function(t) { return '<li>' + t.title + ' <span class="due">Due ' + t.due + '</span></li>'; }).join('') + '</ul></div>' : '';
+      return '<div class="project-card"><div class="card-name">' + p.name + '</div><div class="card-meta">등록 현황 (목표 대비) ' + (p.enrollmentPct || 0) + '%</div><div class="progress-bar" style="margin:4px 0 8px 0"><div class="progress-bar-fill" style="width:' + (p.enrollmentPct || 0) + '%"></div></div><div class="card-meta-row">PI: ' + p.pi + '<span>' + p.date + ' 업데이트</span></div><div class="card-status-line">' + statusLine + ' ' + issueLine + '</div>' + milestoneBar(p.currentMilestone, p.enrollmentPct).replace('Current', currentLabel) + tasksHtml + '</div>';
+    }).join('');
+  }
+
+  function renderCharts() {
+    var colors = ['rgba(13,148,136,0.78)', 'rgba(249,115,22,0.78)', 'rgba(234,179,8,0.78)', 'rgba(139,92,246,0.78)', 'rgba(236,72,153,0.78)', 'rgba(14,165,233,0.78)', 'rgba(34,197,94,0.78)', 'rgba(168,85,247,0.78)'];
+    var pieOpts = {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        datalabels: {
+          color: '#1e293b',
+          font: { weight: 'bold', size: 12 },
+          formatter: function(value, ctx) {
+            var total = ctx.dataset.data.reduce(function(a, b) { return a + b; }, 0);
+            var pct = total ? ((value / total) * 100).toFixed(1) : 0;
+            return pct + '%';
+          }
+        }
+      }
+    };
+    if (charts.product) charts.product.destroy();
+    if (document.getElementById('chartProduct')) {
+      charts.product = new Chart(document.getElementById('chartProduct'), { type: 'pie', data: { labels: ['Enblozem', 'Fexuprazan', 'V-Actin', 'Others'], datasets: [{ data: [25, 24, 16, 18], backgroundColor: colors }] }, options: pieOpts });
+    }
+    if (charts.phase) charts.phase.destroy();
+    if (document.getElementById('chartPhase')) {
+      charts.phase = new Chart(document.getElementById('chartPhase'), { type: 'pie', data: { labels: ['Phase 1', 'Phase 2', 'Phase 3', 'NDA'], datasets: [{ data: [18, 28, 14, 9], backgroundColor: colors }] }, options: pieOpts });
+    }
+    if (charts.region) charts.region.destroy();
+    if (document.getElementById('chartRegion')) {
+      charts.region = new Chart(document.getElementById('chartRegion'), { type: 'pie', data: { labels: ['Korea', 'China', 'Indonesia', 'Other Global'], datasets: [{ data: [50, 10, 35, 5], backgroundColor: colors.slice(0, 4) }] }, options: pieOpts });
+    }
+    if (charts.disease) charts.disease.destroy();
+    if (document.getElementById('chartDisease')) {
+      charts.disease = new Chart(document.getElementById('chartDisease'), { type: 'pie', data: { labels: ['Diabetes', 'Gastric', 'Respiratory', 'Others'], datasets: [{ data: [19.2, 13.3, 20, 13], backgroundColor: colors }] }, options: pieOpts });
+    }
+  }
+
+  function initSitesChart() {
+    var el = document.getElementById('chartSites');
+    if (!el) return;
+    if (charts.sites) charts.sites.destroy();
+    var months = ['2023.03', '2023.04', '2023.05', '2023.06', '2023.07', '2023.08', '2023.09', '2023.10', '2023.11', '2023.12', '2024.01', '2024.02', '2024.03'];
+    var data1 = [0, 0, 0, 0, 0, 20, 40, 60, 85, 95, 98, 50, 0];
+    var data2 = [0, 0, 0, 0, 0, 0, 15, 35, 55, 70, 75, 78, 0];
+    charts.sites = new Chart(el, {
+      type: 'line',
+      data: {
+        labels: months,
+        datasets: [
+          { label: '가천대학교 인천 길병원', data: data1, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.1)', fill: true, tension: 0.3 },
+          { label: 'Shanghai Kuku Central Hospital', data: data2, borderColor: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)', fill: true, tension: 0.3 }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom' } },
+        scales: {
+          y: { beginAtZero: true, max: 120 },
+          x: { grid: { display: false } }
+        }
+      }
+    });
+  }
+
+  function updateNavActive() {
+    var activePage = currentPage === 'project' ? 'program' : (currentPage === 'closed-project' ? 'closed' : currentPage);
+    document.querySelectorAll('.nav-menu a').forEach(function(a) {
+      var p = a.getAttribute('data-page');
+      a.classList.toggle('active', p === activePage);
+    });
+  }
+
+  function onHashChange() {
+    var r = parseHash();
+    showPage(r.page, r.projectId, r.tab, r.dashboardSub);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('#roleSelect, #roleSelectHeader').forEach(function(s) {
+      if (s) s.value = getRole();
+    });
+    document.getElementById('roleSelect').addEventListener('change', function() { setRole(this.value); });
+    var header = document.getElementById('roleSelectHeader');
+    if (header) header.addEventListener('change', function() { setRole(this.value); });
+    document.getElementById('sidebar-project') && document.getElementById('sidebar-project').querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function(e) { e.preventDefault(); var t = this.getAttribute('data-project-tab'); if (t) window.location.hash = 'project/' + currentProjectId + '/' + t; });
+    });
+    document.getElementById('sidebar-closed-project') && document.getElementById('sidebar-closed-project').querySelectorAll('a').forEach(function(a) {
+      a.addEventListener('click', function(e) { e.preventDefault(); var t = this.getAttribute('data-closed-tab'); if (t) window.location.hash = 'closed/' + currentProjectId + '/' + t; });
+    });
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('.link-vendor');
+      if (link) { e.preventDefault(); openVendorEvalModal(link.getAttribute('data-vendor'), link.getAttribute('data-type')); }
+      var budgetSub = e.target.closest('[data-budget-sub]');
+      if (budgetSub) {
+        e.preventDefault();
+        var sub = budgetSub.getAttribute('data-budget-sub');
+        var card = budgetSub.closest('.card');
+        if (card) {
+          card.querySelectorAll('.budget-sub-panel').forEach(function(p) { p.classList.remove('active'); });
+          card.querySelectorAll('[data-budget-sub]').forEach(function(a) { a.classList.toggle('active', a.getAttribute('data-budget-sub') === sub); });
+          var panel = card.querySelector('.budget-sub-panel[data-budget-panel="' + sub + '"]');
+          if (panel) panel.classList.add('active');
+        }
+      }
+      var memberTab = e.target.closest('[data-member-tab]');
+      if (memberTab) {
+        e.preventDefault();
+        var msub = memberTab.getAttribute('data-member-tab');
+        var mcard = memberTab.closest('.card');
+        if (mcard) {
+          mcard.querySelectorAll('.member-panel').forEach(function(p) { p.classList.remove('active'); });
+          mcard.querySelectorAll('[data-member-tab]').forEach(function(b) { b.classList.toggle('active', b.getAttribute('data-member-tab') === msub); });
+          var mpanel = mcard.querySelector('.member-panel[data-member-panel="' + msub + '"]');
+          if (mpanel) mpanel.classList.add('active');
+        }
+      }
+    });
+    var plannedEl = document.getElementById('op-planned-enrollment');
+    var actualEl = document.getElementById('op-actual-enrollment');
+    if (plannedEl) plannedEl.addEventListener('input', calcRecruitmentPerf);
+    if (actualEl) actualEl.addEventListener('input', calcRecruitmentPerf);
+    function calcRecruitmentPerf() {
+      var planned = parseInt(plannedEl && plannedEl.value, 10);
+      var actual = parseInt(actualEl && actualEl.value, 10);
+      var el = document.getElementById('op-recruitment-perf');
+      if (!el) return;
+      if (planned > 0 && !isNaN(actual)) el.textContent = (actual / planned).toFixed(2) + ' (actual/planned)';
+      else el.textContent = 'auto 계산';
+    }
+    var addIssue = document.getElementById('op-add-issue');
+    if (addIssue) addIssue.addEventListener('click', function() {
+      var tpl = document.querySelector('.op-issue-row');
+      if (!tpl) return;
+      var div = document.createElement('div');
+      div.className = 'form-row op-issue-row';
+      div.innerHTML = '<label>Issue</label><div style="flex:1; display:flex; gap:12px; flex-wrap:wrap; align-items:flex-start;"><select class="form-control op-issue-category" style="max-width:200px"><option value="">Issue category</option><option value="Recruitment">Recruitment</option><option value="Protocol deviation">Protocol deviation</option><option value="Safety issue">Safety issue</option><option value="Vendor issue">Vendor issue</option><option value="Regulatory issue">Regulatory issue</option><option value="Site performance">Site performance</option></select><input type="text" class="form-control op-issue-desc" placeholder="Issue description" style="min-width:200px"><select class="form-control op-issue-impact" style="max-width:140px"><option value="">Impact level</option><option value="Low">Low</option><option value="Moderate">Moderate</option><option value="High">High</option><option value="Critical">Critical</option></select></div>';
+      document.getElementById('op-major-issues-list').appendChild(div);
+    });
+    var addLesson = document.getElementById('op-add-lesson');
+    if (addLesson) addLesson.addEventListener('click', function() {
+      var div = document.createElement('div');
+      div.className = 'form-row op-lesson-row';
+      div.innerHTML = '<label>Lesson</label><div style="flex:1; display:flex; gap:12px; flex-wrap:wrap;"><select class="form-control op-lesson-category" style="max-width:200px"><option value="">Lesson category</option><option value="Protocol design">Protocol design</option><option value="Recruitment strategy">Recruitment strategy</option><option value="Vendor management">Vendor management</option><option value="Site selection">Site selection</option><option value="Operational planning">Operational planning</option></select><input type="text" class="form-control op-lesson-desc" placeholder="Lesson description" style="min-width:240px"></div>';
+      document.getElementById('op-lessons-list').appendChild(div);
+    });
+    document.getElementById('vendor-eval-modal') && document.getElementById('vendor-eval-modal').addEventListener('click', function(e) { if (e.target === this) closeVendorEvalModal(); });
+    window.addEventListener('hashchange', onHashChange);
+    onHashChange();
+  });
+})();
+  </script>
+</body>
+</html>
