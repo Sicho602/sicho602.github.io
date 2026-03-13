@@ -22,6 +22,8 @@
       --radius: 8px;
       --success: #10b981;
       --tag-bg: #dbeafe;
+      --chart-bg: #F8FAFC;
+      --chart-grid: #E5E7EB;
     }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Malgun Gothic', 'Segoe UI', sans-serif; font-size: 14px; color: var(--text); background: var(--bg-page); min-height: 100vh; }
@@ -80,6 +82,13 @@
     .project-sidebar a:hover { background: var(--input-bg); }
     .project-sidebar a.active { background: #eff6ff; color: var(--primary); font-weight: 600; border-left-color: var(--primary); }
     .project-content { flex: 1; min-width: 0; }
+    #view-closed-project .closed-panel-readonly input[readonly],
+    #view-closed-project .closed-panel-readonly textarea[readonly],
+    #view-closed-project .closed-panel-readonly select:disabled { cursor: default; background: var(--input-bg); color: var(--text); opacity: 1; }
+    #view-closed-project .closed-panel-readonly input:disabled,
+    #view-closed-project .closed-panel-readonly button:disabled,
+    #view-closed-project .closed-panel-readonly input[type="button"]:disabled,
+    #view-closed-project .closed-panel-readonly input[type="submit"]:disabled { opacity: 0.65; cursor: not-allowed; }
     .section-title { font-size: 16px; font-weight: 700; margin: 0 0 20px 0; padding-bottom: 8px; border-bottom: 1px solid var(--nav-border); }
     .actual-expected { display: flex; align-items: center; gap: 8px; }
     .actual-expected input { width: 100px; padding: 6px 10px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--input-bg); }
@@ -192,17 +201,34 @@
     .member-status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 600; background: #e0f2fe; color: #0369a1; min-width: 52px; }
     .member-status-badge.on { background: #dcfce7; color: #166534; }
     .member-status-badge.off { background: #fee2e2; color: #b91c1c; }
+    .closed-subnav { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--nav-border); }
+    .closed-subnav a { padding: 10px 16px; text-decoration: none; color: var(--text-muted); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+    .closed-subnav a:hover { color: var(--text); }
+    .closed-subnav a.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .closed-dashboard-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 24px; padding: 16px; background: var(--input-bg); border-radius: var(--radius); border: 1px solid var(--nav-border); }
+    .closed-dashboard-filter label { font-size: 13px; font-weight: 500; margin-right: 4px; }
+    .closed-dashboard-filter select { padding: 6px 10px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--card-bg); font-size: 13px; min-width: 120px; }
+    .closed-dashboard-section { margin-bottom: 32px; }
+    .closed-dashboard-section h3 { font-size: 16px; font-weight: 700; margin: 0 0 16px 0; padding-bottom: 8px; border-bottom: 1px solid var(--nav-border); }
+    .closed-dashboard-charts { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .closed-dashboard-charts.single { grid-template-columns: 1fr; }
+    .closed-dashboard-chart-card { background: var(--chart-bg); border: 1px solid var(--chart-grid); border-radius: 12px; padding: 20px; }
+    .closed-dashboard-chart-card h4 { font-size: 14px; font-weight: 600; margin: 0 0 12px 0; color: var(--text-muted); }
+    .closed-dashboard-chart-card .chart-wrap { height: 240px; position: relative; background: var(--chart-bg); border-radius: 8px; }
+    .closed-dashboard-gauge-value { font-size: 28px; font-weight: 700; color: #2563EB; text-align: center; margin-top: 8px; }
     .dashboard-subnav { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--nav-border); }
     .dashboard-subnav a { padding: 10px 16px; text-decoration: none; color: var(--text-muted); font-weight: 500; border-bottom: 2px solid transparent; margin-bottom: -1px; }
     .dashboard-subnav a:hover { color: var(--text); }
     .dashboard-subnav a.active { color: var(--primary); border-bottom-color: var(--primary); }
     .summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
-    .summary-card { border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 24px; background: var(--card-bg); }
+    .summary-card { border: 1px solid var(--chart-grid); border-radius: 12px; padding: 24px; background: var(--chart-bg); }
     .summary-card .label { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 12px; line-height: 1.3; }
     .summary-card .value { font-size: 32px; font-weight: 700; color: var(--text); }
     .summary-card .change { font-size: 13px; margin-top: 10px; }
     .summary-card .change.up { color: #059669; }
     .summary-card .change.alert { color: #dc2626; font-weight: 500; }
+    #dashboard-admin-overall .grid-4 .card { background: var(--chart-bg); border-color: var(--chart-grid); border-radius: 12px; }
+    #dashboard-admin-overall .grid-4 .card .card-title { color: #64748B; }
     .project-card { border: 1px solid var(--nav-border); border-radius: var(--radius); padding: 16px; background: var(--card-bg); height: 100%; display: flex; flex-direction: column; }
     .project-card .card-name-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
     .project-card .card-name { font-weight: 600; font-size: 15px; flex: 1; min-width: 0; }
@@ -243,13 +269,12 @@
   <nav class="top-nav">
     <a href="#dashboard" class="logo">CTMS Pro</a>
     <div class="nav-menu">
-      <a href="#dashboard" data-page="dashboard">대시보드</a>
-      <a href="#program" data-page="program">과제관리</a>
-      <a href="#closed" data-page="closed">종료과제</a>
-      <a href="#cost" data-page="cost">비용 관리</a>
-      <a href="#partner" data-page="partner">파트너 관리</a>
-      <a href="#approval" data-page="approval">결재 관리</a>
-      <a href="#system" data-page="system">시스템 관리</a>
+      <a href="#dashboard" data-page="dashboard">Dashboard</a>
+      <a href="#program" data-page="program">Studies</a>
+      <a href="#closed" data-page="closed">Completed Studies</a>
+      <a href="#approval" data-page="approval">Approvals</a>
+      <a href="#partner" data-page="partner">Partners</a>
+      <a href="#system" data-page="system">Admin</a>
     </div>
     <div class="nav-right">
       <button type="button" class="icon-btn" title="언어">&#127472;&#127479;</button>
@@ -269,22 +294,19 @@
       <div class="page-header">
         <div>
           <div class="breadcrumb" id="dashboard-breadcrumb">대시보드</div>
-          <h1 class="page-title" id="dashboard-main-title">종합 대시보드</h1>
+          <h1 class="page-title" id="dashboard-main-title">Overview Dashboard</h1>
         </div>
-        <select id="roleSelectHeader" class="role-select">
-          <option value="admin">관리자</option>
-          <option value="user">사용자</option>
-        </select>
       </div>
-      <!-- 관리자 전용: 종합 / 과제 대시보드 서브 탭 -->
-      <div id="dashboard-subnav-wrap" class="dashboard-subnav" style="display: none;">
-        <a href="#dashboard/overall" id="dashboard-tab-overall" class="active">종합 대시보드</a>
-        <a href="#dashboard/project" id="dashboard-tab-project">과제 대시보드</a>
+      <!-- 관리자 전용: 종합 / 과제 / 종료과제 대시보드 서브 탭 -->
+      <div id="dashboard-subnav-wrap" class="dashboard-subnav" style="display: flex;">
+        <a href="#dashboard/overall" id="dashboard-tab-overall" class="active">Overview Dashboard</a>
+        <a href="#dashboard/project" id="dashboard-tab-project">Study Dashboard</a>
+        <a href="#dashboard/closed" id="dashboard-tab-closed">Completed Studies Dashboard</a>
       </div>
 
-      <!-- 관리자 - 종합 대시보드 -->
-      <div id="dashboard-admin-overall" style="display: none;">
-        <p style="color: var(--text-muted); margin-bottom: 16px;">전월 대비 변경</p>
+      <!-- 관리자 - 종합 대시보드 (기본 표시) -->
+      <div id="dashboard-admin-overall" style="display: block;">
+        <p style="color: var(--text-muted); margin-bottom: 16px;">MoM Change</p>
         <div class="summary-cards">
           <div class="summary-card">
             <div class="label">Total Active Projects</div>
@@ -308,6 +330,59 @@
           <div class="card"><h2 class="card-title">단계별 현황</h2><div style="height:260px"><canvas id="chartPhase"></canvas></div></div>
           <div class="card"><h2 class="card-title">국내/외 현황</h2><div style="height:260px"><canvas id="chartRegion"></canvas></div></div>
           <div class="card"><h2 class="card-title">대상질환별 현황</h2><div style="height:260px"><canvas id="chartDisease"></canvas></div></div>
+        </div>
+      </div>
+
+      <!-- 관리자 - 종료과제 대시보드 (필터 + 10차트) -->
+      <div id="dashboard-admin-closed" style="display: none;">
+        <div class="closed-dashboard-filter">
+          <label>TA</label><select id="dash-closed-filter-ta"><option value="">전체</option><option value="Endocrine">Endocrine</option><option value="GI">GI</option><option value="CNS">CNS</option><option value="Oncology">Oncology</option><option value="Infectious disease">Infectious disease</option></select>
+          <label>Phase</label><select id="dash-closed-filter-phase"><option value="">전체</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+          <label>Region</label><select id="dash-closed-filter-region"><option value="">전체</option><option value="Domestic">Domestic</option><option value="Global">Global</option></select>
+          <label>CRO</label><select id="dash-closed-filter-cro"><option value="">전체</option><option value="CRO A">CRO A</option><option value="CRO B">CRO B</option><option value="CRO C">CRO C</option></select>
+          <label>Year</label><select id="dash-closed-filter-year"><option value="">전체</option><option value="2024">2024</option><option value="2025">2025</option></select>
+          <button type="button" class="btn btn-primary">적용</button>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>Study Success Metrics</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>Phase success rate</h4><div class="chart-wrap"><canvas id="dash-closed-chart-phase-success"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>TA success rate</h4><div class="chart-wrap"><canvas id="dash-closed-chart-ta-success"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Success Rate (TA × Phase)</h4><div class="chart-wrap"><canvas id="dash-closed-chart-ta-phase-success"></canvas></div></div>
+          </div>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>Recruitment Performance</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>TA recruitment duration</h4><div class="chart-wrap"><canvas id="dash-closed-chart-ta-enrollment"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Recruitment Difficulty by Region</h4><div class="chart-wrap"><canvas id="dash-closed-chart-region-enrollment"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Recruitment Benchmark (TA vs 전체 평균)</h4><div class="chart-wrap"><canvas id="dash-closed-chart-recruitment-benchmark"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Recruitment success rate (Actual/Planned)</h4><div class="chart-wrap"><canvas id="dash-closed-chart-enrollment-rate"></canvas></div><div class="closed-dashboard-gauge-value">92%</div></div>
+          </div>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>CRO Performance</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>CRO Performance by Scope</h4><div class="chart-wrap"><canvas id="dash-closed-chart-cro-by-scope"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>CRO Scope Distribution</h4><div class="chart-wrap"><canvas id="dash-closed-chart-cro-scope-distribution"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Vendor Score vs Timeline Performance</h4><div class="chart-wrap"><canvas id="dash-closed-chart-cro-score-vs-timeline"></canvas></div></div>
+          </div>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>Study Timeline</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>Phase study duration</h4><div class="chart-wrap"><canvas id="dash-closed-chart-phase-duration"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Milestone Duration</h4><div class="chart-wrap"><canvas id="dash-closed-chart-milestone-duration"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>TA study duration</h4><div class="chart-wrap"><canvas id="dash-closed-chart-ta-duration"></canvas></div></div>
+          </div>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>Operational Insights</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>Major issue distribution</h4><div class="chart-wrap"><canvas id="dash-closed-chart-major-issue"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Issue Trend</h4><div class="chart-wrap"><canvas id="dash-closed-chart-issue-trend"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Lessons learned distribution</h4><div class="chart-wrap"><canvas id="dash-closed-chart-lessons"></canvas></div></div>
+          </div>
         </div>
       </div>
 
@@ -388,28 +463,172 @@
       </div>
     </div>
 
-    <!-- 뷰: 비용/파트너/결재/시스템 (플레이스홀더) -->
-    <div id="view-cost" class="view-page">
-      <div class="page-header">
-        <div><div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 비용 관리</div><h1 class="page-title">비용 관리</h1></div>
-      </div>
-      <div class="card"><p style="color: var(--text-muted); margin:0;">과제별 비용 및 예산을 관리합니다.</p></div>
-    </div>
+    <!-- 뷰: Partners - 기관 목록 / 벤더 목록 -->
     <div id="view-partner" class="view-page">
       <div class="page-header">
-        <div><div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 파트너 관리</div><h1 class="page-title">파트너 관리</h1></div>
+        <div><div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Partners &gt; <span id="partner-breadcrumb-sub">기관 관리</span></div><h1 class="page-title" id="partner-page-title">기관 관리</h1></div>
       </div>
-      <div class="card"><p style="color: var(--text-muted); margin:0;">파트너(협력기관) 정보를 관리합니다.</p></div>
+      <nav class="closed-subnav">
+        <a href="#partner/institution" id="partner-tab-institution" data-partner-tab="institution" class="active">기관 목록</a>
+        <a href="#partner/vendor" id="partner-tab-vendor" data-partner-tab="vendor">벤더 목록</a>
+      </nav>
+      <div id="partner-institution-wrap">
+        <div class="card">
+          <div class="vendor-search-panel" style="margin-bottom: 16px;">
+            <div class="form-row">
+              <label style="flex: 0 0 80px;">기관명</label>
+              <input type="text" class="form-control" placeholder="기관명" style="max-width: 200px;">
+              <label style="flex: 0 0 80px; margin-left: 16px;">국가</label>
+              <select class="form-control" style="max-width: 160px;"><option value="">전체</option><option value="KR">Korea, South</option><option value="CN">China</option><option value="ID">Indonesia</option></select>
+              <label style="flex: 0 0 80px; margin-left: 16px;">주소</label>
+              <input type="text" class="form-control" placeholder="주소" style="flex: 1; min-width: 200px;">
+            </div>
+            <div class="vendor-search-actions" style="margin-top: 12px;">
+              <button type="button" class="btn btn-primary">&#128269; 검색</button>
+              <button type="button" class="btn btn-outline">초기화</button>
+            </div>
+          </div>
+          <div class="list-actions" style="margin-bottom: 12px;"><button type="button" class="btn btn-primary">+ 등록</button></div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>No.<span class="sort-icon">&#8645;</span></th><th>기관명<span class="sort-icon">&#8645;</span></th><th>국가<span class="sort-icon">&#8645;</span></th><th>주소<span class="sort-icon">&#8645;</span></th><th>대표 연락처<span class="sort-icon">&#8645;</span></th><th>비고<span class="sort-icon">&#8645;</span></th></tr>
+              </thead>
+              <tbody>
+                <tr><td>258</td><td><a href="#" style="color:var(--primary);">Shanghai Xuhui Central Hospital</a></td><td>China</td><td>Shanghai Xuhui District...</td><td></td><td></td></tr>
+                <tr><td>257</td><td><a href="#" style="color:var(--primary);">Hebei PetroChina Central Hospital</a></td><td>China</td><td>Hebei Province...</td><td></td><td></td></tr>
+                <tr><td>256</td><td><a href="#" style="color:var(--primary);">Beijing Union Medical College Hospital</a></td><td>China</td><td>Beijing Dongcheng...</td><td></td><td></td></tr>
+                <tr><td>255</td><td><a href="#" style="color:var(--primary);">Guangdong General Hospital</a></td><td>China</td><td>Guangzhou...</td><td></td><td></td></tr>
+                <tr><td>254</td><td><a href="#" style="color:var(--primary);">Sichuan Provincial People's Hospital</a></td><td>China</td><td>Chengdu...</td><td></td><td></td></tr>
+                <tr><td>253</td><td><a href="#" style="color:var(--primary);">Zhejiang University Hospital</a></td><td>China</td><td>Hangzhou...</td><td></td><td></td></tr>
+                <tr><td>252</td><td><a href="#" style="color:var(--primary);">Shanghai Jiao Tong University Affiliated Hospital</a></td><td>China</td><td>Shanghai...</td><td></td><td></td></tr>
+                <tr><td>251</td><td><a href="#" style="color:var(--primary);">Jiangsu Province Hospital</a></td><td>China</td><td>Nanjing...</td><td></td><td></td></tr>
+                <tr><td>250</td><td><a href="#" style="color:var(--primary);">Fujian Medical University Union Hospital</a></td><td>China</td><td>Fuzhou...</td><td></td><td></td></tr>
+                <tr><td>249</td><td><a href="#" style="color:var(--primary);">Hunan Xiangya Hospital</a></td><td>China</td><td>Changsha...</td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="site-pagination" style="margin-top: 12px;"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">2</button><button type="button">3</button><span>...</span><button type="button">26</button><button type="button">&#8594;</button></div>
+        </div>
+      </div>
+      <div id="partner-vendor-wrap" style="display:none;">
+        <div class="card">
+          <div class="vendor-search-panel" style="margin-bottom: 16px;">
+            <div class="form-row">
+              <label style="flex: 0 0 80px;">구분</label>
+              <select class="form-control" style="max-width: 200px;"><option value="">전체</option><option value="CO">CO (Clinical Operation)</option><option value="STAT">STAT</option><option value="DM">DM</option><option value="PV">PV</option><option value="QM">QM</option><option value="MW">MW</option><option value="Audit">Audit</option><option value="기타">기타</option></select>
+              <label style="flex: 0 0 80px; margin-left: 16px;">Vendor명</label>
+              <input type="text" class="form-control" placeholder="Vendor명" style="max-width: 200px;">
+              <label style="flex: 0 0 80px; margin-left: 16px;">국가</label>
+              <select class="form-control" style="max-width: 160px;"><option value="">전체</option><option value="KR">Korea, South</option><option value="CN">China</option><option value="ID">Indonesia</option></select>
+              <label style="flex: 0 0 80px; margin-left: 16px;">주소</label>
+              <input type="text" class="form-control" placeholder="주소" style="flex: 1; min-width: 200px;">
+            </div>
+            <div class="vendor-search-actions" style="margin-top: 12px;">
+              <button type="button" class="btn btn-primary">&#128269; 검색</button>
+              <button type="button" class="btn btn-outline">초기화</button>
+            </div>
+          </div>
+          <div class="list-actions" style="margin-bottom: 12px;"><button type="button" class="btn btn-primary">+ 등록</button></div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>No.<span class="sort-icon">&#8645;</span></th><th>구분<span class="sort-icon">&#8645;</span></th><th>Vendor명<span class="sort-icon">&#8645;</span></th><th>국가<span class="sort-icon">&#8645;</span></th><th>주소<span class="sort-icon">&#8645;</span></th><th>대표 연락처<span class="sort-icon">&#8645;</span></th><th>비고<span class="sort-icon">&#8645;</span></th></tr>
+              </thead>
+              <tbody>
+                <tr><td>127</td><td>기타</td><td><a href="#" style="color:var(--primary);">이대목동병원</a></td><td>Korea, South</td><td>서울 동대문구...</td><td>010-7183-5514</td><td></td></tr>
+                <tr><td>126</td><td>QM (Quality Mana...)</td><td><a href="#" style="color:var(--primary);">세브란스병원</a></td><td>Korea, South</td><td>서울 서초구...</td><td></td><td></td></tr>
+                <tr><td>125</td><td>Audit</td><td><a href="#" style="color:var(--primary);">서울아산병원</a></td><td>Korea, South</td><td>서울 송파구...</td><td></td><td></td></tr>
+                <tr><td>124</td><td>MW (Medical writi...)</td><td><a href="#" style="color:var(--primary);">Yangtze River Pharma...</a></td><td>China</td><td>Jiangyin, Jiangsu...</td><td></td><td></td></tr>
+                <tr><td>123</td><td>PV (Pharmacovigil...)</td><td><a href="#" style="color:var(--primary);">Indonesia Clinical Research</a></td><td>Indonesia</td><td>JL. RS. Fatmawati...</td><td>+6221 7695513</td><td></td></tr>
+                <tr><td>122</td><td>DM</td><td><a href="#" style="color:var(--primary);">DreamCIS</a></td><td>Korea, South</td><td>서울 금천구 디지털로...</td><td></td><td>중국 파트너사</td></tr>
+                <tr><td>121</td><td>CO (Clinical Operation)</td><td><a href="#" style="color:var(--primary);">나노스페이스</a></td><td>Korea, South</td><td>엔지니어링 오피스 20...</td><td></td><td></td></tr>
+                <tr><td>120</td><td>STAT (Statistics)</td><td><a href="#" style="color:var(--primary);">LSK Global</a></td><td>Korea, South</td><td>서울 강남구...</td><td></td><td></td></tr>
+                <tr><td>119</td><td>DM</td><td><a href="#" style="color:var(--primary);">CRO A</a></td><td>China</td><td>Shanghai...</td><td></td><td></td></tr>
+                <tr><td>118</td><td>CO</td><td><a href="#" style="color:var(--primary);">Novotech</a></td><td>Australia</td><td>Sydney...</td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="site-pagination" style="margin-top: 12px;"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">2</button><button type="button">3</button><span>...</span><button type="button">13</button><button type="button">&#8594;</button></div>
+        </div>
+      </div>
     </div>
     <div id="view-approval" class="view-page">
       <div class="page-header">
-        <div><div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 결재 관리</div><h1 class="page-title">결재 관리</h1></div>
+        <div><div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Approvals &gt; <span id="approval-breadcrumb-sub">결재요청함</span></div><h1 class="page-title" id="approval-page-title">결재요청함</h1></div>
       </div>
-      <div class="card"><p style="color: var(--text-muted); margin:0;">결재 문서 및 결재 라인을 관리합니다.</p></div>
+      <nav class="closed-subnav">
+        <a href="#approval/request" id="approval-tab-request" data-approval-tab="request" class="active">결재요청</a>
+        <a href="#approval/process" id="approval-tab-process" data-approval-tab="process">결재처리</a>
+      </nav>
+      <div id="approval-request-wrap">
+        <div class="card">
+          <div class="closed-subnav" style="margin-bottom: 16px; border-bottom:none; gap:8px;">
+            <a href="#" class="active">결재 진행 <span style="margin-left:4px;color:#EF4444;font-weight:600;">0</span></a>
+            <a href="#">결재 완료 <span style="margin-left:4px;color:#9CA3AF;font-weight:600;">0</span></a>
+          </div>
+          <div class="vendor-search-panel" style="margin-bottom: 16px;">
+            <div class="form-row" style="flex-wrap:wrap; gap:12px;">
+              <select class="form-control" style="max-width:140px"><option>구분</option><option>임상</option><option>기타</option></select>
+              <input type="text" class="form-control" placeholder="프로젝트명" style="flex:1; min-width:180px;">
+              <input type="text" class="form-control" placeholder="요청자" style="max-width:160px;">
+              <input type="date" class="form-control" style="max-width:170px;">
+              <input type="date" class="form-control" style="max-width:170px;">
+              <select class="form-control" style="max-width:120px"><option>Phase</option><option>1</option><option>2</option><option>3</option></select>
+              <select class="form-control" style="max-width:140px"><option>진행 상태</option><option>진행중</option><option>완료</option></select>
+              <button type="button" class="btn btn-primary">&#128269; 검색</button>
+              <button type="button" class="btn btn-outline">초기화</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>No.</th><th>구분</th><th>프로젝트명</th><th>Phase</th><th>요청자</th><th>요청일자</th></tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted)">일치하는 레코드 없음</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="site-pagination" style="margin-top: 12px;"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">&#8594;</button></div>
+        </div>
+      </div>
+      <div id="approval-process-wrap" style="display:none;">
+        <div class="card">
+          <div class="closed-subnav" style="margin-bottom: 16px; border-bottom:none; gap:8px;">
+            <a href="#" class="active">결재 대기 <span style="margin-left:4px;color:#EF4444;font-weight:600;">0</span></a>
+            <a href="#">결재 완료 <span style="margin-left:4px;color:#9CA3AF;font-weight:600;">0</span></a>
+          </div>
+          <div class="vendor-search-panel" style="margin-bottom: 16px;">
+            <div class="form-row" style="flex-wrap:wrap; gap:12px;">
+              <select class="form-control" style="max-width:140px"><option>구분</option><option>임상</option><option>기타</option></select>
+              <input type="text" class="form-control" placeholder="프로젝트명" style="flex:1; min-width:180px;">
+              <input type="text" class="form-control" placeholder="요청자" style="max-width:160px;">
+              <input type="date" class="form-control" style="max-width:170px;">
+              <input type="date" class="form-control" style="max-width:170px;">
+              <select class="form-control" style="max-width:120px"><option>Phase</option><option>1</option><option>2</option><option>3</option></select>
+              <select class="form-control" style="max-width:140px"><option>진행 상태</option><option>진행중</option><option>완료</option></select>
+              <button type="button" class="btn btn-primary">&#128269; 검색</button>
+              <button type="button" class="btn btn-outline">초기화</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>No.</th><th>구분</th><th>프로젝트명</th><th>Phase</th><th>요청자</th><th>요청일자</th></tr>
+              </thead>
+              <tbody>
+                <tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted)">일치하는 레코드 없음</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="site-pagination" style="margin-top: 12px;"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">&#8594;</button></div>
+        </div>
+      </div>
     </div>
     <div id="view-system" class="view-page">
       <div class="page-header">
-        <div><div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 시스템 관리</div><h1 class="page-title">시스템 관리</h1></div>
+        <div><div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Admin</div><h1 class="page-title">Admin</h1></div>
       </div>
       <div class="card"><p style="color: var(--text-muted); margin:0;">사용자, 권한, 코드 등 시스템 설정을 관리합니다.</p></div>
     </div>
@@ -1052,32 +1271,89 @@
       </div>
     </div>
 
-    <!-- 뷰: 종료과제 목록 -->
+    <!-- 뷰: 종료과제 (목록 + 대시보드) -->
     <div id="view-closed" class="view-page">
       <div class="page-header">
         <div>
-          <div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; 종료과제</div>
-          <h1 class="page-title">종료과제</h1>
+          <div class="breadcrumb"><a href="#dashboard">Dashboard</a> > Completed Studies</div>
+          <h1 class="page-title">Completed Studies</h1>
         </div>
       </div>
-      <div class="card">
-        <p style="margin:0 0 16px 0; color: var(--text-muted);">종료된 과제 목록입니다. 상세를 선택하면 과제 종료 후 데이터를 추가·조회할 수 있습니다.</p>
-        <div class="table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr><th>품목/제품</th><th>과제명</th><th>Phase</th><th>종료일</th><th></th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>엔블로</td><td>엔블로 DWP16001 3상 (종료)</td><td>3상</td><td>2024-12-31</td>
-                <td><a href="#closed/closed-01" class="btn btn-outline">상세</a></td>
-              </tr>
-              <tr>
-                <td>엔블로</td><td>엔블로 단일제 2상 (종료)</td><td>2상</td><td>2024-06-30</td>
-                <td><a href="#closed/closed-02" class="btn btn-outline">상세</a></td>
-              </tr>
-            </tbody>
-          </table>
+      <nav class="closed-subnav">
+        <a href="#closed" id="closed-tab-list" class="active">Completed Studies List</a>
+        <a href="#closed/dashboard" id="closed-tab-dashboard">Completed Studies Dashboard</a>
+      </nav>
+      <div id="closed-list-wrap">
+        <div class="card">
+          <p style="margin:0 0 16px 0; color: var(--text-muted);">종료된 과제 목록입니다. 상세를 선택하면 과제 종료 후 데이터를 추가·조회할 수 있습니다.</p>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr><th>품목/제품</th><th>과제명</th><th>Phase</th><th>종료일</th><th></th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>엔블로</td><td>엔블로 DWP16001 3상 (종료)</td><td>3상</td><td>2024-12-31</td>
+                  <td><a href="#closed/closed-01" class="btn btn-outline">상세</a></td>
+                </tr>
+                <tr>
+                  <td>엔블로</td><td>엔블로 단일제 2상 (종료)</td><td>2상</td><td>2024-06-30</td>
+                  <td><a href="#closed/closed-02" class="btn btn-outline">상세</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="closed-dashboard-wrap" style="display:none;">
+        <div class="closed-dashboard-filter">
+          <label>TA</label><select id="closed-filter-ta"><option value="">전체</option><option value="Endocrine">Endocrine</option><option value="GI">GI</option><option value="CNS">CNS</option><option value="Oncology">Oncology</option><option value="Infectious disease">Infectious disease</option></select>
+          <label>Phase</label><select id="closed-filter-phase"><option value="">전체</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select>
+          <label>Region</label><select id="closed-filter-region"><option value="">전체</option><option value="Domestic">Domestic</option><option value="Global">Global</option></select>
+          <label>CRO</label><select id="closed-filter-cro"><option value="">전체</option><option value="CRO A">CRO A</option><option value="CRO B">CRO B</option><option value="CRO C">CRO C</option></select>
+          <label>Year</label><select id="closed-filter-year"><option value="">전체</option><option value="2024">2024</option><option value="2025">2025</option></select>
+          <button type="button" class="btn btn-primary">적용</button>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>Study Success Metrics</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>Phase success rate</h4><div class="chart-wrap"><canvas id="closed-chart-phase-success"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>TA success rate</h4><div class="chart-wrap"><canvas id="closed-chart-ta-success"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Success Rate (TA × Phase)</h4><div class="chart-wrap"><canvas id="closed-chart-ta-phase-success"></canvas></div></div>
+          </div>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>Recruitment Performance</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>TA recruitment duration</h4><div class="chart-wrap"><canvas id="closed-chart-ta-enrollment"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Recruitment Difficulty by Region</h4><div class="chart-wrap"><canvas id="closed-chart-region-enrollment"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Recruitment Benchmark (TA vs 전체 평균)</h4><div class="chart-wrap"><canvas id="closed-chart-recruitment-benchmark"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Recruitment success rate (Actual/Planned)</h4><div class="chart-wrap"><canvas id="closed-chart-enrollment-rate"></canvas></div><div class="closed-dashboard-gauge-value" id="closed-gauge-enrollment">92%</div></div>
+          </div>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>CRO Performance</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>CRO Performance by Scope</h4><div class="chart-wrap"><canvas id="closed-chart-cro-by-scope"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>CRO Scope Distribution</h4><div class="chart-wrap"><canvas id="closed-chart-cro-scope-distribution"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Vendor Score vs Timeline Performance</h4><div class="chart-wrap"><canvas id="closed-chart-cro-score-vs-timeline"></canvas></div></div>
+          </div>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>Study Timeline</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>Phase study duration</h4><div class="chart-wrap"><canvas id="closed-chart-phase-duration"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Milestone Duration</h4><div class="chart-wrap"><canvas id="closed-chart-milestone-duration"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>TA study duration</h4><div class="chart-wrap"><canvas id="closed-chart-ta-duration"></canvas></div></div>
+          </div>
+        </div>
+        <div class="closed-dashboard-section">
+          <h3>Operational Insights</h3>
+          <div class="closed-dashboard-charts">
+            <div class="closed-dashboard-chart-card"><h4>Major issue distribution</h4><div class="chart-wrap"><canvas id="closed-chart-major-issue"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Issue Trend</h4><div class="chart-wrap"><canvas id="closed-chart-issue-trend"></canvas></div></div>
+            <div class="closed-dashboard-chart-card"><h4>Lessons learned distribution</h4><div class="chart-wrap"><canvas id="closed-chart-lessons"></canvas></div></div>
+          </div>
         </div>
       </div>
     </div>
@@ -1086,7 +1362,7 @@
     <div id="view-closed-project" class="view-page">
       <div class="page-header">
         <div>
-          <div class="breadcrumb"><a href="#dashboard">대시보드</a> &gt; <a href="#closed">종료과제</a> &gt; <span id="closedTabLabel">Study Info</span></div>
+          <div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; <a href="#closed">Completed Studies</a> &gt; <span id="closedTabLabel">Study Info</span></div>
           <h1 class="page-title" id="closedProjectTitle">엔블로 DWP16001 3상 (종료)</h1>
         </div>
       </div>
@@ -1102,7 +1378,7 @@
           <a href="#" data-closed-tab="operational">Operational Performance</a>
         </aside>
         <div class="project-content">
-          <div id="closed-panel-info" class="closed-panel">
+          <div id="closed-panel-info" class="closed-panel closed-panel-readonly">
             <div class="card">
               <h2 class="section-title">기본 정보</h2>
               <div class="form-row"><label>Protocol No.</label><input type="text" class="form-control" value="DW_DWP16001308"></div>
@@ -1165,7 +1441,7 @@
               </div>
             </div>
           </div>
-          <div id="closed-panel-budget" class="closed-panel" style="display:none;">
+          <div id="closed-panel-budget" class="closed-panel closed-panel-readonly" style="display:none;">
             <div class="card">
               <h2 class="card-title">Budget</h2>
               <p style="color: var(--text-muted); margin-bottom: 16px;">과제별 예산 및 집행 현황을 관리합니다.</p>
@@ -1176,10 +1452,10 @@
               <div class="budget-sub-panel" data-budget-panel="reconciliation"><h3 class="sub-section-title">마감 관리 (Cost Reconciliation)</h3><div class="reconciliation-month-table"><div class="budget-filter-row" style="justify-content:space-between"><select class="form-control" style="max-width:120px"><option>전체 보기</option></select><div style="display:flex;align-items:center;gap:8px"><label>기준 연도</label><select class="form-control" style="max-width:100px"><option>2006</option></select></div></div><div class="table-wrap" style="margin-top:12px"><table class="data-table"><thead><tr><th>구분</th><th>1월</th><th>2월</th><th>3월</th><th>4월</th><th>5월</th><th>6월</th><th>7월</th><th>8월</th><th>9월</th><th>10월</th><th>11월</th><th>12월</th></tr></thead><tbody><tr><td>총 금액</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>상태</td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td><td><span class="status-badge ongoing">완료</span></td></tr></tbody></table></div></div><div class="list-actions" style="margin-bottom:12px"><input type="text" class="form-control" placeholder="YYYY-MM" style="max-width:100px"><button type="button" class="btn btn-primary">마감하기</button></div><div class="reconciliation-tabs"><a href="#" data-recon-tab="before" class="active">마감 전</a><a href="#" data-recon-tab="done">마감 완료</a></div><div class="table-wrap"><table class="data-table"><thead><tr><th>No.</th><th>실행월</th><th>예산명</th><th>담당자</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center;padding:40px;color:var(--text-muted)">해당하는 데이터가 없습니다.</td></tr></tbody></table></div><div class="site-pagination"><button type="button">&#8592;</button><span class="page-num">1</span><button type="button">&#8594;</button></div></div>
             </div>
           </div>
-          <div id="closed-panel-site" class="closed-panel" style="display:none;">
+          <div id="closed-panel-site" class="closed-panel closed-panel-readonly" style="display:none;">
             <div class="card"><h2 class="card-title">Sites</h2><p style="color: var(--text-muted);">과제 참여 기관(Site) 목록 및 현황을 관리합니다.</p></div>
           </div>
-          <div id="closed-panel-vendor" class="closed-panel" style="display:none;">
+          <div id="closed-panel-vendor" class="closed-panel closed-panel-readonly" style="display:none;">
             <div class="card">
               <h2 class="card-title">Service Provider</h2>
               <p style="color: var(--text-muted); margin-bottom: 16px;">과제 관련 Vendor(업체) 계약 및 현황을 관리합니다. 벤더명을 클릭하면 상세 평가표를 입력·조회할 수 있습니다.</p>
@@ -1263,7 +1539,7 @@
               <p style="color: var(--text-muted); font-size: 13px; margin-top: 12px;">평가 항목 (1~10점): Quality(deliverable quality), Timeline(일정 준수), Communication, Issue management(issue 대응), Expertise(전문성), Sponsor satisfaction</p>
             </div>
           </div>
-          <div id="closed-panel-milestone" class="closed-panel" style="display:none;">
+          <div id="closed-panel-milestone" class="closed-panel closed-panel-readonly" style="display:none;">
             <div class="card">
               <h2 class="card-title">Milestones</h2>
               <p style="color: var(--text-muted); margin-bottom: 16px;">과제 일정 및 마일스톤을 관리합니다.</p>
@@ -1291,7 +1567,7 @@
               </div>
             </div>
           </div>
-          <div id="closed-panel-studyteam" class="closed-panel" style="display:none;">
+          <div id="closed-panel-studyteam" class="closed-panel closed-panel-readonly" style="display:none;">
             <div class="card">
               <h2 class="card-title">Study Team Member</h2>
               <p style="color: var(--text-muted); margin-bottom: 16px;">과제 참여 스터디팀 구성원을 관리합니다.</p>
@@ -1726,11 +2002,17 @@ function closeVendorEvalModal() {
     { id: 'enblo-insulin', tag: '엔블로', name: '엔블로 인슐린 3상', status: 'before', pct: 0 }
   ];
   var charts = {};
+  var CHART_PALETTE = ['#2563EB', '#14B8A6', '#F59E0B', '#64748B', '#10B981', '#6366F1', '#8B5CF6', '#0EA5E9'];
+  if (typeof Chart !== 'undefined') {
+    Chart.defaults.color = '#64748B';
+    Chart.defaults.borderColor = '#E5E7EB';
+  }
 
   function getRole() { return localStorage.getItem(ROLE_KEY) || 'user'; }
   function setRole(role) {
     localStorage.setItem(ROLE_KEY, role);
-    document.querySelectorAll('#roleSelect, #roleSelectHeader').forEach(function(s) { if (s) s.value = role; });
+    var roleEl = document.getElementById('roleSelect');
+    if (roleEl) roleEl.value = role;
     if (currentPage === 'dashboard') renderDashboard();
     updateNavActive();
   }
@@ -1739,29 +2021,62 @@ function closeVendorEvalModal() {
     var h = (window.location.hash || '#dashboard').slice(1);
     if (h.indexOf('project/') === 0) {
       var parts = h.split('/');
-      return { page: 'project', projectId: parts[1] || 'enblo-gem', tab: parts[2] || 'info', dashboardSub: null };
+      return { page: 'project', projectId: parts[1] || 'enblo-gem', tab: parts[2] || 'info', dashboardSub: null, closedViewSub: null };
     }
+    if (h === 'closed') return { page: 'closed', projectId: null, tab: null, dashboardSub: null, closedViewSub: 'list' };
+    if (h === 'closed/dashboard') return { page: 'closed', projectId: null, tab: null, dashboardSub: null, closedViewSub: 'dashboard' };
     if (h.indexOf('closed/') === 0) {
       var parts = h.split('/');
-      return { page: 'closed-project', projectId: parts[1] || 'closed-01', tab: parts[2] || 'info', dashboardSub: null };
+      return { page: 'closed-project', projectId: parts[1] || 'closed-01', tab: parts[2] || 'info', dashboardSub: null, closedViewSub: null };
     }
     if (h === 'dashboard' || h.indexOf('dashboard/') === 0) {
       var sub = h === 'dashboard' ? null : h.split('/')[1];
-      return { page: 'dashboard', projectId: null, tab: 'info', dashboardSub: sub || 'overall' };
+      return { page: 'dashboard', projectId: null, tab: 'info', dashboardSub: sub || 'overall', closedViewSub: null };
     }
-    return { page: h || 'dashboard', projectId: null, tab: 'info', dashboardSub: 'overall' };
+    if (h === 'cost') return { page: 'dashboard', projectId: null, tab: 'info', dashboardSub: 'overall', closedViewSub: null };
+    if (h === 'partner' || h.indexOf('partner/') === 0) {
+      var psub = h === 'partner' ? 'institution' : (h.split('/')[1] || 'institution');
+      return { page: 'partner', projectId: null, tab: null, dashboardSub: null, closedViewSub: null, partnerSub: psub };
+    }
+    if (h === 'approval' || h.indexOf('approval/') === 0) {
+      var asub = h === 'approval' ? 'request' : (h.split('/')[1] || 'request');
+      return { page: 'approval', projectId: null, tab: null, dashboardSub: null, closedViewSub: null, partnerSub: null, approvalSub: asub };
+    }
+    return { page: h || 'dashboard', projectId: null, tab: 'info', dashboardSub: 'overall', closedViewSub: null };
   }
 
   var currentPage = 'dashboard';
   var currentProjectId = 'enblo-gem';
   var currentProjectTab = 'info';
   var currentDashboardSub = 'overall';
+  var currentClosedViewSub = 'list';
+  var currentPartnerSub = 'institution';
+  var currentApprovalSub = 'request';
 
-  function showPage(page, projectId, tab, dashboardSub) {
+  function setClosedProjectPanelsReadonly() {
+    var panelIds = ['info', 'budget', 'site', 'vendor', 'milestone', 'studyteam'];
+    panelIds.forEach(function(id) {
+      var panel = document.getElementById('closed-panel-' + id);
+      if (!panel) return;
+      panel.querySelectorAll('input').forEach(function(el) {
+        var t = (el.type || 'text').toLowerCase();
+        if (t === 'button' || t === 'submit' || t === 'reset' || t === 'image' || t === 'checkbox' || t === 'radio') el.disabled = true;
+        else { el.readOnly = true; el.disabled = false; }
+      });
+      panel.querySelectorAll('textarea').forEach(function(el) { el.readOnly = true; });
+      panel.querySelectorAll('select').forEach(function(el) { el.disabled = true; });
+      panel.querySelectorAll('button').forEach(function(el) { el.disabled = true; });
+    });
+  }
+
+  function showPage(page, projectId, tab, dashboardSub, closedViewSub, partnerSub, approvalSub) {
     currentPage = page;
     currentProjectId = projectId || currentProjectId;
     currentProjectTab = tab || 'info';
     currentDashboardSub = dashboardSub !== undefined && dashboardSub !== null ? dashboardSub : (page === 'dashboard' ? 'overall' : currentDashboardSub);
+    currentClosedViewSub = closedViewSub !== undefined && closedViewSub !== null ? closedViewSub : (page === 'closed' ? 'list' : currentClosedViewSub);
+    currentPartnerSub = partnerSub !== undefined && partnerSub !== null ? partnerSub : (page === 'partner' ? 'institution' : currentPartnerSub);
+    currentApprovalSub = approvalSub !== undefined && approvalSub !== null ? approvalSub : (page === 'approval' ? 'request' : currentApprovalSub);
     document.querySelectorAll('.view-page').forEach(function(el) { el.classList.remove('active'); });
     var view = document.getElementById('view-' + page);
     if (view) view.classList.add('active');
@@ -1769,8 +2084,6 @@ function closeVendorEvalModal() {
 
     if (page === 'dashboard') {
       renderDashboard(currentDashboardSub);
-      var header = document.getElementById('roleSelectHeader');
-      if (header) header.style.display = '';
     } else if (page === 'project') {
       document.getElementById('projectTitle').textContent = PROJECT_TITLES[currentProjectId] || '';
       document.getElementById('projectTabLabel').textContent = TAB_LABELS[currentProjectTab] || 'Study Info';
@@ -1796,6 +2109,41 @@ function closeVendorEvalModal() {
       document.querySelectorAll('.closed-panel').forEach(function(p) { p.style.display = 'none'; });
       var closedPanel = document.getElementById('closed-panel-' + currentProjectTab);
       if (closedPanel) closedPanel.style.display = 'block';
+      setClosedProjectPanelsReadonly();
+    } else if (page === 'closed') {
+      var listWrap = document.getElementById('closed-list-wrap');
+      var dashWrap = document.getElementById('closed-dashboard-wrap');
+      var tabList = document.getElementById('closed-tab-list');
+      var tabDash = document.getElementById('closed-tab-dashboard');
+      if (listWrap) listWrap.style.display = currentClosedViewSub === 'list' ? 'block' : 'none';
+      if (dashWrap) dashWrap.style.display = currentClosedViewSub === 'dashboard' ? 'block' : 'none';
+      if (tabList) tabList.classList.toggle('active', currentClosedViewSub === 'list');
+      if (tabDash) tabDash.classList.toggle('active', currentClosedViewSub === 'dashboard');
+      if (currentClosedViewSub === 'dashboard') renderClosedDashboard();
+    } else if (page === 'partner') {
+      var partnerTitle = document.getElementById('partner-page-title');
+      var partnerBreadcrumb = document.getElementById('partner-breadcrumb-sub');
+      if (partnerTitle) partnerTitle.textContent = currentPartnerSub === 'institution' ? '기관 관리' : 'Vendor 관리';
+      if (partnerBreadcrumb) partnerBreadcrumb.textContent = currentPartnerSub === 'institution' ? '기관 관리' : 'Vendor 관리';
+      var instWrap = document.getElementById('partner-institution-wrap');
+      var vendorWrap = document.getElementById('partner-vendor-wrap');
+      if (instWrap) instWrap.style.display = currentPartnerSub === 'institution' ? 'block' : 'none';
+      if (vendorWrap) vendorWrap.style.display = currentPartnerSub === 'vendor' ? 'block' : 'none';
+      document.querySelectorAll('[data-partner-tab]').forEach(function(a) {
+        a.classList.toggle('active', a.getAttribute('data-partner-tab') === currentPartnerSub);
+      });
+    } else if (page === 'approval') {
+      var approvalTitle = document.getElementById('approval-page-title');
+      var approvalBreadcrumb = document.getElementById('approval-breadcrumb-sub');
+      if (approvalTitle) approvalTitle.textContent = currentApprovalSub === 'request' ? '결재요청함' : '결재처리함';
+      if (approvalBreadcrumb) approvalBreadcrumb.textContent = currentApprovalSub === 'request' ? '결재요청함' : '결재처리함';
+      var reqWrap = document.getElementById('approval-request-wrap');
+      var procWrap = document.getElementById('approval-process-wrap');
+      if (reqWrap) reqWrap.style.display = currentApprovalSub === 'request' ? 'block' : 'none';
+      if (procWrap) procWrap.style.display = currentApprovalSub === 'process' ? 'block' : 'none';
+      document.querySelectorAll('[data-approval-tab]').forEach(function(a) {
+        a.classList.toggle('active', a.getAttribute('data-approval-tab') === currentApprovalSub);
+      });
     }
     updateNavActive();
   }
@@ -1821,18 +2169,18 @@ function closeVendorEvalModal() {
     var breadcrumb = document.getElementById('dashboard-breadcrumb');
     var titleEl = document.getElementById('dashboard-main-title');
     if (subnavWrap) subnavWrap.style.display = role === 'admin' ? 'flex' : 'none';
-    if (breadcrumb) breadcrumb.textContent = '대시보드' + (role === 'admin' && sub === 'project' ? ' &gt; 과제 대시보드' : role === 'admin' ? ' &gt; 종합 대시보드' : ' &gt; 과제 대시보드');
-    if (titleEl) titleEl.textContent = role === 'admin' ? (sub === 'overall' ? 'DW Clinical Overview Dashboard' : '품목별 프로젝트 현황') : '프로젝트 대시보드 - 사용자';
+    if (breadcrumb) breadcrumb.textContent = 'Dashboard' + (role === 'admin' && sub === 'project' ? ' > Study Dashboard' : role === 'admin' && sub === 'closed' ? ' > Completed Studies Dashboard' : role === 'admin' ? ' > Overview Dashboard' : ' > Study Dashboard');
+    if (titleEl) titleEl.textContent = role === 'admin' ? (sub === 'overall' ? 'DW Clinical Overview Dashboard' : sub === 'closed' ? 'Completed Studies Dashboard' : '품목별 프로젝트 현황') : '프로젝트 대시보드 - 사용자';
     document.getElementById('dashboard-admin-overall').style.display = role === 'admin' && sub === 'overall' ? 'block' : 'none';
     document.getElementById('dashboard-admin-project').style.display = role === 'admin' && sub === 'project' ? 'block' : 'none';
+    document.getElementById('dashboard-admin-closed').style.display = role === 'admin' && sub === 'closed' ? 'block' : 'none';
     document.getElementById('dashboard-user-project').style.display = role === 'user' ? 'block' : 'none';
-    document.querySelectorAll('#dashboard-tab-overall, #dashboard-tab-project').forEach(function(a) {
-      if (a) a.classList.toggle('active', (a.id === 'dashboard-tab-overall' && sub === 'overall') || (a.id === 'dashboard-tab-project' && sub === 'project'));
+    document.querySelectorAll('#dashboard-tab-overall, #dashboard-tab-project, #dashboard-tab-closed').forEach(function(a) {
+      if (a) a.classList.toggle('active', (a.id === 'dashboard-tab-overall' && sub === 'overall') || (a.id === 'dashboard-tab-project' && sub === 'project') || (a.id === 'dashboard-tab-closed' && sub === 'closed'));
     });
-    var header = document.getElementById('roleSelectHeader');
-    if (header) header.style.display = role === 'user' ? '' : 'none';
     if (role === 'admin' && sub === 'overall') renderCharts();
     if (role === 'admin' && sub === 'project') renderAdminProjectCards();
+    if (role === 'admin' && sub === 'closed') renderDashboardClosedCharts();
     if (role === 'user') renderUserProjectCards();
   }
 
@@ -1883,7 +2231,7 @@ function closeVendorEvalModal() {
   }
 
   function renderCharts() {
-    var colors = ['rgba(13,148,136,0.78)', 'rgba(249,115,22,0.78)', 'rgba(234,179,8,0.78)', 'rgba(139,92,246,0.78)', 'rgba(236,72,153,0.78)', 'rgba(14,165,233,0.78)', 'rgba(34,197,94,0.78)', 'rgba(168,85,247,0.78)'];
+    var colors = CHART_PALETTE;
     var pieOpts = {
       responsive: true,
       maintainAspectRatio: false,
@@ -1901,19 +2249,19 @@ function closeVendorEvalModal() {
     };
     if (charts.product) charts.product.destroy();
     if (document.getElementById('chartProduct')) {
-      charts.product = new Chart(document.getElementById('chartProduct'), { type: 'pie', data: { labels: ['Enblozem', 'Fexuprazan', 'V-Actin', 'Others'], datasets: [{ data: [25, 24, 16, 18], backgroundColor: colors }] }, options: pieOpts });
+      charts.product = new Chart(document.getElementById('chartProduct'), { type: 'pie', data: { labels: ['Enblozem', 'Fexuprazan', 'V-Actin', 'Others'], datasets: [{ label: '제품별', data: [25, 24, 16, 18], backgroundColor: colors }] }, options: pieOpts });
     }
     if (charts.phase) charts.phase.destroy();
     if (document.getElementById('chartPhase')) {
-      charts.phase = new Chart(document.getElementById('chartPhase'), { type: 'pie', data: { labels: ['Phase 1', 'Phase 2', 'Phase 3', 'NDA'], datasets: [{ data: [18, 28, 14, 9], backgroundColor: colors }] }, options: pieOpts });
+      charts.phase = new Chart(document.getElementById('chartPhase'), { type: 'pie', data: { labels: ['Phase 1', 'Phase 2', 'Phase 3', 'NDA'], datasets: [{ label: '단계별', data: [18, 28, 14, 9], backgroundColor: colors }] }, options: pieOpts });
     }
     if (charts.region) charts.region.destroy();
     if (document.getElementById('chartRegion')) {
-      charts.region = new Chart(document.getElementById('chartRegion'), { type: 'pie', data: { labels: ['Korea', 'China', 'Indonesia', 'Other Global'], datasets: [{ data: [50, 10, 35, 5], backgroundColor: colors.slice(0, 4) }] }, options: pieOpts });
+      charts.region = new Chart(document.getElementById('chartRegion'), { type: 'pie', data: { labels: ['Korea', 'China', 'Indonesia', 'Other Global'], datasets: [{ label: '국내/외', data: [50, 10, 35, 5], backgroundColor: colors.slice(0, 4) }] }, options: pieOpts });
     }
     if (charts.disease) charts.disease.destroy();
     if (document.getElementById('chartDisease')) {
-      charts.disease = new Chart(document.getElementById('chartDisease'), { type: 'pie', data: { labels: ['Diabetes', 'Gastric', 'Respiratory', 'Others'], datasets: [{ data: [19.2, 13.3, 20, 13], backgroundColor: colors }] }, options: pieOpts });
+      charts.disease = new Chart(document.getElementById('chartDisease'), { type: 'pie', data: { labels: ['Diabetes', 'Gastric', 'Respiratory', 'Others'], datasets: [{ label: '대상질환별', data: [19.2, 13.3, 20, 13], backgroundColor: colors }] }, options: pieOpts });
     }
   }
 
@@ -1929,8 +2277,8 @@ function closeVendorEvalModal() {
       data: {
         labels: months,
         datasets: [
-          { label: '가천대학교 인천 길병원', data: data1, borderColor: '#2563eb', backgroundColor: 'rgba(37, 99, 235, 0.1)', fill: true, tension: 0.3 },
-          { label: 'Shanghai Kuku Central Hospital', data: data2, borderColor: '#dc2626', backgroundColor: 'rgba(220, 38, 38, 0.1)', fill: true, tension: 0.3 }
+          { label: '가천대학교 인천 길병원', data: data1, borderColor: CHART_PALETTE[0], backgroundColor: 'rgba(37, 99, 235, 0.1)', fill: true, tension: 0.3 },
+          { label: 'Shanghai Kuku Central Hospital', data: data2, borderColor: CHART_PALETTE[1], backgroundColor: 'rgba(20, 184, 166, 0.1)', fill: true, tension: 0.3 }
         ]
       },
       options: {
@@ -1945,6 +2293,58 @@ function closeVendorEvalModal() {
     });
   }
 
+  var chartsClosed = {};
+  var closedBarOpts = { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } };
+  var closedPieOpts = { responsive: true, maintainAspectRatio: false, plugins: { datalabels: { color: '#1e293b', font: { weight: 'bold', size: 11 }, formatter: function(v, ctx) { var t = ctx.dataset.data.reduce(function(a,b){ return a+b; }, 0); return t ? ((v/t)*100).toFixed(0) + '%' : ''; } } } };
+
+  function renderClosedDashboard() {
+    var colors = CHART_PALETTE;
+    var destroy = function(id) { if (chartsClosed[id]) { chartsClosed[id].destroy(); chartsClosed[id] = null; } };
+    ['phaseSuccess','taSuccess','taPhaseSuccess','taEnrollment','regionEnrollment','recruitmentBenchmark','enrollmentRate','croByScope','croScopeDistribution','croScoreVsTimeline','phaseDuration','milestoneDuration','taDuration','majorIssue','issueTrend','lessons'].forEach(destroy);
+    function el(id) { return document.getElementById('closed-chart-' + id); }
+    if (el('phase-success')) chartsClosed.phaseSuccess = new Chart(el('phase-success'), { type: 'bar', data: { labels: ['Phase 1', 'Phase 2', 'Phase 3'], datasets: [{ label: '성공률', data: [88, 62, 70], backgroundColor: [colors[0], colors[1], colors[2]] }] }, options: Object.assign({}, closedBarOpts, { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '%'; } } } }) });
+    if (el('ta-success')) chartsClosed.taSuccess = new Chart(el('ta-success'), { type: 'bar', data: { labels: ['Aesthetics', 'GI', 'Metabolic', 'CNS'], datasets: [{ label: '성공률', data: [86, 74, 67, 41], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '%'; } } } }) });
+    if (el('ta-phase-success')) chartsClosed.taPhaseSuccess = new Chart(el('ta-phase-success'), { type: 'bar', data: { labels: ['Endocrine Phase2', 'Endocrine Phase3', 'GI Phase2', 'GI Phase3', 'CNS Phase2', 'CNS Phase3'], datasets: [{ label: '성공률', data: [70, 60, 65, 55, 45, 40], backgroundColor: [colors[0], colors[1], colors[2], colors[3], colors[4], colors[5]] }] }, options: Object.assign({}, closedBarOpts, { indexAxis: 'y', plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'start', formatter: function(v) { return v + '%'; } } } }) });
+    if (el('ta-enrollment')) chartsClosed.taEnrollment = new Chart(el('ta-enrollment'), { type: 'bar', data: { labels: ['Aesthetics', 'GI', 'Metabolic', 'CNS'], datasets: [{ label: '등록 기간', data: [6, 9, 10, 16], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { scales: { y: { beginAtZero: true, ticks: { callback: function(v) { return v + '개월'; } } } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '개월'; } } } }) });
+    if (el('region-enrollment')) chartsClosed.regionEnrollment = new Chart(el('region-enrollment'), { type: 'bar', data: { labels: ['Korea', 'Indonesia', 'China', 'Other'], datasets: [{ label: '%', data: [50, 32, 12, 6], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { scales: { y: { beginAtZero: true, max: 100, ticks: { callback: function(v) { return v + '%'; } } } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '%'; } } } }) });
+    if (el('recruitment-benchmark')) chartsClosed.recruitmentBenchmark = new Chart(el('recruitment-benchmark'), { type: 'bar', data: { labels: ['Aesthetics', 'GI', 'Metabolic', 'CNS'], datasets: [{ label: 'TA 평균 등록기간', data: [6, 9, 10, 16], backgroundColor: colors[0] }, { label: '전체 평균', data: [10, 10, 10, 10], backgroundColor: colors[1] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '개월'; } } }, scales: { y: { beginAtZero: true, ticks: { callback: function(v) { return v + '개월'; } } } } } });
+    if (el('enrollment-rate')) chartsClosed.enrollmentRate = new Chart(el('enrollment-rate'), { type: 'bar', data: { labels: ['Planned', 'Actual'], datasets: [{ label: '등록', data: [150, 138], backgroundColor: [colors[1], colors[0]] }] }, options: Object.assign({}, closedBarOpts, { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top' } } }) });
+    if (el('cro-by-scope')) chartsClosed.croByScope = new Chart(el('cro-by-scope'), { type: 'bar', data: { labels: ['CRO A', 'CRO B', 'CRO C'], datasets: [{ label: 'Score', data: [89, 84, 77], backgroundColor: colors[0] }, { label: 'On-time', data: [91, 82, 69], backgroundColor: colors[1] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { anchor: 'end', align: 'top', formatter: function(v, ctx) { return v + (ctx.datasetIndex === 1 ? '%' : ''); } } }, scales: { y: { beginAtZero: true, max: 100 } } } });
+    if (el('cro-scope-distribution')) chartsClosed.croScopeDistribution = new Chart(el('cro-scope-distribution'), { type: 'pie', data: { labels: ['Full CRO', 'DM only', 'STAT only', 'Mixed vendors'], datasets: [{ label: 'CRO Scope', data: [40, 25, 15, 20], backgroundColor: colors.slice(0, 4) }] }, options: closedPieOpts });
+    if (el('cro-score-vs-timeline')) chartsClosed.croScoreVsTimeline = new Chart(el('cro-score-vs-timeline'), { type: 'scatter', data: { datasets: [{ label: 'Vendors', data: [{ x: 88, y: 1 }, { x: 82, y: 3 }, { x: 75, y: 5 }, { x: 90, y: 0 }, { x: 78, y: 4 }], backgroundColor: colors[0], borderColor: colors[0], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v, ctx) { return ['LSK','CRO B','CRO C','Novotech','CRO B2'][ctx.dataIndex] || ''; } } }, scales: { x: { title: { display: true, text: 'Vendor score' }, min: 70, max: 100 }, y: { title: { display: true, text: 'Milestone delay (months)' }, beginAtZero: true } } } });
+    if (el('phase-duration')) chartsClosed.phaseDuration = new Chart(el('phase-duration'), { type: 'bar', data: { labels: ['Phase 1', 'Phase 2', 'Phase 3'], datasets: [{ label: 'Duration (months)', data: [13, 21, 32], backgroundColor: [colors[0], colors[1], colors[2]] }] }, options: Object.assign({}, closedBarOpts, { scales: { y: { ticks: { callback: function(v) { return v + ' months'; } } } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + ' months'; } } } }) });
+    if (el('milestone-duration')) chartsClosed.milestoneDuration = new Chart(el('milestone-duration'), { type: 'bar', data: { labels: ['IND → FPI', 'FPI → LPI', 'LPI → DB Lock', 'DB Lock → CSR'], datasets: [{ label: 'Duration (months)', data: [6, 9, 8, 4], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { indexAxis: 'y', plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'start', formatter: function(v) { return v + ' months'; } } } }) });
+    if (el('ta-duration')) chartsClosed.taDuration = new Chart(el('ta-duration'), { type: 'bar', data: { labels: ['Aesthetics', 'GI', 'Metabolic', 'CNS'], datasets: [{ label: 'Duration (months)', data: [20, 26, 29, 37], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + ' months'; } } } }) });
+    if (el('major-issue')) chartsClosed.majorIssue = new Chart(el('major-issue'), { type: 'pie', data: { labels: ['Recruitment issue', 'Protocol deviation', 'Vendor issue', 'Regulatory issue'], datasets: [{ label: 'Issues', data: [35, 25, 23, 17], backgroundColor: colors.slice(0, 4) }] }, options: closedPieOpts });
+    if (el('issue-trend')) chartsClosed.issueTrend = new Chart(el('issue-trend'), { type: 'bar', data: { labels: ['2019', '2020', '2021'], datasets: [{ label: 'Recruitment', data: [20, 30, 40], backgroundColor: colors[0] }, { label: 'Vendor', data: [25, 25, 22], backgroundColor: colors[1] }, { label: 'Protocol', data: [30, 25, 20], backgroundColor: colors[2] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '%'; } } }, scales: { y: { beginAtZero: true, max: 100 }, x: { stacked: false } } } });
+    if (el('lessons')) chartsClosed.lessons = new Chart(el('lessons'), { type: 'pie', data: { labels: ['Protocol design issue', 'Recruitment strategy', 'Vendor management', 'Site selection'], datasets: [{ label: 'Lessons learned', data: [32, 30, 22, 16], backgroundColor: colors.slice(0, 4) }] }, options: closedPieOpts });
+  }
+
+  var chartsDashboardClosed = {};
+  function renderDashboardClosedCharts() {
+    var colors = CHART_PALETTE;
+    var d = chartsDashboardClosed;
+    var destroy = function(id) { if (d[id]) { d[id].destroy(); d[id] = null; } };
+    ['phaseSuccess','taSuccess','taPhaseSuccess','taEnrollment','regionEnrollment','recruitmentBenchmark','enrollmentRate','croByScope','croScopeDistribution','croScoreVsTimeline','phaseDuration','milestoneDuration','taDuration','majorIssue','issueTrend','lessons'].forEach(destroy);
+    function el(id) { return document.getElementById('dash-closed-chart-' + id); }
+    if (el('phase-success')) d.phaseSuccess = new Chart(el('phase-success'), { type: 'bar', data: { labels: ['Phase 1', 'Phase 2', 'Phase 3'], datasets: [{ label: '성공률', data: [88, 62, 70], backgroundColor: [colors[0], colors[1], colors[2]] }] }, options: Object.assign({}, closedBarOpts, { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '%'; } } } }) });
+    if (el('ta-success')) d.taSuccess = new Chart(el('ta-success'), { type: 'bar', data: { labels: ['Aesthetics', 'GI', 'Metabolic', 'CNS'], datasets: [{ label: '성공률', data: [86, 74, 67, 41], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '%'; } } } }) });
+    if (el('ta-phase-success')) d.taPhaseSuccess = new Chart(el('ta-phase-success'), { type: 'bar', data: { labels: ['Endocrine Phase2', 'Endocrine Phase3', 'GI Phase2', 'GI Phase3', 'CNS Phase2', 'CNS Phase3'], datasets: [{ label: '성공률', data: [70, 60, 65, 55, 45, 40], backgroundColor: [colors[0], colors[1], colors[2], colors[3], colors[4], colors[5]] }] }, options: Object.assign({}, closedBarOpts, { indexAxis: 'y', plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'start', formatter: function(v) { return v + '%'; } } } }) });
+    if (el('ta-enrollment')) d.taEnrollment = new Chart(el('ta-enrollment'), { type: 'bar', data: { labels: ['Aesthetics', 'GI', 'Metabolic', 'CNS'], datasets: [{ label: '등록 기간', data: [6, 9, 10, 16], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { scales: { y: { beginAtZero: true, ticks: { callback: function(v) { return v + '개월'; } } } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '개월'; } } } }) });
+    if (el('region-enrollment')) d.regionEnrollment = new Chart(el('region-enrollment'), { type: 'bar', data: { labels: ['Korea', 'Indonesia', 'China', 'Other'], datasets: [{ label: '%', data: [50, 32, 12, 6], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { scales: { y: { beginAtZero: true, max: 100, ticks: { callback: function(v) { return v + '%'; } } } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '%'; } } } }) });
+    if (el('recruitment-benchmark')) d.recruitmentBenchmark = new Chart(el('recruitment-benchmark'), { type: 'bar', data: { labels: ['Aesthetics', 'GI', 'Metabolic', 'CNS'], datasets: [{ label: 'TA 평균 등록기간', data: [6, 9, 10, 16], backgroundColor: colors[0] }, { label: '전체 평균', data: [10, 10, 10, 10], backgroundColor: colors[1] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '개월'; } } }, scales: { y: { beginAtZero: true, ticks: { callback: function(v) { return v + '개월'; } } } } } });
+    if (el('enrollment-rate')) d.enrollmentRate = new Chart(el('enrollment-rate'), { type: 'bar', data: { labels: ['Planned', 'Actual'], datasets: [{ label: '등록', data: [150, 138], backgroundColor: [colors[1], colors[0]] }] }, options: Object.assign({}, closedBarOpts, { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top' } } }) });
+    if (el('cro-by-scope')) d.croByScope = new Chart(el('cro-by-scope'), { type: 'bar', data: { labels: ['CRO A', 'CRO B', 'CRO C'], datasets: [{ label: 'Score', data: [89, 84, 77], backgroundColor: colors[0] }, { label: 'On-time', data: [91, 82, 69], backgroundColor: colors[1] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { anchor: 'end', align: 'top', formatter: function(v, ctx) { return v + (ctx.datasetIndex === 1 ? '%' : ''); } } }, scales: { y: { beginAtZero: true, max: 100 } } } });
+    if (el('cro-scope-distribution')) d.croScopeDistribution = new Chart(el('cro-scope-distribution'), { type: 'pie', data: { labels: ['Full CRO', 'DM only', 'STAT only', 'Mixed vendors'], datasets: [{ label: 'CRO Scope', data: [40, 25, 15, 20], backgroundColor: colors.slice(0, 4) }] }, options: closedPieOpts });
+    if (el('cro-score-vs-timeline')) d.croScoreVsTimeline = new Chart(el('cro-score-vs-timeline'), { type: 'scatter', data: { datasets: [{ label: 'Vendors', data: [{ x: 88, y: 1 }, { x: 82, y: 3 }, { x: 75, y: 5 }, { x: 90, y: 0 }, { x: 78, y: 4 }], backgroundColor: colors[0], borderColor: colors[0], borderWidth: 1 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v, ctx) { return ['LSK','CRO B','CRO C','Novotech','CRO B2'][ctx.dataIndex] || ''; } } }, scales: { x: { title: { display: true, text: 'Vendor score' }, min: 70, max: 100 }, y: { title: { display: true, text: 'Milestone delay (months)' }, beginAtZero: true } } } });
+    if (el('phase-duration')) d.phaseDuration = new Chart(el('phase-duration'), { type: 'bar', data: { labels: ['Phase 1', 'Phase 2', 'Phase 3'], datasets: [{ label: 'Duration (months)', data: [13, 21, 32], backgroundColor: [colors[0], colors[1], colors[2]] }] }, options: Object.assign({}, closedBarOpts, { scales: { y: { ticks: { callback: function(v) { return v + ' months'; } } } }, plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + ' months'; } } } }) });
+    if (el('milestone-duration')) d.milestoneDuration = new Chart(el('milestone-duration'), { type: 'bar', data: { labels: ['IND → FPI', 'FPI → LPI', 'LPI → DB Lock', 'DB Lock → CSR'], datasets: [{ label: 'Duration (months)', data: [6, 9, 8, 4], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { indexAxis: 'y', plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'start', formatter: function(v) { return v + ' months'; } } } }) });
+    if (el('ta-duration')) d.taDuration = new Chart(el('ta-duration'), { type: 'bar', data: { labels: ['Aesthetics', 'GI', 'Metabolic', 'CNS'], datasets: [{ label: 'Duration (months)', data: [20, 26, 29, 37], backgroundColor: [colors[0], colors[1], colors[2], colors[3]] }] }, options: Object.assign({}, closedBarOpts, { plugins: { legend: { display: false }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + ' months'; } } } }) });
+    if (el('major-issue')) d.majorIssue = new Chart(el('major-issue'), { type: 'pie', data: { labels: ['Recruitment issue', 'Protocol deviation', 'Vendor issue', 'Regulatory issue'], datasets: [{ label: 'Issues', data: [35, 25, 23, 17], backgroundColor: colors.slice(0, 4) }] }, options: closedPieOpts });
+    if (el('issue-trend')) d.issueTrend = new Chart(el('issue-trend'), { type: 'bar', data: { labels: ['2019', '2020', '2021'], datasets: [{ label: 'Recruitment', data: [20, 30, 40], backgroundColor: colors[0] }, { label: 'Vendor', data: [25, 25, 22], backgroundColor: colors[1] }, { label: 'Protocol', data: [30, 25, 20], backgroundColor: colors[2] }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' }, datalabels: { anchor: 'end', align: 'top', formatter: function(v) { return v + '%'; } } }, scales: { y: { beginAtZero: true, max: 100 }, x: { stacked: false } } } });
+    if (el('lessons')) d.lessons = new Chart(el('lessons'), { type: 'pie', data: { labels: ['Protocol design issue', 'Recruitment strategy', 'Vendor management', 'Site selection'], datasets: [{ label: 'Lessons learned', data: [32, 30, 22, 16], backgroundColor: colors.slice(0, 4) }] }, options: closedPieOpts });
+  }
+
   function updateNavActive() {
     var activePage = currentPage === 'project' ? 'program' : (currentPage === 'closed-project' ? 'closed' : currentPage);
     document.querySelectorAll('.nav-menu a').forEach(function(a) {
@@ -1954,17 +2354,14 @@ function closeVendorEvalModal() {
   }
 
   function onHashChange() {
+    if ((window.location.hash || '').replace('#', '') === 'cost') { location.replace('#dashboard'); return; }
     var r = parseHash();
-    showPage(r.page, r.projectId, r.tab, r.dashboardSub);
+    showPage(r.page, r.projectId, r.tab, r.dashboardSub, r.closedViewSub, r.partnerSub, r.approvalSub);
   }
 
   document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('#roleSelect, #roleSelectHeader').forEach(function(s) {
-      if (s) s.value = getRole();
-    });
+    document.getElementById('roleSelect').value = getRole();
     document.getElementById('roleSelect').addEventListener('change', function() { setRole(this.value); });
-    var header = document.getElementById('roleSelectHeader');
-    if (header) header.addEventListener('change', function() { setRole(this.value); });
     document.getElementById('sidebar-project') && document.getElementById('sidebar-project').querySelectorAll('a').forEach(function(a) {
       a.addEventListener('click', function(e) { e.preventDefault(); var t = this.getAttribute('data-project-tab'); if (t) window.location.hash = 'project/' + currentProjectId + '/' + t; });
     });
