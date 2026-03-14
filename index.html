@@ -1695,7 +1695,19 @@
                 <div class="panel-block-body">
                   <div class="form-row">
                     <label>Primary endpoint name</label>
-                    <input type="text" class="form-control" id="results-primary-name" placeholder="Primary endpoint 명 입력">
+                    <input type="text" class="form-control" id="results-primary-name" placeholder="Primary endpoint 명 입력" value="Change in HbA1c at Week 24">
+                  </div>
+                  <div class="form-row">
+                    <label>Effect size</label>
+                    <input type="text" class="form-control" id="results-effect-size" placeholder="optional" style="max-width:200px" value="−0.04%">
+                  </div>
+                  <div class="form-row">
+                    <label>p-value (95% CI)</label>
+                    <input type="text" class="form-control" id="results-pvalue" placeholder="optional" style="max-width:280px" value="−0.21 to 0.12">
+                  </div>
+                  <div class="form-row">
+                    <label>Interpretation</label>
+                    <input type="text" class="form-control" id="results-interpretation" placeholder="해석 입력" value="Dapagliflozin+Met 대비 비열등성 입증">
                   </div>
                   <div class="form-row">
                     <label>Endpoint result summary</label>
@@ -1707,16 +1719,49 @@
                         <input type="color" id="results-summary-color" value="#000000" style="display:none" onchange="applyFormat('results-summary','foreColor',this.value)">
                         <button type="button" title="표 삽입" onclick="insertTable('results-summary')">표</button>
                       </div>
-                      <div id="results-summary" class="rich-text-editor" contenteditable="true" data-placeholder="결과 요약 입력 (서식 사용 가능)"></div>
+                      <div id="results-summary" class="rich-text-editor" contenteditable="true" data-placeholder="결과 요약 입력 (서식 사용 가능)">
+                        <p style="margin-bottom:12px;">Source: <a href="https://www.e-dmj.org/journal/view.php?doi=10.4093/dmj.2022.0315" target="_blank" rel="noopener">Diabetes Metab J 2023;47(6):796-807</a> Table 2.</p>
+                        <div class="table-wrap" style="overflow-x:auto;">
+                          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse; width:100%; font-size:13px;">
+                            <thead>
+                              <tr style="background:var(--input-bg);"><th>Variable</th><th>Enavogliflozin 0.3 mg (n=95)</th><th>Dapagliflozin 10 mg (n=90)</th></tr>
+                            </thead>
+                            <tbody>
+                              <tr><td><strong>HbA1c, %</strong></td><td></td><td></td></tr>
+                              <tr><td>Baseline</td><td>7.75 (0.82)</td><td>7.68 (0.73)</td></tr>
+                              <tr><td>Week 24</td><td>6.98 (0.61)</td><td>6.97 (0.72)</td></tr>
+                              <tr><td>Change from baseline at week 24 - LS mean (SE)</td><td>–0.80 (0.06)</td><td>–0.75 (0.06)</td></tr>
+                              <tr><td>LS mean difference (95% CI)</td><td colspan="2">–0.04 (–0.21 to 0.12)</td></tr>
+                              <tr><td><strong>FPG, mg/dL</strong></td><td></td><td></td></tr>
+                              <tr><td>Baseline</td><td>145.35 (26.60)</td><td>149.33 (31.85)</td></tr>
+                              <tr><td>Week 24</td><td>113.58 (17.21)</td><td>117.91 (19.38)</td></tr>
+                              <tr><td>Change from baseline at week 24 - LS mean (SE)</td><td>–32.53 (1.76)</td><td>–29.14 (1.82)</td></tr>
+                              <tr><td>LS mean difference (95% CI), P value</td><td colspan="2">–3.38 (–8.15 to 1.39), P=0.1633</td></tr>
+                              <tr><td><strong>Systolic blood pressure, mm Hg</strong></td><td></td><td></td></tr>
+                              <tr><td>Baseline</td><td>129.72 (13.64)</td><td>127.44 (14.12)</td></tr>
+                              <tr><td>Week 24</td><td>123.38 (12.55)</td><td>121.40 (11.90)</td></tr>
+                              <tr><td>Change from baseline at week 24 - LS mean (SE)</td><td>–5.93 (1.01)</td><td>–6.57 (1.04)</td></tr>
+                              <tr><td><strong>Diastolic blood pressure, mm Hg</strong></td><td></td><td></td></tr>
+                              <tr><td>Change from baseline at week 24 - LS mean (SE)</td><td>–5.41 (0.65)</td><td>–4.26 (0.67)</td></tr>
+                              <tr><td><strong>Body weight, kg</strong></td><td></td><td></td></tr>
+                              <tr><td>Baseline</td><td>70.17 (11.06)</td><td>70.52 (11.81)</td></tr>
+                              <tr><td>Week 24</td><td>66.39 (10.90)</td><td>66.92 (11.89)</td></tr>
+                              <tr><td>Change from baseline at week 24 - LS mean (SE)</td><td>–3.77 (0.33)</td><td>–3.58 (0.34)</td></tr>
+                              <tr><td><strong>UACR, mg/g</strong></td><td></td><td></td></tr>
+                              <tr><td>Change from baseline at week 24 - LS mean (SE)</td><td>–24.29 (3.38)</td><td>–17.37 (3.48)</td></tr>
+                              <tr><td><strong>UGCR, g/g</strong></td><td></td><td></td></tr>
+                              <tr><td>Change from baseline at week 24 - LS mean (SE)</td><td>60.48 (2.12)</td><td>44.94 (2.18)</td></tr>
+                              <tr><td><strong>HOMA-β</strong></td><td></td><td></td></tr>
+                              <tr><td>Change from baseline at week 24 - LS mean (SE)</td><td>6.94 (3.17)</td><td>11.93 (3.25)</td></tr>
+                              <tr><td><strong>HOMA-IR</strong></td><td></td><td></td></tr>
+                              <tr><td>Change from baseline at week 24 - LS mean (SE)</td><td>–1.85 (0.13)</td><td>–1.31 (0.14)</td></tr>
+                              <tr><td>LS mean difference (95% CI), P value</td><td colspan="2">–0.53 (–0.90 to –0.17), P=0.0041</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <p style="margin-top:8px;color:var(--text-muted);font-size:12px;">LS, least square; SE, standard error; CI, confidence interval; FPG, fasting plasma glucose; UACR, urine albumin-creatinine ratio; UGCR, urine glucose-creatinine ratio; HOMA-β, homeostasis model assessment of β-cell function; HOMA-IR, homeostasis model assessment of insulin resistance.</p>
+                      </div>
                     </div>
-                  </div>
-                  <div class="form-row">
-                    <label>Effect size</label>
-                    <input type="number" class="form-control" id="results-effect-size" placeholder="optional" step="any" style="max-width:200px">
-                  </div>
-                  <div class="form-row">
-                    <label>p-value</label>
-                    <input type="number" class="form-control" id="results-pvalue" placeholder="optional" step="any" min="0" max="1" style="max-width:200px">
                   </div>
                 </div>
               </div>
@@ -1728,11 +1773,18 @@
                     <label>Study success</label>
                     <select class="form-control" id="results-study-success" style="max-width:240px">
                       <option value="">선택</option>
-                      <option value="Success">Success</option>
+                      <option value="Success" selected>Success</option>
                       <option value="Fail">Fail</option>
                       <option value="Partially met">Partially met</option>
                       <option value="Not applicable">Not applicable</option>
                     </select>
+                  </div>
+                  <div class="form-row">
+                    <label>Figure</label>
+                    <div style="flex:1; min-width:0;">
+                      <img id="results-figure-img" src="https://www.e-dmj.org/upload/thumbnails/dmj-2022-0315f2.jpg" alt="Study figure" style="max-width:100%; height:auto; border:1px solid var(--border); border-radius:6px;" referrerpolicy="no-referrer">
+                      <p style="margin-top:6px; font-size:12px; color:var(--text-muted);">Source: <a href="https://www.e-dmj.org/journal/view.php?doi=10.4093/dmj.2022.0315" target="_blank" rel="noopener">Diabetes Metab J 2023;47(6):796-807</a> Figure 2.</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1750,13 +1802,37 @@
                         <input type="color" id="results-safety-color" value="#000000" style="display:none" onchange="applyFormat('results-safety','foreColor',this.value)">
                         <button type="button" title="표 삽입" onclick="insertTable('results-safety')">표</button>
                       </div>
-                      <div id="results-safety" class="rich-text-editor" contenteditable="true" data-placeholder="주요 Safety 결과 요약 (서식 사용 가능)"></div>
+                      <div id="results-safety" class="rich-text-editor" contenteditable="true" data-placeholder="주요 Safety 결과 요약 (서식 사용 가능)">
+                        <p style="margin-bottom:12px;">Source: <a href="https://www.e-dmj.org/journal/view.php?doi=10.4093/dmj.2022.0315" target="_blank" rel="noopener">Diabetes Metab J 2023;47(6):796-807</a> Table 3.</p>
+                        <div class="table-wrap" style="overflow-x:auto;">
+                          <table border="1" cellpadding="8" cellspacing="0" style="border-collapse:collapse; width:100%; font-size:13px;">
+                            <thead>
+                              <tr style="background:var(--input-bg);"><th>System organ class (preferred term)</th><th>Enavogliflozin 0.3 mg (n=101)</th><th>Dapagliflozin 10 mg (n=99)</th></tr>
+                            </thead>
+                            <tbody>
+                              <tr><td>Patients with TEAEs</td><td>62 (61.4)</td><td>58 (58.6)</td></tr>
+                              <tr><td>Patients with ADRs</td><td>15 (14.9)</td><td>14 (14.1)</td></tr>
+                              <tr><td>Dyspepsia</td><td>3 (3.0)</td><td>2 (2.0)</td></tr>
+                              <tr><td>Cystitis</td><td>2 (2.0)</td><td>1 (1.0)</td></tr>
+                              <tr><td>Hypoglycemia</td><td>1 (1.0)</td><td>2 (2.0)</td></tr>
+                              <tr><td>Pollakiuria</td><td>1 (1.0)</td><td>2 (2.0)</td></tr>
+                              <tr><td>Vulvovaginal pruritus</td><td>1 (1.0)</td><td>0</td></tr>
+                              <tr><td>Pruritus</td><td>1 (1.0)</td><td>0</td></tr>
+                              <tr><td><strong>Patients with SAEs</strong></td><td><strong>2 (2.0)</strong></td><td><strong>2 (2.0)</strong></td></tr>
+                              <tr><td>Mechanical ileus</td><td>1 (1.0)</td><td>0</td></tr>
+                              <tr><td>Benign prostatic hyperplasia</td><td>0</td><td>1 (1.0)</td></tr>
+                              <tr><td>Prostate cancer</td><td>0</td><td>1 (1.0)</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                        <p style="margin-top:8px;color:var(--text-muted);font-size:12px;">Values are presented as number (%). TEAE, treatment-emergent adverse event; ADR, adverse drug reaction; SAE, serious adverse event.</p>
+                      </div>
                     </div>
                   </div>
                   <div class="form-row">
                     <label>SAE 발생 여부</label>
                     <div class="radio-group">
-                      <label><input type="radio" name="results-sae" value="Yes"> Yes</label>
+                      <label><input type="radio" name="results-sae" value="Yes" checked> Yes</label>
                       <label><input type="radio" name="results-sae" value="No"> No</label>
                     </div>
                   </div>
@@ -1769,7 +1845,7 @@
                   <div class="form-row">
                     <label>Publication 여부</label>
                     <div class="radio-group">
-                      <label><input type="radio" name="results-pub-yn" value="Yes"> Yes</label>
+                      <label><input type="radio" name="results-pub-yn" value="Yes" checked> Yes</label>
                       <label><input type="radio" name="results-pub-yn" value="No"> No</label>
                     </div>
                   </div>
@@ -1777,7 +1853,7 @@
                     <label>Publication type</label>
                     <select class="form-control" id="results-pub-type" style="max-width:280px">
                       <option value="">선택</option>
-                      <option value="Journal article">Journal article</option>
+                      <option value="Journal article" selected>Journal article</option>
                       <option value="Conference presentation">Conference presentation</option>
                       <option value="Poster">Poster</option>
                       <option value="None">None</option>
@@ -1785,11 +1861,11 @@
                   </div>
                   <div class="form-row">
                     <label>Journal</label>
-                    <input type="text" class="form-control" id="results-journal" placeholder="저널명">
+                    <input type="text" class="form-control" id="results-journal" placeholder="저널명" value="DIABETES&amp;METABOLISM JOURNAL (DMJ)">
                   </div>
                   <div class="form-row">
                     <label>DOI / link</label>
-                    <input type="text" class="form-control" id="results-doi" placeholder="DOI 또는 링크 URL">
+                    <input type="text" class="form-control" id="results-doi" placeholder="DOI 또는 링크 URL" value="10.4093/dmj.2022.0315">
                   </div>
                 </div>
               </div>
@@ -2069,6 +2145,78 @@ function closeVendorEvalModal() {
     });
   }
 
+  var CLOSED_RESULTS_SAMPLE = null;
+  function saveClosedResultsSample() {
+    if (CLOSED_RESULTS_SAMPLE) return;
+    var el = function(id) { return document.getElementById(id); };
+    var summary = el('results-summary'); var safety = el('results-safety');
+    if (!summary || !safety) return;
+    var fig = el('results-figure-img');
+    var saeYes = document.querySelector('input[name="results-sae"][value="Yes"]');
+    var pubYes = document.querySelector('input[name="results-pub-yn"][value="Yes"]');
+    CLOSED_RESULTS_SAMPLE = {
+      primaryName: (el('results-primary-name') && el('results-primary-name').value) || '',
+      effectSize: (el('results-effect-size') && el('results-effect-size').value) || '',
+      pvalue: (el('results-pvalue') && el('results-pvalue').value) || '',
+      interpretation: (el('results-interpretation') && el('results-interpretation').value) || '',
+      summaryHTML: summary.innerHTML,
+      studySuccess: (el('results-study-success') && el('results-study-success').value) || '',
+      figureSrc: (fig && fig.src) || '',
+      figureCaption: fig && fig.nextElementSibling && fig.nextElementSibling.tagName === 'P' ? fig.nextElementSibling.innerHTML : '',
+      safetyHTML: safety.innerHTML,
+      saeYes: saeYes ? saeYes.checked : false,
+      pubYes: pubYes ? pubYes.checked : false,
+      pubType: (el('results-pub-type') && el('results-pub-type').value) || '',
+      journal: (el('results-journal') && el('results-journal').value) || '',
+      doi: (el('results-doi') && el('results-doi').value) || ''
+    };
+  }
+  function clearClosedResultsForm() {
+    var el = function(id) { return document.getElementById(id); };
+    if (el('results-primary-name')) el('results-primary-name').value = '';
+    if (el('results-effect-size')) el('results-effect-size').value = '';
+    if (el('results-pvalue')) el('results-pvalue').value = '';
+    if (el('results-interpretation')) el('results-interpretation').value = '';
+    if (el('results-summary')) el('results-summary').innerHTML = '';
+    if (el('results-study-success')) el('results-study-success').value = '';
+    var fig = el('results-figure-img');
+    if (fig) { fig.src = ''; fig.style.display = 'none'; }
+    var figCap = fig && fig.nextElementSibling && fig.nextElementSibling.tagName === 'P' ? fig.nextElementSibling : null;
+    if (figCap) figCap.style.display = 'none';
+    if (el('results-safety')) el('results-safety').innerHTML = '';
+    var saeNo = document.querySelector('input[name="results-sae"][value="No"]');
+    if (saeNo) saeNo.checked = true;
+    var pubNo = document.querySelector('input[name="results-pub-yn"][value="No"]');
+    if (pubNo) pubNo.checked = true;
+    if (el('results-pub-type')) el('results-pub-type').value = '';
+    if (el('results-journal')) el('results-journal').value = '';
+    if (el('results-doi')) el('results-doi').value = '';
+  }
+  function restoreClosedResultsSample() {
+    if (!CLOSED_RESULTS_SAMPLE) return;
+    var el = function(id) { return document.getElementById(id); };
+    if (el('results-primary-name')) el('results-primary-name').value = CLOSED_RESULTS_SAMPLE.primaryName;
+    if (el('results-effect-size')) el('results-effect-size').value = CLOSED_RESULTS_SAMPLE.effectSize;
+    if (el('results-pvalue')) el('results-pvalue').value = CLOSED_RESULTS_SAMPLE.pvalue;
+    if (el('results-interpretation')) el('results-interpretation').value = CLOSED_RESULTS_SAMPLE.interpretation;
+    if (el('results-summary')) el('results-summary').innerHTML = CLOSED_RESULTS_SAMPLE.summaryHTML;
+    if (el('results-study-success')) el('results-study-success').value = CLOSED_RESULTS_SAMPLE.studySuccess;
+    var fig = el('results-figure-img');
+    if (fig) { fig.src = CLOSED_RESULTS_SAMPLE.figureSrc || ''; fig.style.display = CLOSED_RESULTS_SAMPLE.figureSrc ? '' : 'none'; }
+    var figCap = fig && fig.nextElementSibling && fig.nextElementSibling.tagName === 'P' ? fig.nextElementSibling : null;
+    if (figCap) { figCap.innerHTML = CLOSED_RESULTS_SAMPLE.figureCaption || ''; figCap.style.display = CLOSED_RESULTS_SAMPLE.figureCaption ? '' : 'none'; }
+    if (el('results-safety')) el('results-safety').innerHTML = CLOSED_RESULTS_SAMPLE.safetyHTML;
+    var saeYes = document.querySelector('input[name="results-sae"][value="Yes"]');
+    var saeNo = document.querySelector('input[name="results-sae"][value="No"]');
+    if (CLOSED_RESULTS_SAMPLE.saeYes && saeYes) saeYes.checked = true; else if (saeNo) saeNo.checked = true;
+    var pubYes = document.querySelector('input[name="results-pub-yn"][value="Yes"]');
+    var pubNo = document.querySelector('input[name="results-pub-yn"][value="No"]');
+    if (CLOSED_RESULTS_SAMPLE.pubYes && pubYes) pubYes.checked = true; else if (pubNo) pubNo.checked = true;
+    if (el('results-pub-type')) el('results-pub-type').value = CLOSED_RESULTS_SAMPLE.pubType;
+    if (el('results-journal')) el('results-journal').value = CLOSED_RESULTS_SAMPLE.journal;
+    if (el('results-doi')) el('results-doi').value = CLOSED_RESULTS_SAMPLE.doi;
+  }
+
   function showPage(page, projectId, tab, dashboardSub, closedViewSub, partnerSub, approvalSub) {
     currentPage = page;
     currentProjectId = projectId || currentProjectId;
@@ -2110,6 +2258,9 @@ function closeVendorEvalModal() {
       var closedPanel = document.getElementById('closed-panel-' + currentProjectTab);
       if (closedPanel) closedPanel.style.display = 'block';
       setClosedProjectPanelsReadonly();
+      saveClosedResultsSample();
+      if (currentProjectId === 'closed-02') clearClosedResultsForm();
+      else if (currentProjectId === 'closed-01') restoreClosedResultsSample();
     } else if (page === 'closed') {
       var listWrap = document.getElementById('closed-list-wrap');
       var dashWrap = document.getElementById('closed-dashboard-wrap');
