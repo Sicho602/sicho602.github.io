@@ -325,7 +325,6 @@
         <div>
           <div class="breadcrumb" id="dashboard-breadcrumb">Dashboard</div>
           <h1 class="page-title" id="dashboard-main-title">Overview Dashboard</h1>
-          <p class="page-description" id="dashboard-description">Monitor key metrics and study progress at a glance.</p>
         </div>
       </div>
       <!-- 관리자 전용: 종합 / 과제 / 종료과제 대시보드 서브 탭 -->
@@ -462,7 +461,6 @@
         <div>
           <div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Study Management</div>
           <h1 class="page-title">Studies</h1>
-          <p style="margin:4px 0 0 0; font-size:14px; color:var(--text-muted); font-weight:400;">Manage clinical studies by product.</p>
         </div>
       </div>
       <div class="study-list-card">
@@ -507,7 +505,7 @@
     <!-- 뷰: Partners - 기관 목록 / 벤더 목록 -->
     <div id="view-partner" class="view-page">
       <div class="page-header">
-        <div><div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Partners &gt; <span id="partner-breadcrumb-sub">Institutions</span></div><h1 class="page-title" id="partner-page-title">Institutions</h1><p class="page-description">Manage partner institutions and contacts.</p></div>
+        <div><div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Partners &gt; <span id="partner-breadcrumb-sub">Institutions</span></div><h1 class="page-title" id="partner-page-title">Institutions</h1></div>
       </div>
       <nav class="closed-subnav">
         <a href="#partner/institution" id="partner-tab-institution" data-partner-tab="institution" class="active">Institutions</a>
@@ -596,7 +594,7 @@
     </div>
     <div id="view-approval" class="view-page">
       <div class="page-header">
-        <div><div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Approvals &gt; <span id="approval-breadcrumb-sub">Request</span></div><h1 class="page-title" id="approval-page-title">Request</h1><p class="page-description">Review and approve pending requests.</p></div>
+        <div><div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Approvals &gt; <span id="approval-breadcrumb-sub">Request</span></div><h1 class="page-title" id="approval-page-title">Request</h1></div>
       </div>
       <nav class="closed-subnav">
         <a href="#approval/request" id="approval-tab-request" data-approval-tab="request" class="active">Request</a>
@@ -669,7 +667,7 @@
     </div>
     <div id="view-system" class="view-page">
       <div class="page-header">
-        <div><div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Admin</div><h1 class="page-title">Admin</h1><p class="page-description">Manage users, roles, and system settings.</p></div>
+        <div><div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Admin</div><h1 class="page-title">Admin</h1></div>
       </div>
       <div class="card"></div>
     </div>
@@ -680,7 +678,6 @@
         <div>
           <div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; <a href="#program">Studies</a> &gt; <span id="projectTabLabel">Overview</span></div>
           <h1 class="page-title" id="projectTitle">엔블로젬 3상</h1>
-          <p class="page-description" id="project-description">Review and manage study details.</p>
         </div>
       </div>
       <div class="project-layout">
@@ -1319,7 +1316,6 @@
         <div>
           <div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Completed Studies</div>
           <h1 class="page-title">Completed Studies</h1>
-          <p class="page-description">View all completed clinical trials.</p>
         </div>
       </div>
       <div id="closed-list-wrap">
@@ -1351,7 +1347,6 @@
         <div>
           <div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; <a href="#closed">Completed Studies</a> &gt; <span id="closedTabLabel">Overview</span></div>
           <h1 class="page-title" id="closedProjectTitle">엔블로 DWP16001 3상 (종료)</h1>
-          <p class="page-description">Review completed study details.</p>
         </div>
       </div>
       <div class="project-layout">
@@ -2308,8 +2303,6 @@ function closeVendorEvalModal() {
     if (subnavWrap) subnavWrap.style.display = role === 'admin' ? 'flex' : 'none';
     if (breadcrumb) breadcrumb.innerHTML = 'Dashboard' + (role === 'admin' && sub === 'project' ? ' &gt; Study Dashboard' : role === 'admin' && sub === 'closed' ? ' &gt; Completed Studies Dashboard' : role === 'admin' ? ' &gt; Overview Dashboard' : ' &gt; Study Dashboard');
     if (titleEl) titleEl.textContent = role === 'admin' ? (sub === 'overall' ? 'Overview Dashboard' : sub === 'closed' ? 'Completed Studies Dashboard' : 'Study Dashboard') : 'Study Dashboard';
-    var descEl = document.getElementById('dashboard-description');
-    if (descEl) descEl.textContent = sub === 'overall' ? 'Monitor key metrics and study progress at a glance.' : sub === 'closed' ? 'View completed study metrics and performance.' : 'Track active studies by product.';
     document.getElementById('dashboard-admin-overall').style.display = role === 'admin' && sub === 'overall' ? 'block' : 'none';
     document.getElementById('dashboard-admin-project').style.display = role === 'admin' && sub === 'project' ? 'block' : 'none';
     document.getElementById('dashboard-admin-closed').style.display = role === 'admin' && sub === 'closed' ? 'block' : 'none';
