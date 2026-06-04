@@ -205,6 +205,96 @@
     .timeline-table .subtask-row .task-cell .cb { margin-right: 8px; accent-color: var(--primary); }
     .timeline-table .add-workgroup { color: var(--primary); cursor: pointer; padding: 10px 12px; border-top: 1px dashed var(--nav-border); font-size: 13px; }
     .timeline-table .add-workgroup:hover { background: var(--input-bg); }
+    /* TO-BE 워크플로우(마일스톤 관리) */
+    .wf-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; margin-bottom: 16px; }
+    .wf-flag-wrap { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+    .flag-badge { padding: 3px 12px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .flag-planning { background: #E0E7FF; color: #4338CA; }
+    .flag-conduct { background: #DCFCE7; color: #16A34A; }
+    .flag-analysis { background: #FEF3C7; color: #B45309; }
+    .flag-closeout { background: #F3E8FF; color: #7E22CE; }
+    .wf-legend { display: flex; gap: 14px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
+    .wf-legend .lg { display: inline-flex; align-items: center; gap: 5px; }
+    .wf-legend-info { position: relative; font-size: 12px; font-weight: 500; color: var(--text-muted); cursor: help; }
+    .wf-legend-pop { display: none; position: absolute; top: 100%; right: 0; margin-top: 8px; background: var(--card-bg); border: 1px solid var(--input-border); border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,.14); padding: 10px 14px; z-index: 40; width: max-content; }
+    .wf-legend-info:hover .wf-legend-pop, .wf-legend-info:focus-within .wf-legend-pop { display: block; }
+    .wf-legend-pop .lg { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 400; color: var(--text-secondary, #475569); white-space: nowrap; padding: 3px 0; }
+    .type-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .type-doc { background: #E0F2FE; color: #0369A1; }
+    .type-ms { background: #FEF9C3; color: #A16207; }
+    .doc-ver { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; color: var(--text-muted); background: #F1F5F9; border: 1px solid var(--input-border); padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+    .doc-ver .dv-ver { color: var(--text); }
+    .docstatus { font-weight: 700; }
+    .docstatus.ds-draft { color: #64748B; }
+    .docstatus.ds-review { color: #B45309; }
+    .docstatus.ds-final { color: #16A34A; }
+    .ms-badge { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px; border-radius: 999px; background: #FEF3C7; color: #B45309; font-size: 11px; font-weight: 700; white-space: nowrap; }
+    .status-badge2 { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+    .st-done { background: #DCFCE7; color: #16A34A; }
+    .st-prog { background: #DBEAFE; color: #2563EB; }
+    .st-plan { background: #F1F5F9; color: #64748B; }
+    .wf-table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: 13px; }
+    .wf-table th, .wf-table td { padding: 5px 10px; border-bottom: 1px solid var(--input-border); text-align: left; vertical-align: middle; }
+    .wf-table th { background: #F8FAFC; font-weight: 600; font-size: 12px; color: #334155; white-space: nowrap; }
+    .wf-table tr.wf-cat td { background: #EFF6FF; font-weight: 700; color: #1E3A8A; font-size: 12px; padding: 4px 10px; }
+    .wf-table tr.wf-task { cursor: pointer; }
+    .wf-table tr.wf-task td { padding-top: 4px; padding-bottom: 4px; }
+    .wf-table tr.wf-task:hover { background: var(--input-bg); }
+    .wf-table .wf-name { display: flex; align-items: center; gap: 6px; padding-left: 8px; }
+    .wf-table .wf-name .task-link { color: var(--primary); font-weight: 500; }
+    .wf-table .lock-ico { color: var(--text-muted); font-size: 13px; cursor: default; }
+    .wf-table .del-ico { color: #DC2626; font-size: 14px; cursor: pointer; background: none; border: none; padding: 2px 6px; border-radius: 4px; }
+    .wf-table .del-ico:hover { background: #FEE2E2; }
+    .wf-table .wf-addtask td { color: var(--primary); cursor: pointer; font-size: 12px; padding: 3px 10px 3px 24px; }
+    .wf-table .wf-addtask:hover td { background: var(--input-bg); }
+    .flag-trigger-note { font-size: 11px; color: var(--warning); font-weight: 600; }
+    /* 간트(기간) */
+    /* 상단 가로 스크롤바 (하단과 동기화) */
+    .wf-scroll-top { overflow-x: auto; overflow-y: hidden; border: 1px solid var(--nav-border); border-bottom: none; border-radius: var(--radius) var(--radius) 0 0; background: var(--card-bg); }
+    .wf-scroll-top > div { height: 1px; }
+    /* 세로 스크롤 + 헤더 틀고정 */
+    .wf-table-wrap { max-height: calc(100vh - 180px); overflow: auto; border-radius: 0 0 var(--radius) var(--radius); }
+    .wf-table thead th { position: sticky; top: 0; z-index: 5; }
+    .wf-table th.wf-name-col, .wf-table td.wf-name-cell { position: sticky; left: 0; z-index: 2; background: var(--card-bg); min-width: 220px; box-shadow: 1px 0 0 var(--input-border); }
+    .wf-table thead th.wf-name-col { z-index: 6; top: 0; left: 0; background: #F8FAFC; }
+    .wf-table tr.wf-task:hover td.wf-name-cell { background: var(--input-bg); }
+    .wf-table tr.wf-cat td.wf-name-cell { background: #EFF6FF; box-shadow: none; }
+    .wf-table tr.wf-addtask td.wf-name-cell { color: var(--primary); cursor: pointer; box-shadow: none; }
+    .wf-table th.g-month { min-width: 50px; width: 50px; text-align: center; font-size: 10px; color: #475569; padding: 8px 2px; white-space: nowrap; line-height: 1.3; }
+    .wf-table th.g-month .g-y { color: var(--text-muted); font-size: 9px; }
+    .wf-table th.g-month.g-current, .wf-table td.g-cell.g-current { background: #FFF7ED; }
+    .wf-table td.g-cell { min-width: 50px; width: 50px; padding: 0; border-right: 1px solid #F1F5F9; position: relative; }
+    .wf-table td.g-cell .gwrap { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); height: 11px; }
+    .wf-table td.g-cell .gbar { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+    .gbar.g-done { background: #16A34A; }
+    .gbar.g-prog { background: #2563EB; }
+    .gbar.g-plan { background: repeating-linear-gradient(45deg, #CBD5E1, #CBD5E1 4px, #E2E8F0 4px, #E2E8F0 8px); }
+    .gbar.gstart { left: 3px; border-top-left-radius: 6px; border-bottom-left-radius: 6px; }
+    .gbar.gend { right: 3px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; }
+    .g-diamond { position: absolute; right: 0; top: 50%; transform: translate(50%, -50%) rotate(45deg); width: 10px; height: 10px; background: #B45309; border: 1.5px solid #fff; box-shadow: 0 0 0 1px #B45309; z-index: 3; }
+    .gleg { display: inline-block; width: 16px; height: 9px; border-radius: 3px; vertical-align: middle; }
+    .gleg.g-done { background: #16A34A; }
+    .gleg.g-prog { background: #2563EB; }
+    .gleg.g-plan { background: repeating-linear-gradient(45deg, #CBD5E1, #CBD5E1 3px, #E2E8F0 3px, #E2E8F0 6px); }
+    /* Task 상세 모달 */
+    #task-detail-modal .modal-box { max-width: 620px; }
+    .task-detail-grid { display: grid; grid-template-columns: 150px 1fr; gap: 12px 16px; align-items: center; }
+    .task-detail-grid .tdl { font-size: 13px; color: var(--text-muted); font-weight: 600; }
+    .task-detail-grid .tdv { font-size: 14px; color: var(--text); }
+    .task-detail-grid .form-control { width: 100%; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: 8px; background: var(--input-bg); font-size: 14px; box-sizing: border-box; }
+    .task-detail-grid textarea.form-control { resize: vertical; min-height: 56px; }
+    .task-detail-grid .tdv-mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; }
+    .task-flag-info { margin: 16px 0 0; padding: 10px 12px; background: #FEF9E7; border: 1px solid #FDE68A; border-radius: 8px; font-size: 12px; color: #92400E; }
+    .task-ms-note { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .task-section-title { font-size: 14px; font-weight: 700; margin: 22px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--nav-border); }
+    .ms-history { list-style: none; margin: 0; padding: 0 0 0 4px; }
+    .ms-history li { position: relative; padding: 0 0 16px 18px; border-left: 2px solid var(--input-border); }
+    .ms-history li:last-child { padding-bottom: 0; border-left-color: transparent; }
+    .ms-history li::before { content: ''; position: absolute; left: -6px; top: 3px; width: 10px; height: 10px; border-radius: 50%; background: var(--primary); }
+    .ms-history .h-date { font-size: 12px; font-weight: 700; color: var(--text); }
+    .ms-history .h-type { font-size: 12px; color: var(--primary); margin-left: 8px; }
+    .ms-history .h-change { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .task-modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
     .member-subnav { display: flex; gap: 4px; margin-bottom: 12px; }
     .member-subnav button { padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--input-border); background: var(--card-bg); cursor: pointer; font-size: 13px; color: var(--text-muted); }
     .member-subnav button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
@@ -256,9 +346,11 @@
     .tag-pending { background: #FEF3C7; color: #F59E0B; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
     .tag-delayed { background: #FEE2E2; color: #DC2626; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
     .tag-issue { background: #FEE2E2; color: #DC2626; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
-    .milestone-wrap { display: grid; grid-template-columns: repeat(5, 1fr); grid-template-rows: auto auto; margin: 12px 0; font-size: 12px; }
+    .milestone-wrap { display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: auto auto; margin: 12px 0; font-size: 12px; }
     .milestone-bar { grid-column: 1 / -1; display: flex; align-items: stretch; gap: 0; }
-    .milestone-bar .seg { flex: 1; height: 10px; background: var(--input-bg); position: relative; overflow: hidden; min-width: 0; border-right: 1px solid var(--nav-border); box-sizing: border-box; }
+    .milestone-bar .seg { flex: 1; height: 18px; background: var(--input-bg); position: relative; overflow: hidden; min-width: 0; border-right: 1px solid var(--nav-border); box-sizing: border-box; }
+    .milestone-bar .seg.seg-recruit { flex: 3; }
+    .milestone-bar .seg .recruit-pct { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--text); z-index: 2; white-space: nowrap; pointer-events: none; }
     .milestone-bar .seg:last-child { border-right: none; }
     .milestone-bar .seg .seg-fill { height: 100%; background: var(--primary); transition: width 0.2s; }
     .milestone-bar .seg.done .seg-fill { width: 100% !important; }
@@ -276,8 +368,10 @@
     #view-program .study-toolbar .search-input { padding: 8px 12px 8px 36px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 14px; width: 220px; background: #fff url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"%2364748B\" stroke-width=\"2\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.35-4.35\"/></svg>') 10px 50% no-repeat; }
     #view-program .study-toolbar .search-input:focus { outline: none; border-color: #2563EB; }
     #view-program .study-toolbar select { padding: 8px 12px; border: 1px solid #E5E7EB; border-radius: 8px; font-size: 13px; background: #fff; min-width: 120px; }
-    .milestone-wrap .label-wrap { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 6px; font-size: 11px; font-weight: 700; color: var(--text); gap: 0; }
+    .milestone-wrap .label-wrap { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(7, 1fr); margin-top: 6px; font-size: 10px; font-weight: 700; color: var(--text); gap: 0; }
     .milestone-wrap .label-wrap span { text-align: center; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+    .milestone-wrap .label-wrap .label-recruit { grid-column: span 3; display: flex; justify-content: space-between; align-items: center; padding: 0 2px; overflow: visible; }
+    .milestone-wrap .label-wrap .label-recruit span { text-align: center; }
     .project-card .card-meta-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; font-size: 13px; font-weight: 700; color: var(--text); }
     .project-card-simple .card-name-row { margin-bottom: 0; }
     .project-card-simple .progress-bar-label { font-size: 12px; color: var(--text-muted); margin-top: 6px; margin-bottom: 2px; }
@@ -1079,111 +1173,29 @@
           </div>
           <div id="project-panel-milestone" class="project-panel" style="display:none;">
             <div class="card">
-              <h2 class="card-title">Milestones</h2>
-              <p style="color: var(--text-muted); margin-bottom: 16px;">과제 일정 및 마일스톤을 관리합니다.</p>
-              <div class="timeline-header">
-                <h3 class="timeline-title">타임라인</h3>
-                <input type="text" class="form-control timeline-search" placeholder="검색어를 입력하세요">
-                <div class="view-btns">
-                  <button type="button">일간</button>
-                  <button type="button">주간</button>
-                  <button type="button" class="active">월간</button>
-                </div>
-                <label class="my-timeline"><input type="checkbox"> 나의 타임라인</label>
-                <button type="button" class="btn btn-primary btn-load-template">새 템플릿 불러오기</button>
-              </div>
-              <div class="timeline-table-wrap">
-                <table class="timeline-table">
+              <h2 class="card-title" style="margin-bottom:10px">Milestones / 워크플로우
+                <span class="wf-flag-wrap" style="margin-left:auto">
+                  <span class="wf-legend-info" tabindex="0">&#9432; 범례
+                    <span class="wf-legend-pop">
+                      <span class="lg"><span class="type-badge type-ms">마일스톤형</span> End Date 관리</span>
+                      <span class="lg"><span class="type-badge type-doc">문서형</span> eTMF / BearDoc 경로</span>
+                      <span class="lg"><span class="ms-badge">&#9733; M</span> 핵심 마일스톤(삭제 불가)</span>
+                      <span class="lg"><span class="gleg g-done"></span> 완료</span>
+                      <span class="lg"><span class="gleg g-prog"></span> 진행중</span>
+                      <span class="lg"><span class="gleg g-plan"></span> 계획</span>
+                    </span>
+                  </span>
+                  <span style="margin-left:14px">과제 상태: <span id="wf-current-flag" class="flag-badge flag-planning">Planning</span></span>
+                  <button type="button" class="btn btn-primary btn-load-template" style="margin-left:12px" onclick="alert('템플릿 불러오기 (데모)')">새 템플릿 불러오기</button>
+                </span>
+              </h2>
+              <div class="wf-scroll-top" id="wf-scroll-top"><div id="wf-scroll-top-inner"></div></div>
+              <div class="timeline-table-wrap wf-table-wrap" id="wf-table-wrap">
+                <table class="wf-table">
                   <thead>
-                    <tr>
-                      <th class="task-cell">업무 / 마일스톤</th>
-                      <th class="pct-cell">계획 (%)</th>
-                      <th class="pct-cell">실적 (%)</th>
-                      <th class="timeline-month">10월</th>
-                      <th class="timeline-month">11월</th>
-                      <th class="timeline-month">12월</th>
-                      <th class="timeline-month">1월</th>
-                      <th class="timeline-month">2월</th>
-                      <th class="timeline-month timeline-cell current-month">3월</th>
-                    </tr>
+                    <tr id="wf-head-row"></tr>
                   </thead>
-                  <tbody>
-                    <tr class="row-total">
-                      <td class="task-cell">TOTAL</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell current-month"></td>
-                    </tr>
-                    <tr class="workgroup-row">
-                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; 프로젝트 준비</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell current-month"></td>
-                    </tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> 전체예산</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> Vendor 확정</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 전체예산 결재문서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> 계약</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> CRO 계약서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 기관(CORE) 계약서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="workgroup-row">
-                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; Start-up</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell current-month"></td>
-                    </tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> IND submission</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> IND 제출(Protocol)</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> IND approval</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> IND 승인서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> SIV</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 1st SIV 자료</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="workgroup-row">
-                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; 추적 및 F/U</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td>
-                      <td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td>
-                    </tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> FPI</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 최종 시험대상자 현황보고</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> LPO</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> 최종 시험대상자 현황보고</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="workgroup-row">
-                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; 데이터분석</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td>
-                    </tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> DM/STAT</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> SAP</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> DBL 승인 문서</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="workgroup-row">
-                      <td class="task-cell"><span class="wg-icon">&#128193;</span> &#9660; 프로젝트 종료</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="pct-cell">0%</td>
-                      <td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td>
-                    </tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb"> CSR</td><td class="pct-cell">0%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr class="subtask-row"><td class="task-cell"><input type="checkbox" class="cb" checked> CSR</td><td class="pct-cell">100%</td><td class="pct-cell">0%</td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell"></td><td class="timeline-cell current-month"></td></tr>
-                    <tr><td colspan="9" class="add-workgroup">+ 워크그룹 만들기</td></tr>
-                  </tbody>
+                  <tbody id="wf-tbody"></tbody>
                 </table>
               </div>
             </div>
@@ -2012,6 +2024,16 @@
     </div>
   </div>
 
+  <div id="task-detail-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span id="task-detail-title">Task 상세</span>
+        <button type="button" class="modal-close" onclick="closeTaskModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="task-detail-body"></div>
+    </div>
+  </div>
+
   <script>
 function applyFormat(editorId, command, value) {
   var el = document.getElementById(editorId);
@@ -2047,6 +2069,280 @@ function openVendorEvalModal(vendorName, vendorType) {
 function closeVendorEvalModal() {
   document.getElementById('vendor-eval-modal').classList.remove('show');
 }
+
+/* ===== TO-BE 워크플로우 / Task 상세 ===== */
+var WORKFLOW = [
+  { cat: '프로젝트 등록', tasks: [
+    { key: 'budget', name: '전체 예산', type: 'doc', status: '완료', planStart: '2025-07-01', planEnd: '2025-07-31', actualStart: '2025-07-05', actualEnd: '2025-07-28', assignee: '홍길동', createdDate: '2025-07-01', etmf: 'Administration > Budget > Final Budget', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\Budget', note: '전체 예산 결재 완료', currentVersion: 'v1.0', docStatus: 'Final', lastUpdateSummary: '최종 예산안 확정', versionHistory: [ { date: '2025-07-28', from: '-', to: 'v1.0', summary: '최종 예산안 승인' } ] }
+  ]},
+  { cat: '계약', tasks: [
+    { key: 'svc-provider', name: 'Service Provider', type: 'doc', status: '완료', planStart: '2025-08-01', planEnd: '2025-08-15', actualStart: '2025-08-01', actualEnd: '2025-08-12', assignee: '홍길동', createdDate: '2025-07-10', etmf: 'Administration > Agreements > CRO MSA', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\Contract\\CRO', note: 'CRO 계약 체결', currentVersion: 'v1.0', docStatus: 'Final', lastUpdateSummary: 'CRO MSA 체결본', versionHistory: [ { date: '2025-08-12', from: '-', to: 'v1.0', summary: 'MSA 최종 서명' } ] },
+    { key: 'site-contract', name: 'Site Contract', type: 'doc', status: '완료', planStart: '2025-08-01', planEnd: '2025-08-31', actualStart: '2025-08-05', actualEnd: '2025-08-28', assignee: '홍길동', createdDate: '2025-07-10', etmf: 'Administration > Agreements > Site Contract', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\Contract\\Site', note: '', currentVersion: 'v1.0', docStatus: 'Final', lastUpdateSummary: '', versionHistory: [ { date: '2025-08-28', from: '-', to: 'v1.0', summary: '기관 계약 최종본' } ] }
+  ]},
+  { cat: 'Start-up', tasks: [
+    { key: 'protocol', name: 'Protocol Develop.', type: 'doc', status: '완료', planStart: '2025-07-15', planEnd: '2025-09-15', actualStart: '2025-07-20', actualEnd: '2025-09-10', assignee: '조성인', createdDate: '2025-07-15', etmf: 'Study Start-up > Protocol > Final Protocol', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\Protocol', note: '프로토콜 v2.0 확정', currentVersion: 'v2.0', docStatus: 'Final', lastUpdateSummary: 'Sample Size 수정, Visit Window 변경', versionHistory: [ { date: '2025-09-10', from: 'v1.0', to: 'v2.0', summary: 'Sample Size 수정, Visit Window 변경' }, { date: '2025-07-20', from: '-', to: 'v1.0', summary: '초안 작성' } ] },
+    { key: 'ind-sub', name: 'IND Submission', type: 'milestone', core: true, msNo: 1, status: '완료', planStart: '2025-09-01', planEnd: '2025-09-30', actualStart: '2025-09-01', actualEnd: '2025-09-28', assignee: '조성인', createdDate: '2025-08-01', note: 'IND 제출 완료' },
+    { key: 'ind-app', name: 'IND Approval', type: 'milestone', core: true, msNo: 2, flagTrigger: 'Conduct', status: '완료', planStart: '2025-10-01', planEnd: '2025-12-15', actualStart: '2025-10-01', actualEnd: '2025-12-10', assignee: '조성인', assigneePrev: '홍길동', assigneeChangeDate: '2025-11-01', createdDate: '2025-09-29', note: 'MFDS 승인 완료' },
+    { key: 'irb-app', name: 'IRB Approval', type: 'doc', status: '완료', planStart: '2025-12-01', planEnd: '2025-12-31', actualStart: '2025-12-01', actualEnd: '2025-12-22', assignee: '조성인', createdDate: '2025-10-01', etmf: 'Study Start-up > Regulatory > IRB Approval', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\IRB', note: '', currentVersion: 'v1.0', docStatus: 'Final', lastUpdateSummary: 'IRB 승인 통지문', versionHistory: [ { date: '2025-12-22', from: '-', to: 'v1.0', summary: 'IRB 승인본 수령' } ] },
+    { key: 'siv', name: 'SIV', type: 'doc', status: '완료', planStart: '2026-01-01', planEnd: '2026-01-15', actualStart: '2026-01-05', actualEnd: '2026-01-12', assignee: '이모니터', createdDate: '2025-12-01', etmf: 'Study Start-up > Site > SIV Report', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\SIV', note: '1st SIV 완료', currentVersion: 'v1.0', docStatus: 'Final', lastUpdateSummary: '1st SIV Report', versionHistory: [ { date: '2026-01-12', from: '-', to: 'v1.0', summary: 'SIV 보고서 최종' } ] }
+  ]},
+  { cat: 'Study Conduct', tasks: [
+    { key: 'fpi', name: 'FPI', type: 'milestone', core: true, msNo: 3, status: '완료', planStart: '2026-01-15', planEnd: '2026-01-31', actualStart: '2026-01-20', actualEnd: '2026-01-28', assignee: '이모니터', createdDate: '2026-01-02', note: '첫 시험대상자 등록' },
+    { key: 'lpi', name: 'LPI', type: 'milestone', core: true, msNo: 4, status: '진행중', planStart: '2026-02-01', planEnd: '2026-04-30', actualStart: '2026-02-10', actualEnd: '', assignee: '이모니터', createdDate: '2026-02-01', progDate: '2026-02-10', note: '대상자 등록 진행중' },
+    { key: 'lpo', name: 'LPO', type: 'milestone', core: true, msNo: 5, flagTrigger: 'Analysis', status: '예정', planStart: '2026-05-01', planEnd: '2026-07-31', actualStart: '', actualEnd: '', createdDate: '2026-02-01', note: '' }
+  ]},
+  { cat: 'Data Management', tasks: [
+    { key: 'dmp', name: 'DMP', type: 'doc', status: '진행중', planStart: '2026-03-01', planEnd: '2026-05-15', actualStart: '2026-03-01', actualEnd: '', assignee: '박데이터', createdDate: '2026-02-15', progDate: '2026-03-01', etmf: 'Data Management > Plan > DMP', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\DM\\DMP', note: '', currentVersion: 'v1.1', docStatus: 'Review', lastUpdateSummary: 'CRF 항목 추가 반영', versionHistory: [ { date: '2026-03-01', from: 'v1.0', to: 'v1.1', summary: 'CRF 항목 추가 반영' }, { date: '2026-02-20', from: '-', to: 'v1.0', summary: '초안 작성' } ] },
+    { key: 'dblock', name: 'DB Lock', type: 'milestone', core: true, msNo: 6, status: '예정', planStart: '2026-08-01', planEnd: '2026-08-31', actualStart: '', actualEnd: '', createdDate: '2026-02-15', note: '' }
+  ]},
+  { cat: 'Statistics Analysis', tasks: [
+    { key: 'sap', name: 'SAP', type: 'doc', status: '진행중', planStart: '2026-03-01', planEnd: '2026-06-30', actualStart: '2026-03-05', actualEnd: '', assignee: '최통계', createdDate: '2026-02-20', progDate: '2026-03-05', etmf: 'Statistics > Plan > SAP', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\Stat\\SAP', note: '', currentVersion: 'v1.0', docStatus: 'Review', lastUpdateSummary: '초안 검토 중', versionHistory: [ { date: '2026-03-05', from: '-', to: 'v1.0', summary: '초안 작성' } ] },
+    { key: 'topline', name: 'Key Results (Topline)', type: 'milestone', core: true, msNo: 7, status: '예정', planStart: '2026-09-01', planEnd: '2026-09-30', actualStart: '', actualEnd: '', createdDate: '2026-02-20', note: '' },
+    { key: 'tlf', name: 'TLF', type: 'doc', flagTrigger: 'Close-out', status: '예정', planStart: '2026-10-01', planEnd: '2026-10-15', actualStart: '', actualEnd: '', createdDate: '2026-02-20', etmf: 'Statistics > Output > TLF', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\Stat\\TLF', note: '', currentVersion: '', docStatus: 'Draft', lastUpdateSummary: '', versionHistory: [] }
+  ]},
+  { cat: '프로젝트 종료', tasks: [
+    { key: 'csr', name: 'CSR', type: 'doc', core: true, msNo: 8, status: '예정', planStart: '2026-11-01', planEnd: '2026-11-30', actualStart: '', actualEnd: '', createdDate: '2026-02-20', etmf: 'Reporting > CSR > Final CSR', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\CSR', note: '', currentVersion: '', docStatus: 'Draft', lastUpdateSummary: '', versionHistory: [] },
+    { key: 'ctd', name: 'CTD', type: 'doc', status: '예정', planStart: '2026-12-01', planEnd: '2026-12-31', actualStart: '', actualEnd: '', createdDate: '2026-02-20', etmf: 'Reporting > CTD > Submission Package', beardoc: '\\\\beardoc\\Clinical\\Enblozem3\\CTD', note: '', currentVersion: '', docStatus: 'Draft', lastUpdateSummary: '', versionHistory: [] }
+  ]}
+];
+var TASKS_BY_KEY = {};
+WORKFLOW.forEach(function(g) { g.tasks.forEach(function(t) { TASKS_BY_KEY[t.key] = t; }); });
+
+function wfStatusBadge(s) {
+  var cls = s === '완료' ? 'st-done' : (s === '진행중' ? 'st-prog' : 'st-plan');
+  return '<span class="status-badge2 ' + cls + '">' + s + '</span>';
+}
+function wfTypeBadge(t) {
+  return t.type === 'milestone'
+    ? '<span class="type-badge type-ms">마일스톤형</span>'
+    : '<span class="type-badge type-doc">문서형</span>';
+}
+function wfMsBadge(t) {
+  return t.core ? '<span class="ms-badge">&#9733; M' + t.msNo + '</span>' : '<span style="color:var(--text-muted)">-</span>';
+}
+function docStatusClass(s) {
+  return s === 'Final' ? 'ds-final' : (s === 'Review' ? 'ds-review' : 'ds-draft');
+}
+function docVerTag(t) {
+  var ver = t.currentVersion ? '<span class="dv-ver">' + t.currentVersion + '</span> · ' : '';
+  return '<span class="doc-ver">&#128196; ' + ver + '<span class="docstatus ' + docStatusClass(t.docStatus) + '">' + (t.docStatus || 'Draft') + '</span></span>';
+}
+function computeStatusFlag() {
+  var flag = 'Planning';
+  if (TASKS_BY_KEY['ind-app'] && TASKS_BY_KEY['ind-app'].actualEnd) flag = 'Conduct';
+  if (TASKS_BY_KEY['lpo'] && TASKS_BY_KEY['lpo'].actualEnd) flag = 'Analysis';
+  if (TASKS_BY_KEY['tlf'] && TASKS_BY_KEY['tlf'].actualEnd) flag = 'Close-out';
+  return flag;
+}
+var GANTT_CURRENT = 2026 * 12 + 6;
+function ganttMonths() {
+  var arr = [], y = 2025, m = 7;
+  for (var i = 0; i < 18; i++) {
+    arr.push({ y: y, m: m, key: y * 12 + m });
+    m++; if (m > 12) { m = 1; y++; }
+  }
+  return arr;
+}
+function dateKey(d) {
+  if (!d) return null;
+  var p = d.split('-');
+  return (+p[0]) * 12 + (+p[1]);
+}
+function taskPeriod(t) {
+  if (t.status === '완료') return { s: dateKey(t.actualStart || t.planStart), e: dateKey(t.actualEnd || t.planEnd), kind: 'g-done' };
+  if (t.status === '진행중') return { s: dateKey(t.actualStart || t.planStart), e: dateKey(t.planEnd), kind: 'g-prog' };
+  return { s: dateKey(t.planStart), e: dateKey(t.planEnd), kind: 'g-plan' };
+}
+function ganttCells(t, months) {
+  var p = taskPeriod(t);
+  return months.map(function(mn) {
+    var cur = mn.key === GANTT_CURRENT ? ' g-current' : '';
+    var bar = '';
+    if (p.s != null && p.e != null && mn.key >= p.s && mn.key <= p.e) {
+      var cls = 'gbar ' + p.kind + (mn.key === p.s ? ' gstart' : '') + (mn.key === p.e ? ' gend' : '');
+      var dia = (t.core && mn.key === p.e) ? '<span class="g-diamond" title="핵심 마일스톤 M' + t.msNo + '"></span>' : '';
+      bar = '<div class="gwrap"><div class="' + cls + '"></div>' + dia + '</div>';
+    }
+    return '<td class="g-cell' + cur + '">' + bar + '</td>';
+  }).join('');
+}
+function renderWorkflow() {
+  var tbody = document.getElementById('wf-tbody');
+  if (!tbody) return;
+  var months = ganttMonths();
+  var colCount = 7 + months.length;
+  var headRow = document.getElementById('wf-head-row');
+  if (headRow) {
+    var monthTh = months.map(function(mn) {
+      var cur = mn.key === GANTT_CURRENT ? ' g-current' : '';
+      return '<th class="g-month' + cur + '"><span class="g-y">\'' + String(mn.y).slice(2) + '</span><br>' + mn.m + '월</th>';
+    }).join('');
+    headRow.innerHTML = '<th class="wf-name-col">워크플로우 / Task</th>'
+      + '<th>구분</th><th>핵심 마일스톤</th><th>상태</th><th>계획 종료일</th><th>실제 종료일</th><th style="width:54px">관리</th>'
+      + monthTh;
+  }
+  var html = '';
+  WORKFLOW.forEach(function(g) {
+    html += '<tr class="wf-cat"><td class="wf-name-cell"><span style="margin-right:6px">&#128193;</span>' + g.cat + '</td><td colspan="' + (colCount - 1) + '"></td></tr>';
+    g.tasks.forEach(function(t) {
+      var trigger = t.flagTrigger ? ' <span class="flag-trigger-note">&#8594; ' + t.flagTrigger + ' 전환</span>' : '';
+      var icon = t.type === 'milestone' ? '&#9873;' : '&#128196;';
+      var action = t.core
+        ? '<span class="lock-ico" title="핵심 마일스톤 - 삭제 불가">&#128274;</span>'
+        : '<button type="button" class="del-ico" title="Task 삭제" onclick="event.stopPropagation(); wfDeleteTask(\'' + t.key + '\')">&times;</button>';
+      var verTag = t.type === 'doc' ? ' ' + docVerTag(t) : '';
+      html += '<tr class="wf-task" onclick="openTaskModal(\'' + t.key + '\')">'
+        + '<td class="wf-name-cell"><div class="wf-name"><span>' + icon + '</span><span class="task-link">' + t.name + '</span>' + verTag + trigger + '</div></td>'
+        + '<td>' + wfTypeBadge(t) + '</td>'
+        + '<td>' + wfMsBadge(t) + '</td>'
+        + '<td>' + wfStatusBadge(t.status) + '</td>'
+        + '<td>' + (t.planEnd || '-') + '</td>'
+        + '<td>' + (t.actualEnd || '<span style="color:var(--text-muted)">-</span>') + '</td>'
+        + '<td>' + action + '</td>'
+        + ganttCells(t, months)
+        + '</tr>';
+    });
+    html += '<tr class="wf-addtask" onclick="alert(\'' + g.cat + ' 에 Task 추가 (데모)\')"><td class="wf-name-cell">+ Task 추가</td><td colspan="' + (colCount - 1) + '"></td></tr>';
+  });
+  tbody.innerHTML = html;
+  var flag = computeStatusFlag();
+  var flagEl = document.getElementById('wf-current-flag');
+  if (flagEl) {
+    var cmap = { 'Planning': 'flag-planning', 'Conduct': 'flag-conduct', 'Analysis': 'flag-analysis', 'Close-out': 'flag-closeout' };
+    flagEl.className = 'flag-badge ' + (cmap[flag] || 'flag-planning');
+    flagEl.textContent = flag;
+  }
+  setTimeout(function() { syncWfTopScroll(); scrollWfToCurrentMonth(); }, 0);
+}
+function syncWfTopScroll() {
+  var wrap = document.getElementById('wf-table-wrap');
+  var top = document.getElementById('wf-scroll-top');
+  var inner = document.getElementById('wf-scroll-top-inner');
+  if (!wrap || !top || !inner) return;
+  var table = wrap.querySelector('.wf-table');
+  inner.style.width = (table ? table.scrollWidth : wrap.scrollWidth) + 'px';
+  if (top._wfBound) return;
+  top._wfBound = true;
+  var lock = false;
+  top.addEventListener('scroll', function() {
+    if (lock) return; lock = true; wrap.scrollLeft = top.scrollLeft; lock = false;
+  });
+  wrap.addEventListener('scroll', function() {
+    if (lock) return; lock = true; top.scrollLeft = wrap.scrollLeft; lock = false;
+  });
+}
+function scrollWfToCurrentMonth() {
+  var wrap = document.getElementById('wf-table-wrap');
+  var headRow = document.getElementById('wf-head-row');
+  var top = document.getElementById('wf-scroll-top');
+  if (!wrap || !headRow) return;
+  var ths = headRow.querySelectorAll('th');
+  var infoW = 0, idx = -1, mcount = 0, monthW = 50;
+  for (var i = 0; i < ths.length; i++) {
+    if (ths[i].classList.contains('g-month')) {
+      if (!monthW || mcount === 0) monthW = ths[i].offsetWidth || 50;
+      if (ths[i].classList.contains('g-current')) idx = mcount;
+      mcount++;
+    } else {
+      infoW += ths[i].offsetWidth;
+    }
+  }
+  if (idx < 0) return;
+  var target = infoW + idx * monthW - 260;
+  if (target < 0) target = 0;
+  var maxScroll = wrap.scrollWidth - wrap.clientWidth;
+  if (target > maxScroll) target = maxScroll;
+  wrap.scrollLeft = target;
+  if (top) top.scrollLeft = target;
+}
+function wfDeleteTask(key) {
+  var t = TASKS_BY_KEY[key];
+  if (!t) return;
+  if (confirm('"' + t.name + '" Task를 삭제하시겠습니까? (데모)')) alert('데모 환경에서는 삭제되지 않습니다.');
+}
+function buildTaskHistory(t) {
+  var h = [];
+  if (t.status === '완료' && t.actualEnd) h.push({ date: t.actualEnd, type: '상태 변경', change: '진행중 → 완료' });
+  if (t.versionHistory && t.versionHistory.length) {
+    t.versionHistory.forEach(function(v) {
+      h.push({ date: v.date, type: 'Version Update', change: v.from + ' → ' + v.to, sub: v.summary ? ('주요 변경: ' + v.summary) : '' });
+    });
+  }
+  if (t.assigneePrev && t.assigneeChangeDate) h.push({ date: t.assigneeChangeDate, type: '담당자 변경', change: t.assigneePrev + ' → ' + t.assignee });
+  if ((t.status === '진행중' || t.status === '완료')) h.push({ date: t.progDate || t.createdDate, type: '상태 변경', change: '예정 → 진행중' });
+  h.push({ date: t.createdDate, type: 'Task 생성', change: t.assignee ? ('담당자: ' + t.assignee) : '' });
+  h.sort(function(a, b) { return a.date < b.date ? 1 : (a.date > b.date ? -1 : 0); });
+  return h;
+}
+function statusSelectHtml(t) {
+  var opts = ['예정', '진행중', '완료'];
+  return '<select class="form-control">' + opts.map(function(o) {
+    return '<option' + (o === t.status ? ' selected' : '') + '>' + o + '</option>';
+  }).join('') + '</select>';
+}
+function docStatusSelectHtml(t) {
+  var opts = ['Draft', 'Review', 'Final'];
+  return '<select class="form-control" style="max-width:160px">' + opts.map(function(o) {
+    return '<option' + (o === t.docStatus ? ' selected' : '') + '>' + o + '</option>';
+  }).join('') + '</select>';
+}
+function openTaskModal(key) {
+  var t = TASKS_BY_KEY[key];
+  if (!t) return;
+  document.getElementById('task-detail-title').textContent = 'Task 상세';
+  var badges = wfTypeBadge(t) + (t.core ? ' <span class="ms-badge">&#9733; 핵심 마일스톤 M' + t.msNo + '</span>' : '');
+  var head = '<div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">'
+    + '<span style="font-size:18px; font-weight:700;">' + t.name + '</span>' + badges + '</div>';
+  var grid = '<div class="task-detail-grid">';
+  if (t.type === 'milestone') {
+    grid += '<div class="tdl">상태</div><div class="tdv">' + statusSelectHtml(t) + '</div>';
+    grid += '<div class="tdl">계획 종료일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.planEnd || '') + '"></div>';
+    grid += '<div class="tdl">실제 시작일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.actualStart || '') + '"></div>';
+    grid += '<div class="tdl">실제 종료일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.actualEnd || '') + '"><div class="task-ms-note">실제 종료일(End Date) 입력 시 핵심 마일스톤이 달성 처리됩니다.</div></div>';
+  } else {
+    grid += '<div class="tdl">Task 상태</div><div class="tdv">' + statusSelectHtml(t) + '</div>';
+    grid += '<div class="tdl">Current Version</div><div class="tdv"><input type="text" class="form-control" value="' + (t.currentVersion || '') + '" placeholder="예: v2.0" style="max-width:140px"></div>';
+    grid += '<div class="tdl">Document Status</div><div class="tdv">' + docStatusSelectHtml(t) + '</div>';
+    grid += '<div class="tdl">eTMF Reference</div><div class="tdv"><input type="text" class="form-control" value="' + (t.etmf || '') + '" placeholder="예: Study Start-up &gt; Protocol &gt; Final Protocol"></div>';
+    grid += '<div class="tdl">BearDoc Link</div><div class="tdv"><input type="text" class="form-control tdv-mono" value="' + (t.beardoc || '') + '" placeholder="예: \\\\beardoc\\Clinical\\ProjectA\\Protocol"></div>';
+    grid += '<div class="tdl">Last Update Summary</div><div class="tdv"><textarea class="form-control" rows="2" maxlength="200" placeholder="최근 변경 요약 (최대 200자)">' + (t.lastUpdateSummary || '') + '</textarea></div>';
+    grid += '<div class="tdl">실제 시작일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.actualStart || '') + '"></div>';
+    grid += '<div class="tdl">실제 종료일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.actualEnd || '') + '">' + (t.core ? '<div class="task-ms-note">실제 종료일 입력 시 핵심 마일스톤(M' + t.msNo + ')이 달성 처리됩니다.</div>' : '') + '</div>';
+  }
+  grid += '<div class="tdl">비고</div><div class="tdv"><textarea class="form-control" rows="2" placeholder="비고">' + (t.note || '') + '</textarea></div>';
+  grid += '</div>';
+  var flagInfo = t.flagTrigger
+    ? '<div class="task-flag-info">&#9888; 이 Task의 <b>실제 종료일</b>이 입력되면 과제 상태(Status Flag)가 <b>' + t.flagTrigger + '</b>(으)로 자동 전환됩니다.</div>'
+    : '';
+  var docNote = t.type === 'doc'
+    ? '<div class="task-ms-note" style="margin-top:10px;">※ 임상 문서는 CTMS에 업로드하지 않고 eTMF 및 BearDoc 보안폴더 경로로 관리합니다.</div>'
+    : '';
+  var hist = buildTaskHistory(t);
+  var histTitle = t.type === 'doc' ? '변경 이력 (History)' : 'Milestone History';
+  var histHtml = '<div class="task-section-title">' + histTitle + '</div><ul class="ms-history">'
+    + hist.map(function(h) {
+        return '<li><span class="h-date">' + h.date + '</span><span class="h-type">' + h.type + '</span>'
+          + (h.change ? '<div class="h-change">' + h.change + '</div>' : '')
+          + (h.sub ? '<div class="h-change">' + h.sub + '</div>' : '') + '</li>';
+      }).join('')
+    + '</ul>';
+  var foot = '<div class="task-modal-foot">'
+    + '<button type="button" class="btn btn-outline" onclick="closeTaskModal()">닫기</button>'
+    + '<button type="button" class="btn btn-primary" onclick="alert(\'저장되었습니다 (데모)\'); closeTaskModal();">저장</button>'
+    + '</div>';
+  document.getElementById('task-detail-body').innerHTML = head + grid + flagInfo + docNote + histHtml + foot;
+  document.getElementById('task-detail-modal').classList.add('show');
+}
+function closeTaskModal() {
+  document.getElementById('task-detail-modal').classList.remove('show');
+}
+document.addEventListener('DOMContentLoaded', function() {
+  renderWorkflow();
+  var tdm = document.getElementById('task-detail-modal');
+  if (tdm) tdm.addEventListener('click', function(e) { if (e.target === this) closeTaskModal(); });
+  window.addEventListener('resize', function() { setTimeout(syncWfTopScroll, 100); });
+});
+
 (function() {
   var ROLE_KEY = 'ctms_role';
   var PROJECT_IDS = ['enblo-mb', 'enblo-gem', 'enblo-china', 'enblo-insulin'];
@@ -2233,6 +2529,7 @@ function closeVendorEvalModal() {
       var panel = document.getElementById('project-panel-' + currentProjectTab);
       if (panel) panel.style.display = 'block';
       if (currentProjectTab === 'site') initSitesChart();
+      if (currentProjectTab === 'milestone') setTimeout(function() { syncWfTopScroll(); scrollWfToCurrentMonth(); }, 0);
     } else if (page === 'closed-project') {
       document.getElementById('closedProjectTitle').textContent = CLOSED_TITLES[currentProjectId] || '';
       document.getElementById('closedTabLabel').textContent = CLOSED_TAB_LABELS[currentProjectTab] || 'Study Info';
@@ -2281,18 +2578,18 @@ function closeVendorEvalModal() {
   }
 
   var adminProjectCards = [
-    { name: '엔블로젬 Enblozem', sub: '', pct: 30, status: 'on_track', issue: 0, pi: '김철수', date: '2024-05-20', currentMilestone: 1, enrollmentPct: 35 },
-    { name: '엔블로젬 2/3상', sub: '', pct: 30, status: 'on_track', issue: 0, pi: '김철수', date: '2024-05-20', currentMilestone: 1, enrollmentPct: 28 },
-    { name: 'Nabota 연구자 임상', sub: '', pct: 30, status: 'pending', issue: 0, pi: '김철수', date: '2024-05-20', currentMilestone: 0, enrollmentPct: 0 },
-    { name: '엔블로젬 3상', sub: '', pct: 30, status: 'on_track', issue: 2, pi: '김철수', date: '2024-05-20', currentMilestone: 1, enrollmentPct: 42 },
-    { name: '엔블로젬 IIT', sub: '', pct: 30, status: 'pending', issue: 0, pi: '김철수', date: '2024-05-20', currentMilestone: 2, enrollmentPct: 100 },
-    { name: '엔블로 단일제 2상', sub: '', pct: 30, status: 'on_track', issue: 3, pi: '김철수', date: '2024-05-20', currentMilestone: 1, enrollmentPct: 55 }
+    { name: '엔블로젬 Enblozem', sub: '', pct: 30, status: 'on_track', issue: 0, pi: '김철수', date: '2024-05-20', enrollmentPct: 35, msDone: [true, true, false, false, false] },
+    { name: '엔블로젬 2/3상', sub: '', pct: 30, status: 'on_track', issue: 0, pi: '김철수', date: '2024-05-20', enrollmentPct: 28, msDone: [true, true, false, false, false] },
+    { name: 'Nabota 연구자 임상', sub: '', pct: 30, status: 'pending', issue: 0, pi: '김철수', date: '2024-05-20', enrollmentPct: 0, msDone: [true, false, false, false, false] },
+    { name: '엔블로젬 3상', sub: '', pct: 30, status: 'on_track', issue: 2, pi: '김철수', date: '2024-05-20', enrollmentPct: 42, msDone: [true, true, false, false, false] },
+    { name: '엔블로젬 IIT', sub: '', pct: 30, status: 'pending', issue: 0, pi: '김철수', date: '2024-05-20', enrollmentPct: 100, msDone: [true, true, false, false, false] },
+    { name: '엔블로 단일제 2상', sub: '', pct: 30, status: 'on_track', issue: 3, pi: '김철수', date: '2024-05-20', enrollmentPct: 55, msDone: [true, true, false, false, false] }
   ];
   var userProjectCards = [
-    { name: '엔블로젬 3상 (Enblo-003)', pct: 30, status: 'on_track', issue: 2, pi: '김칠수 교수', currentMilestone: 1, enrollmentPct: 35, tasks: [{ title: 'EDC 데이터 검토 (Site 101)', due: 'Oct 15' }, { title: '모니터링 보고서 작성 (Site 102)', due: 'Oct 20' }] },
-    { name: '엔블로젬 연구자 주도 임상 (Enblo-IIT)', pct: 60, status: 'delayed', issue: 1, pi: '이영희 박사', currentMilestone: 2, enrollmentPct: 100, tasks: [{ title: '연구자 미팅 준비 (Site 105)', due: 'Oct 28' }, { title: 'AE/SAE 보고서 확인', due: 'Oct 30' }] }
+    { name: '엔블로젬 3상 (Enblo-003)', pct: 30, status: 'on_track', issue: 2, pi: '김칠수 교수', enrollmentPct: 35, msDone: [true, true, false, false, false], tasks: [{ title: 'EDC 데이터 검토 (Site 101)', due: 'Oct 15' }, { title: '모니터링 보고서 작성 (Site 102)', due: 'Oct 20' }] },
+    { name: '엔블로젬 연구자 주도 임상 (Enblo-IIT)', pct: 60, status: 'delayed', issue: 1, pi: '이영희 박사', enrollmentPct: 100, msDone: [true, true, false, false, false], tasks: [{ title: '연구자 미팅 준비 (Site 105)', due: 'Oct 28' }, { title: 'AE/SAE 보고서 확인', due: 'Oct 30' }] }
   ];
-  var milestones = ['IND', 'FPI', 'LPO', 'DBL', 'CSR'];
+  var milestones = ['IND Sub', 'IND App', 'FPI~LPI', 'DBL', 'CSR'];
 
   function renderDashboard(dashboardSub) {
     var role = getRole();
@@ -2316,24 +2613,31 @@ function closeVendorEvalModal() {
     if (role === 'user') renderUserProjectCards();
   }
 
-  function milestoneBar(currentIdx, enrollmentPct) {
-    enrollmentPct = enrollmentPct != null ? enrollmentPct : 0;
+  function milestoneBar(p, currentPrefix) {
+    var enrollmentPct = Math.min(100, Math.max(0, p.enrollmentPct != null ? p.enrollmentPct : 0));
+    var msDone = p.msDone || [false, false, false, false, false];
     var n = 5;
-    var palette = CHART_PALETTE_PIE || ['#5B8DEE', '#4ECDC4', '#F7B731', '#95A5A6', '#45B7D1'];
+    var recruitIdx = 2;
+    var palette = ['#5B8DEE', '#4ECDC4', '#F7B731', '#95A5A6', '#45B7D1'];
+    var fills = [];
+    for (var i = 0; i < n; i++) {
+      if (i === recruitIdx) fills[i] = enrollmentPct;
+      else fills[i] = msDone[i] ? 100 : 0;
+    }
+    var currentIdx = -1;
+    for (var j = 0; j < n; j++) { if (fills[j] < 100) { currentIdx = j; break; } }
     var html = '<div class="milestone-bar">';
     for (var i = 0; i < n; i++) {
-      var isRecruitmentSeg = (i === 1);
-      var fillPct = 100;
-      if (i < currentIdx) fillPct = 100;
-      else if (i === currentIdx && isRecruitmentSeg) fillPct = Math.min(100, Math.max(0, enrollmentPct));
-      else if (i === currentIdx) fillPct = 100;
-      else fillPct = 0;
-      var cls = 'seg' + (fillPct >= 100 ? ' done' : '') + (i === currentIdx ? ' current' : '');
+      var cls = 'seg' + (i === recruitIdx ? ' seg-recruit' : '') + (fills[i] >= 100 ? ' done' : '') + (i === currentIdx ? ' current' : '');
       var segColor = palette[i] || 'var(--primary)';
-      html += '<div class="' + cls + '">' + (i === currentIdx ? '<span class="current-marker">Current</span>' : '') + '<div class="seg-fill" style="width:' + fillPct + '%; background:' + segColor + '"></div></div>';
+      var markerText = currentPrefix ? (currentPrefix + (currentIdx >= 0 ? milestones[currentIdx] : '')) : 'Current';
+      var recruitText = (i === recruitIdx && enrollmentPct > 0) ? '<span class="recruit-pct">등록률: ' + enrollmentPct + '%</span>' : '';
+      html += '<div class="' + cls + '">' + (i === currentIdx ? '<span class="current-marker">' + markerText + '</span>' : '') + '<div class="seg-fill" style="width:' + fills[i] + '%; background:' + segColor + '"></div>' + recruitText + '</div>';
     }
     html += '</div><div class="label-wrap">';
-    milestones.forEach(function(m) { html += '<span>' + m + '</span>'; });
+    html += '<span>IND Sub</span><span>IND App</span>';
+    html += '<span class="label-recruit"><span>FPI</span><span>LPI</span></span>';
+    html += '<span>DBL</span><span>CSR</span>';
     html += '</div>';
     return '<div class="milestone-wrap">' + html + '</div>';
   }
@@ -2345,8 +2649,7 @@ function closeVendorEvalModal() {
       var statusTag = p.status === 'on_track' ? '<span class="tag-on-track">On Track</span>' : p.status === 'pending' ? '<span class="tag-pending">Pending</span>' : '<span class="tag-delayed">Delayed</span>';
       var issueTag = p.issue > 0 ? '<span class="tag-issue">Issue: ' + p.issue + '</span>' : '';
       var tagsInline = '<div class="card-tags-inline">' + statusTag + (issueTag ? ' ' + issueTag : '') + '</div>';
-      var pct = p.enrollmentPct || 0;
-      return '<a href="#program" style="text-decoration:none;color:inherit"><div class="project-card project-card-simple"><div class="card-name-row"><div class="card-name">' + p.name + '</div>' + tagsInline + '</div><div class="progress-bar-label">등록 현황 (목표 대비)</div><div class="progress-bar-wrap"><div class="progress-bar" style="margin:6px 0 10px 0"><div class="progress-bar-fill" style="width:' + pct + '%"></div></div><span class="progress-pct">' + pct + '%</span></div>' + milestoneBar(p.currentMilestone, pct) + '</div></a>';
+      return '<a href="#program" style="text-decoration:none;color:inherit"><div class="project-card project-card-simple"><div class="card-name-row"><div class="card-name">' + p.name + '</div>' + tagsInline + '</div>' + milestoneBar(p) + '</div></a>';
     }).join('');
   }
 
@@ -2358,12 +2661,10 @@ function closeVendorEvalModal() {
       var statusDotCls = p.status === 'on_track' ? 'green' : 'orange';
       var statusLine = 'Overall Status: <span class="status-dot ' + statusDotCls + '"></span><span style="color:' + (p.status === 'on_track' ? 'var(--success)' : 'var(--warning)') + '; font-weight:500">' + statusText + '</span>';
       var issueLine = 'Issue: ' + (p.issue || 0) + ' <span class="status-dot red"></span>';
-      var currentLabel = 'Current at ' + milestones[p.currentMilestone];
       var tasksHtml = p.tasks && p.tasks.length ? '<div class="my-tasks"><div class="my-tasks-title">내 작업 (My Tasks)</div><ul>' + p.tasks.map(function(t) { return '<li>' + t.title + ' <span class="due">Due ' + t.due + '</span></li>'; }).join('') + '</ul></div>' : '';
-      var pct = p.enrollmentPct || 0;
       var statusBadge = p.status === 'on_track' ? '<span class="tag-on-track">On Track</span>' : '<span class="tag-delayed">Delayed</span>';
       var issueTag = (p.issue || 0) > 0 ? '<span class="tag-issue">Issue: ' + p.issue + '</span>' : '';
-      return '<div class="project-card project-card-simple"><div class="card-name-row"><div class="card-name">' + p.name + '</div><div class="card-tags-inline">' + statusBadge + (issueTag ? ' ' + issueTag : '') + '</div></div><div class="progress-bar-label">등록 현황 (목표 대비)</div><div class="progress-bar-wrap"><div class="progress-bar" style="margin:6px 0 10px 0"><div class="progress-bar-fill" style="width:' + pct + '%"></div></div><span class="progress-pct">' + pct + '%</span></div>' + milestoneBar(p.currentMilestone, pct).replace('Current', currentLabel) + tasksHtml + '</div>';
+      return '<div class="project-card project-card-simple"><div class="card-name-row"><div class="card-name">' + p.name + '</div><div class="card-tags-inline">' + statusBadge + (issueTag ? ' ' + issueTag : '') + '</div></div>' + milestoneBar(p, 'Current at ') + tasksHtml + '</div>';
     }).join('');
   }
 
