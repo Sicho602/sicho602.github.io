@@ -105,6 +105,13 @@
     .actual-expected { display: flex; align-items: center; gap: 8px; }
     .actual-expected input { width: 100px; padding: 6px 10px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--input-bg); }
     .actual-expected .sep { color: var(--text-muted); }
+    .schema-box { display: flex; flex-direction: column; gap: 12px; }
+    .schema-preview { border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--input-bg); padding: 12px; min-height: 120px; display: flex; align-items: center; justify-content: center; overflow: auto; }
+    .schema-preview img.schema-img { max-width: 100%; height: auto; display: block; border-radius: 4px; }
+    .schema-empty { color: var(--text-muted); font-size: 14px; text-align: center; padding: 24px 12px; }
+    .schema-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+    .schema-upload-btn { position: relative; overflow: hidden; }
+    .schema-hint { font-size: 12px; color: var(--text-muted); margin: 0; }
     .view-page { display: none; }
     .view-page.active { display: block; }
     .sub-section-title { font-size: 15px; font-weight: 600; margin: 24px 0 12px 0; color: var(--text); }
@@ -810,6 +817,21 @@
               </div>
               <div class="form-row"><label>국가</label><input type="text" class="form-control" value="Korea, South" style="max-width:240px"></div>
               <div class="form-row"><label>목적</label><textarea class="form-control" rows="4">Metformin과 Gemigliptin으로 혈당조절이 불충분한 제 2형 당뇨병 환자를 대상으로 Metformin과 Gemigliptin과의 병합요법으로써 DWP16001의 장기적 안전성 및 유효성을 평가하고자 한다.</textarea></div>
+            </div>
+            <div class="card">
+              <h2 class="section-title">모식도 (Schematic Diagram)</h2>
+              <div class="schema-box">
+                <div class="schema-preview" id="schema-preview-active">
+                  <img src="assets/schema-enblogem.png?v=1" alt="임상시험 모식도" class="schema-img">
+                </div>
+                <div class="schema-actions">
+                  <label class="btn btn-outline schema-upload-btn">이미지 첨부/변경
+                    <input type="file" accept="image/*" style="display:none" onchange="handleSchemaUpload(event, 'schema-preview-active')">
+                  </label>
+                  <button type="button" class="btn btn-outline" onclick="clearSchema('schema-preview-active')">이미지 삭제</button>
+                </div>
+                <p class="schema-hint">임상시험 설계 모식도(Study Schema) 이미지를 첨부하세요. PNG, JPG 등 이미지 파일을 지원합니다.</p>
+              </div>
             </div>
             <div class="card">
               <h2 class="section-title">상세 정보</h2>
@@ -2368,7 +2390,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  function getRole() { return localStorage.getItem(ROLE_KEY) || 'user'; }
+  function handleSchemaUpload(evt, previewId) {
+    var file = evt.target && evt.target.files && evt.target.files[0];
+    if (!file) return;
+    if (!/^image\//.test(file.type)) { alert('이미지 파일만 첨부할 수 있습니다.'); evt.target.value = ''; return; }
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var box = document.getElementById(previewId);
+      if (!box) return;
+      box.innerHTML = '<img src="' + e.target.result + '" alt="임상시험 모식도" class="schema-img">';
+    };
+    reader.readAsDataURL(file);
+    evt.target.value = '';
+  }
+  function clearSchema(previewId) {
+    var box = document.getElementById(previewId);
+    if (!box) return;
+    box.innerHTML = '<div class="schema-empty">첨부된 모식도가 없습니다. \'이미지 첨부/변경\'을 눌러 추가하세요.</div>';
+  }
+
+  function getRole() { return localStorage.getItem(ROLE_KEY) || 'admin'; }
   function setRole(role) {
     localStorage.setItem(ROLE_KEY, role);
     var roleEl = document.getElementById('roleSelect');
