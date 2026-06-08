@@ -286,6 +286,14 @@
     .gleg.g-done { background: #16A34A; }
     .gleg.g-prog { background: #2563EB; }
     .gleg.g-plan { background: repeating-linear-gradient(45deg, #CBD5E1, #CBD5E1 3px, #E2E8F0 3px, #E2E8F0 6px); }
+    /* 핵심 마일스톤 깃발 / 미완료 필터 / 지연 표시 */
+    .ms-flag { font-size: 14px; line-height: 1; }
+    .ms-flag-done { color: #16A34A; }
+    .ms-flag-todo { color: #111827; }
+    .wf-overdue { color: #DC2626; font-weight: 700; white-space: nowrap; }
+    .wf-table tr.wf-overdue-row td.wf-name-cell { box-shadow: inset 3px 0 0 #DC2626, 1px 0 0 var(--input-border); }
+    .wf-filter-toggle { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; color: var(--text); cursor: pointer; white-space: nowrap; }
+    .wf-filter-toggle input { cursor: pointer; margin: 0; }
     /* Task 상세 모달 */
     #task-detail-modal .modal-box { max-width: 620px; }
     .task-detail-grid { display: grid; grid-template-columns: 150px 1fr; gap: 12px 16px; align-items: center; }
@@ -1200,11 +1208,14 @@
             <div class="card">
               <h2 class="card-title" style="margin-bottom:10px">Milestones / 워크플로우
                 <span class="wf-flag-wrap" style="margin-left:auto">
+                  <label class="wf-filter-toggle"><input type="checkbox" id="wf-incomplete-only" onchange="wfToggleIncomplete(this)"> 미완료 Task만 보기</label>
                   <span class="wf-legend-info" tabindex="0">&#9432; 범례
                     <span class="wf-legend-pop">
                       <span class="lg"><span class="type-badge type-ms">마일스톤형</span> End Date 관리</span>
                       <span class="lg"><span class="type-badge type-doc">문서형</span> eTMF / BearDoc 경로</span>
-                      <span class="lg"><span class="ms-badge">&#9733; M</span> 핵심 마일스톤(삭제 불가)</span>
+                      <span class="lg"><span class="ms-flag ms-flag-done">&#9873;</span> 완료된 핵심 마일스톤</span>
+                      <span class="lg"><span class="ms-flag ms-flag-todo">&#9873;</span> 미완료 핵심 마일스톤 · 삭제 불가</span>
+                      <span class="lg"><span class="wf-overdue">&#9888;</span> 계획 종료일 경과(지연)</span>
                       <span class="lg"><span class="gleg g-done"></span> 완료</span>
                       <span class="lg"><span class="gleg g-prog"></span> 진행중</span>
                       <span class="lg"><span class="gleg g-plan"></span> 계획</span>
@@ -2152,6 +2163,15 @@ function docVerTag(t) {
   var ver = t.currentVersion ? '<span class="dv-ver">' + t.currentVersion + '</span> · ' : '';
   return '<span class="doc-ver">&#128196; ' + ver + '<span class="docstatus ' + docStatusClass(t.docStatus) + '">' + (t.docStatus || 'Draft') + '</span></span>';
 }
+var wfIncompleteOnly = false;
+function wfToggleIncomplete(cb) { wfIncompleteOnly = !!(cb && cb.checked); renderWorkflow(); }
+function isWfOverdue(t) {
+  if (!t || !t.planEnd) return false;
+  if (t.status === '완료' || t.actualEnd) return false;
+  var pe = new Date(t.planEnd + 'T23:59:59');
+  if (isNaN(pe.getTime())) return false;
+  return pe < new Date();
+}
 function computeStatusFlag() {
   var flag = 'Planning';
   if (TASKS_BY_KEY['ind-app'] && TASKS_BY_KEY['ind-app'].actualEnd) flag = 'Conduct';
@@ -2195,7 +2215,7 @@ function renderWorkflow() {
   var tbody = document.getElementById('wf-tbody');
   if (!tbody) return;
   var months = ganttMonths();
-  var colCount = 7 + months.length;
+  var colCount = 6 + months.length;
   var headRow = document.getElementById('wf-head-row');
   if (headRow) {
     var monthTh = months.map(function(mn) {
@@ -2203,31 +2223,39 @@ function renderWorkflow() {
       return '<th class="g-month' + cur + '"><span class="g-y">\'' + String(mn.y).slice(2) + '</span><br>' + mn.m + '월</th>';
     }).join('');
     headRow.innerHTML = '<th class="wf-name-col">워크플로우 / Task</th>'
-      + '<th>구분</th><th>핵심 마일스톤</th><th>상태</th><th>계획 종료일</th><th>실제 종료일</th><th style="width:54px">관리</th>'
+      + '<th>구분</th><th>상태</th><th>계획 종료일</th><th>실제 종료일</th><th style="width:54px">관리</th>'
       + monthTh;
   }
   var html = '';
   WORKFLOW.forEach(function(g) {
+    var tasks = g.tasks.filter(function(t) { return !wfIncompleteOnly || t.status !== '완료'; });
+    if (wfIncompleteOnly && tasks.length === 0) return;
     html += '<tr class="wf-cat"><td class="wf-name-cell"><span style="margin-right:6px">&#128193;</span>' + g.cat + '</td><td colspan="' + (colCount - 1) + '"></td></tr>';
-    g.tasks.forEach(function(t) {
+    tasks.forEach(function(t) {
       var trigger = t.flagTrigger ? ' <span class="flag-trigger-note">&#8594; ' + t.flagTrigger + ' 전환</span>' : '';
-      var icon = t.type === 'milestone' ? '&#9873;' : '&#128196;';
+      var done = t.status === '완료' || !!t.actualEnd;
+      var icon = t.core
+        ? '<span class="ms-flag ' + (done ? 'ms-flag-done' : 'ms-flag-todo') + '" title="핵심 마일스톤 M' + t.msNo + (done ? ' · 완료' : ' · 미완료') + '">&#9873;</span>'
+        : (t.type === 'milestone' ? '&#9873;' : '&#128196;');
       var action = t.core
         ? '<span class="lock-ico" title="핵심 마일스톤 - 삭제 불가">&#128274;</span>'
         : '<button type="button" class="del-ico" title="Task 삭제" onclick="event.stopPropagation(); wfDeleteTask(\'' + t.key + '\')">&times;</button>';
       var verTag = t.type === 'doc' ? ' ' + docVerTag(t) : '';
-      html += '<tr class="wf-task" onclick="openTaskModal(\'' + t.key + '\')">'
+      var overdue = isWfOverdue(t);
+      var planEndCell = t.planEnd
+        ? (overdue ? '<span class="wf-overdue" title="계획 종료일 경과 · 실제 종료일 미입력">' + t.planEnd + ' &#9888;</span>' : t.planEnd)
+        : '-';
+      html += '<tr class="wf-task' + (overdue ? ' wf-overdue-row' : '') + '" onclick="openTaskModal(\'' + t.key + '\')">'
         + '<td class="wf-name-cell"><div class="wf-name"><span>' + icon + '</span><span class="task-link">' + t.name + '</span>' + verTag + trigger + '</div></td>'
         + '<td>' + wfTypeBadge(t) + '</td>'
-        + '<td>' + wfMsBadge(t) + '</td>'
         + '<td>' + wfStatusBadge(t.status) + '</td>'
-        + '<td>' + (t.planEnd || '-') + '</td>'
+        + '<td>' + planEndCell + '</td>'
         + '<td>' + (t.actualEnd || '<span style="color:var(--text-muted)">-</span>') + '</td>'
         + '<td>' + action + '</td>'
         + ganttCells(t, months)
         + '</tr>';
     });
-    html += '<tr class="wf-addtask" onclick="alert(\'' + g.cat + ' 에 Task 추가 (데모)\')"><td class="wf-name-cell">+ Task 추가</td><td colspan="' + (colCount - 1) + '"></td></tr>';
+    if (!wfIncompleteOnly) html += '<tr class="wf-addtask" onclick="alert(\'' + g.cat + ' 에 Task 추가 (데모)\')"><td class="wf-name-cell">+ Task 추가</td><td colspan="' + (colCount - 1) + '"></td></tr>';
   });
   tbody.innerHTML = html;
   var flag = computeStatusFlag();
