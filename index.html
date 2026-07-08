@@ -302,6 +302,12 @@
     .task-detail-grid .form-control { width: 100%; padding: 8px 12px; border: 1px solid var(--input-border); border-radius: 8px; background: var(--input-bg); font-size: 14px; box-sizing: border-box; }
     .task-detail-grid textarea.form-control { resize: vertical; min-height: 56px; }
     .task-detail-grid .tdv-mono { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; }
+    .date-range { display: flex; align-items: flex-end; gap: 10px; }
+    .date-range .dr-field { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+    .date-range .dr-cap { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .date-range .dr-sep { padding-bottom: 8px; color: var(--text-muted); }
+    .tform-sec { margin-top: 16px; padding: 12px 14px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; }
+    .tform-sec-title { font-size: 12px; font-weight: 700; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
     .task-flag-info { margin: 16px 0 0; padding: 10px 12px; background: #FEF9E7; border: 1px solid #FDE68A; border-radius: 8px; font-size: 12px; color: #92400E; }
     .task-ms-note { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
     .task-section-title { font-size: 14px; font-weight: 700; margin: 22px 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--nav-border); }
@@ -399,10 +405,47 @@
     .milestone-bar .current-marker { position: absolute; top: -16px; left: 50%; transform: translateX(-50%); font-size: 11px; color: var(--primary); font-weight: 600; white-space: nowrap; }
     .milestone-bar .current-marker::after { content: ''; position: absolute; top: 12px; left: 50%; margin-left: -4px; border: 4px solid transparent; border-top-color: var(--primary); }
     .my-tasks { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--nav-border); }
-    .my-tasks .my-tasks-title { font-size: 13px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+    .my-tasks .task-group { margin-top: 10px; }
+    .my-tasks .task-group:first-child { margin-top: 0; }
+    .my-tasks .task-group-title { font-size: 12px; font-weight: 700; margin-bottom: 5px; display: flex; align-items: center; gap: 6px; }
+    .my-tasks .task-group-title.tg-progress { color: #2563EB; }
+    .my-tasks .task-group-title.tg-upcoming { color: #64748B; }
+    .my-tasks .task-group-title .tg-count { display: inline-flex; min-width: 16px; height: 16px; padding: 0 5px; align-items: center; justify-content: center; border-radius: 999px; font-size: 11px; font-weight: 700; }
+    .my-tasks .tg-progress .tg-count { background: #DBEAFE; color: #2563EB; }
+    .my-tasks .tg-upcoming .tg-count { background: #F1F5F9; color: #64748B; }
     .my-tasks ul { margin: 0; padding-left: 18px; font-size: 13px; color: var(--text-muted); }
     .my-tasks li { margin-bottom: 4px; }
-    .my-tasks li .due { font-size: 12px; color: var(--primary); }
+    .my-tasks li .due { font-size: 12px; color: var(--text-muted); }
+    .my-tasks li.tg-more { list-style: none; margin-left: -18px; font-size: 12px; font-weight: 600; color: var(--primary); }
+    /* 핵심 마일스톤 진척 현황 */
+    .ms-progress-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .ms-sub { font-size: 12px; font-weight: 400; color: var(--text-muted); margin-left: 6px; }
+    .ms-progress-toggles { display: flex; gap: 8px; }
+    .ms-seg { display: inline-flex; border: 1px solid var(--input-border); border-radius: 8px; overflow: hidden; }
+    .ms-seg button { border: none; background: var(--card-bg); color: var(--text-muted); font-size: 12px; font-weight: 600; padding: 6px 14px; cursor: pointer; }
+    .ms-seg button + button { border-left: 1px solid var(--input-border); }
+    .ms-seg button.active { background: var(--primary); color: #fff; }
+    .ms-legend-hint { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 12px; font-size: 12px; color: var(--text-muted); }
+    .ms-legend-hint .dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+    .ms-progress-table, .ms-summary-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .ms-progress-table th, .ms-progress-table td, .ms-summary-table th, .ms-summary-table td { padding: 10px 12px; border-bottom: 1px solid var(--input-border); text-align: center; }
+    .ms-progress-table th, .ms-summary-table th { background: #F8FAFC; font-weight: 600; font-size: 12px; color: #334155; }
+    .ms-progress-table th:first-child, .ms-progress-table td:first-child, .ms-summary-table th:first-child, .ms-summary-table td:first-child { text-align: left; }
+    .ms-progress-table .ms-td-done { color: #16A34A; font-weight: 700; }
+    .ms-progress-table .ms-td-delay { color: #DC2626; font-weight: 700; }
+    .ms-progress-table .ms-total-row td { background: #EFF6FF; font-weight: 700; border-bottom: none; }
+    .ms-summary-table .ms-name { font-weight: 600; color: var(--primary); }
+    .ms-summary-table th.ms-q-col, .ms-summary-table td.ms-q-col { background: #F5F7FF; border-left: 1px solid #E0E7FF; }
+    .ms-summary-table th.ms-q-group { background: #E0E7FF; color: #4338CA; font-weight: 700; border-left: 2px solid #A5B4FC; border-right: 2px solid #A5B4FC; border-top: 2px solid #A5B4FC; }
+    .ms-summary-table th.ms-q-col:first-of-type, .ms-summary-table td.ms-q-col:first-of-type { border-left: 2px solid #A5B4FC; }
+    .ms-summary-table th.ms-q-end, .ms-summary-table td.ms-q-end { border-right: 2px solid #A5B4FC; }
+    .ms-summary-table tbody tr:last-child td.ms-q-col { border-bottom: 2px solid #A5B4FC; }
+    .ms-summary-table tbody tr.ms-total-row td { background: #EFF6FF; font-weight: 700; border-top: 2px solid var(--input-border); }
+    .ms-summary-table tbody tr.ms-total-row td.ms-q-col { background: #E0E7FF; }
+    .ms-badge-num { display: inline-flex; min-width: 28px; justify-content: center; padding: 2px 9px; border-radius: 999px; font-weight: 700; font-size: 12px; background: #F1F5F9; color: #94A3B8; }
+    .ms-badge-num.done.hot { background: #DCFCE7; color: #16A34A; }
+    .ms-badge-num.delay.hot { background: #FEE2E2; color: #DC2626; }
+    .ms-badge-num.plan.hot { background: #E0E7FF; color: #4338CA; }
     @media (max-width: 1200px) { .grid-4 { grid-template-columns: repeat(2, 1fr); } .grid-3 { grid-template-columns: repeat(2, 1fr); } .grid-2 { grid-template-columns: 1fr; } .summary-cards { grid-template-columns: 1fr; } }
     @media (max-width: 768px) { .grid-4 { grid-template-columns: 1fr; } .grid-3 { grid-template-columns: 1fr; } .form-row { flex-direction: column; } .form-row label { flex: none; } }
   </style>
@@ -472,6 +515,37 @@
           <div class="card"><h2 class="card-title">단계별 현황</h2><div style="height:260px"><canvas id="chartPhase"></canvas></div></div>
           <div class="card"><h2 class="card-title">국내/외 현황</h2><div style="height:260px"><canvas id="chartRegion"></canvas></div></div>
           <div class="card"><h2 class="card-title">대상질환별 현황</h2><div style="height:260px"><canvas id="chartDisease"></canvas></div></div>
+        </div>
+        <div class="card" style="margin-top: 16px;">
+          <h2 class="card-title" style="margin:0 0 4px;">핵심 마일스톤 현황 요약 <span class="ms-sub" id="ms-summary-sub"></span></h2>
+          <div style="overflow-x:auto;">
+            <table class="ms-summary-table">
+              <thead id="ms-summary-thead"></thead>
+              <tbody id="ms-summary-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card" style="margin-top: 16px;">
+          <div class="ms-progress-head">
+            <h2 class="card-title" style="margin:0;">핵심 마일스톤 진척 현황 <span class="ms-sub">센터 전체 과제 · 8개 핵심 마일스톤</span></h2>
+            <div class="ms-progress-toggles">
+              <div class="ms-seg" id="ms-period-seg">
+                <button type="button" data-msp="month" class="active" onclick="setMsPeriod('month')">월별</button>
+                <button type="button" data-msp="year" onclick="setMsPeriod('year')">연도별</button>
+              </div>
+              <div class="ms-seg" id="ms-view-seg">
+                <button type="button" data-msv="chart" class="active" onclick="setMsView('chart')">차트</button>
+                <button type="button" data-msv="table" onclick="setMsView('table')">표</button>
+              </div>
+            </div>
+          </div>
+          <div id="ms-progress-chart-wrap" style="height:340px; margin-top:12px;"><canvas id="chartMsProgress"></canvas></div>
+          <div id="ms-progress-table-wrap" style="display:none; margin-top:12px; overflow-x:auto;"></div>
+          <div class="ms-legend-hint">
+            <span><span class="dot" style="background:#10B981"></span>달성(완료): 해당 월 실제 종료 완료 마일스톤 수</span>
+            <span><span class="dot" style="background:#EF4444"></span>지연: 계획 종료월 경과 · 기한 내 미완료</span>
+            <span><span class="dot" style="background:#94A3B8"></span>예정(계획): 해당 월 완료 계획 마일스톤 수</span>
+          </div>
         </div>
       </div>
 
@@ -2339,6 +2413,28 @@ function docStatusSelectHtml(t) {
     return '<option' + (o === t.docStatus ? ' selected' : '') + '>' + o + '</option>';
   }).join('') + '</select>';
 }
+function taskDateRangeRows(t) {
+  function rng(label, sVal, eVal, note) {
+    return '<div class="tdl">' + label + '</div>'
+      + '<div class="tdv"><div class="date-range">'
+      + '<label class="dr-field"><span class="dr-cap">Start date</span><input type="text" class="form-control" value="' + (sVal || '') + '" placeholder="YYYY-MM-DD"></label>'
+      + '<span class="dr-sep">~</span>'
+      + '<label class="dr-field"><span class="dr-cap">End date</span><input type="text" class="form-control" value="' + (eVal || '') + '" placeholder="YYYY-MM-DD"></label>'
+      + '</div>' + (note || '') + '</div>';
+  }
+  var actNote = t.core
+    ? '<div class="task-ms-note">Actual End date 입력 시 핵심 마일스톤(M' + t.msNo + ')이 달성 처리됩니다.</div>'
+    : '';
+  return rng('Original Target Date', t.origStart || t.planStart, t.origEnd || t.planEnd)
+    + rng('Current Target Date', t.planStart, t.planEnd)
+    + rng('Actual Date', t.actualStart, t.actualEnd, actNote);
+}
+function tdRow(label, valueHtml) {
+  return '<div class="tdl">' + label + '</div><div class="tdv">' + valueHtml + '</div>';
+}
+function tdSection(title, rowsHtml) {
+  return '<div class="tform-sec"><div class="tform-sec-title">' + title + '</div><div class="task-detail-grid">' + rowsHtml + '</div></div>';
+}
 function openTaskModal(key) {
   var t = TASKS_BY_KEY[key];
   if (!t) return;
@@ -2346,24 +2442,22 @@ function openTaskModal(key) {
   var badges = wfTypeBadge(t) + (t.core ? ' <span class="ms-badge">&#9733; 핵심 마일스톤 M' + t.msNo + '</span>' : '');
   var head = '<div style="display:flex; align-items:center; gap:10px; margin-bottom:16px;">'
     + '<span style="font-size:18px; font-weight:700;">' + t.name + '</span>' + badges + '</div>';
-  var grid = '<div class="task-detail-grid">';
-  if (t.type === 'milestone') {
-    grid += '<div class="tdl">상태</div><div class="tdv">' + statusSelectHtml(t) + '</div>';
-    grid += '<div class="tdl">계획 종료일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.planEnd || '') + '"></div>';
-    grid += '<div class="tdl">실제 시작일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.actualStart || '') + '"></div>';
-    grid += '<div class="tdl">실제 종료일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.actualEnd || '') + '"><div class="task-ms-note">실제 종료일(End Date) 입력 시 핵심 마일스톤이 달성 처리됩니다.</div></div>';
-  } else {
-    grid += '<div class="tdl">Task 상태</div><div class="tdv">' + statusSelectHtml(t) + '</div>';
-    grid += '<div class="tdl">Current Version</div><div class="tdv"><input type="text" class="form-control" value="' + (t.currentVersion || '') + '" placeholder="예: v2.0" style="max-width:140px"></div>';
-    grid += '<div class="tdl">Document Status</div><div class="tdv">' + docStatusSelectHtml(t) + '</div>';
-    grid += '<div class="tdl">eTMF Reference</div><div class="tdv"><input type="text" class="form-control" value="' + (t.etmf || '') + '" placeholder="예: Study Start-up &gt; Protocol &gt; Final Protocol"></div>';
-    grid += '<div class="tdl">BearDoc Link</div><div class="tdv"><input type="text" class="form-control tdv-mono" value="' + (t.beardoc || '') + '" placeholder="예: \\\\beardoc\\Clinical\\ProjectA\\Protocol"></div>';
-    grid += '<div class="tdl">Last Update Summary</div><div class="tdv"><textarea class="form-control" rows="2" maxlength="200" placeholder="최근 변경 요약 (최대 200자)">' + (t.lastUpdateSummary || '') + '</textarea></div>';
-    grid += '<div class="tdl">실제 시작일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.actualStart || '') + '"></div>';
-    grid += '<div class="tdl">실제 종료일</div><div class="tdv"><input type="date" class="form-control" value="' + (t.actualEnd || '') + '">' + (t.core ? '<div class="task-ms-note">실제 종료일 입력 시 핵심 마일스톤(M' + t.msNo + ')이 달성 처리됩니다.</div>' : '') + '</div>';
+  var grid = '<div class="task-detail-grid">'
+    + tdRow(t.type === 'milestone' ? '상태' : 'Task 상태', statusSelectHtml(t))
+    + '</div>';
+  grid += tdSection('&#128197; 일정 (Schedule)', taskDateRangeRows(t));
+  if (t.type === 'doc') {
+    grid += tdSection('&#128196; 문서 버전 / 상태',
+      tdRow('Current Version', '<input type="text" class="form-control" value="' + (t.currentVersion || '') + '" placeholder="예: v2.0" style="max-width:140px">')
+      + tdRow('Document Status', docStatusSelectHtml(t))
+      + tdRow('Last Update Summary', '<textarea class="form-control" rows="2" maxlength="200" placeholder="최근 변경 요약 (최대 200자)">' + (t.lastUpdateSummary || '') + '</textarea>'));
+    grid += tdSection('&#128193; 문서 경로 (eTMF / BearDoc)',
+      tdRow('eTMF Reference', '<input type="text" class="form-control" value="' + (t.etmf || '') + '" placeholder="예: Study Start-up &gt; Protocol &gt; Final Protocol">')
+      + tdRow('BearDoc Link', '<input type="text" class="form-control tdv-mono" value="' + (t.beardoc || '') + '" placeholder="예: \\\\beardoc\\Clinical\\ProjectA\\Protocol">'));
   }
-  grid += '<div class="tdl">비고</div><div class="tdv"><textarea class="form-control" rows="2" placeholder="비고">' + (t.note || '') + '</textarea></div>';
-  grid += '</div>';
+  grid += '<div class="task-detail-grid" style="margin-top:16px">'
+    + tdRow('비고', '<textarea class="form-control" rows="2" placeholder="비고">' + (t.note || '') + '</textarea>')
+    + '</div>';
   var flagInfo = t.flagTrigger
     ? '<div class="task-flag-info">&#9888; 이 Task의 <b>실제 종료일</b>이 입력되면 과제 상태(Status Flag)가 <b>' + t.flagTrigger + '</b>(으)로 자동 전환됩니다.</div>'
     : '';
@@ -2658,8 +2752,21 @@ document.addEventListener('DOMContentLoaded', function() {
     { name: '엔블로 단일제 2상', sub: '', pct: 30, status: 'on_track', issue: 3, pi: '김철수', date: '2024-05-20', enrollmentPct: 55, msDone: [true, true, false, false, false] }
   ];
   var userProjectCards = [
-    { name: '엔블로젬 3상 (Enblo-003)', pct: 30, status: 'on_track', issue: 2, pi: '김칠수 교수', enrollmentPct: 35, msDone: [true, true, false, false, false], tasks: [{ title: 'EDC 데이터 검토 (Site 101)', due: 'Oct 15' }, { title: '모니터링 보고서 작성 (Site 102)', due: 'Oct 20' }] },
-    { name: '엔블로젬 연구자 주도 임상 (Enblo-IIT)', pct: 60, status: 'delayed', issue: 1, pi: '이영희 박사', enrollmentPct: 100, msDone: [true, true, false, false, false], tasks: [{ title: '연구자 미팅 준비 (Site 105)', due: 'Oct 28' }, { title: 'AE/SAE 보고서 확인', due: 'Oct 30' }] }
+    { name: '엔블로젬 3상 (Enblo-003)', pct: 30, status: 'on_track', issue: 2, pi: '김칠수 교수', enrollmentPct: 35, msDone: [true, true, false, false, false], tasks: [
+      { title: 'EDC 데이터 검토 (Site 101)', due: 'Oct 15', status: 'progress' },
+      { title: '모니터링 보고서 작성 (Site 102)', due: 'Oct 20', status: 'progress' },
+      { title: 'Query 해결 (Site 103)', due: 'Oct 22', status: 'progress' },
+      { title: 'SDV 진행 (Site 104)', due: 'Oct 25', status: 'progress' },
+      { title: 'LPI 마일스톤 점검', due: 'Nov 05', status: 'upcoming' },
+      { title: 'DMP 검토 의견 회신', due: 'Nov 12', status: 'upcoming' },
+      { title: '중간 점검 미팅', due: 'Nov 18', status: 'upcoming' },
+      { title: 'IRB 정기보고 준비', due: 'Nov 25', status: 'upcoming' }
+    ] },
+    { name: '엔블로젬 연구자 주도 임상 (Enblo-IIT)', pct: 60, status: 'delayed', issue: 1, pi: '이영희 박사', enrollmentPct: 100, msDone: [true, true, false, false, false], tasks: [
+      { title: '연구자 미팅 준비 (Site 105)', due: 'Oct 28', status: 'progress' },
+      { title: 'AE/SAE 보고서 확인', due: 'Oct 30', status: 'progress' },
+      { title: 'SAP 초안 검토', due: 'Nov 03', status: 'upcoming' }
+    ] }
   ];
   var milestones = ['IND Sub', 'IND App', 'FPI~LPI', 'DBL', 'CSR'];
 
@@ -2733,11 +2840,183 @@ document.addEventListener('DOMContentLoaded', function() {
       var statusDotCls = p.status === 'on_track' ? 'green' : 'orange';
       var statusLine = 'Overall Status: <span class="status-dot ' + statusDotCls + '"></span><span style="color:' + (p.status === 'on_track' ? 'var(--success)' : 'var(--warning)') + '; font-weight:500">' + statusText + '</span>';
       var issueLine = 'Issue: ' + (p.issue || 0) + ' <span class="status-dot red"></span>';
-      var tasksHtml = p.tasks && p.tasks.length ? '<div class="my-tasks"><div class="my-tasks-title">내 작업 (My Tasks)</div><ul>' + p.tasks.map(function(t) { return '<li>' + t.title + ' <span class="due">Due ' + t.due + '</span></li>'; }).join('') + '</ul></div>' : '';
+      var allTasks = p.tasks || [];
+      function taskGroup(label, cls, items) {
+        if (!items.length) return '';
+        var LIMIT = 3;
+        var shown = items.slice(0, LIMIT);
+        var moreCount = items.length - shown.length;
+        var moreHtml = moreCount > 0 ? '<li class="tg-more">+ ' + moreCount + '건 더 보기</li>' : '';
+        return '<div class="task-group"><div class="task-group-title ' + cls + '">' + label + ' <span class="tg-count">' + items.length + '</span></div><ul>'
+          + shown.map(function(t) { return '<li>' + t.title + ' <span class="due">~ ' + t.due + '</span></li>'; }).join('')
+          + moreHtml
+          + '</ul></div>';
+      }
+      var progTasks = allTasks.filter(function(t) { return t.status === 'progress'; });
+      var upTasks = allTasks.filter(function(t) { return t.status === 'upcoming'; });
+      var tasksHtml = allTasks.length ? '<div class="my-tasks">' + taskGroup('진행중 작업', 'tg-progress', progTasks) + taskGroup('진행예정 작업', 'tg-upcoming', upTasks) + '</div>' : '';
       var statusBadge = p.status === 'on_track' ? '<span class="tag-on-track">On Track</span>' : '<span class="tag-delayed">Delayed</span>';
       var issueTag = (p.issue || 0) > 0 ? '<span class="tag-issue">Issue: ' + p.issue + '</span>' : '';
       return '<div class="project-card project-card-simple"><div class="card-name-row"><div class="card-name">' + p.name + '</div><div class="card-tags-inline">' + statusBadge + (issueTag ? ' ' + issueTag : '') + '</div></div>' + milestoneBar(p, 'Current at ') + tasksHtml + '</div>';
     }).join('');
+  }
+
+  /* ===== 핵심 마일스톤 진척 현황 (센터 전체) ===== */
+  var MS_CORE_NAMES = ['IND Submission', 'IND Approval', 'FPI', 'LPI', 'LPO', 'DBL', 'Topline', 'CSR'];
+  var MS_MONTHLY = {
+    months:   ['2025-08', '2025-09', '2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09', '2026-10'],
+    achieved: [1, 2, 2, 3, 3, 4, 4, 4, 4, 5, 5, 5, 0, 0, 0],
+    delayed:  [0, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 3, 0, 0, 0],
+    planned:  [1, 2, 3, 3, 4, 5, 4, 5, 5, 5, 6, 8, 6, 4, 3]
+  };
+  var MS_CURRENT = '2026-06';
+  // achieved/delayed/planned = 이번달 기준, q* = 이번 분기 / 다음 분기 기준
+  var MS_SUMMARY = [
+    { name: 'IND Submission', achieved: 0, delayed: 0, planned: 1, qAchieved: 1, qDelayed: 0, qNextPlanned: 2 },
+    { name: 'IND Approval',   achieved: 1, delayed: 0, planned: 1, qAchieved: 2, qDelayed: 0, qNextPlanned: 2 },
+    { name: 'FPI',            achieved: 1, delayed: 0, planned: 1, qAchieved: 3, qDelayed: 1, qNextPlanned: 2 },
+    { name: 'LPI',            achieved: 1, delayed: 1, planned: 1, qAchieved: 3, qDelayed: 1, qNextPlanned: 3 },
+    { name: 'LPO',            achieved: 1, delayed: 0, planned: 1, qAchieved: 2, qDelayed: 0, qNextPlanned: 3 },
+    { name: 'DBL',            achieved: 1, delayed: 0, planned: 1, qAchieved: 2, qDelayed: 0, qNextPlanned: 3 },
+    { name: 'Topline',        achieved: 0, delayed: 0, planned: 1, qAchieved: 1, qDelayed: 0, qNextPlanned: 2 },
+    { name: 'CSR',            achieved: 0, delayed: 0, planned: 1, qAchieved: 0, qDelayed: 0, qNextPlanned: 1 }
+  ];
+  var msPeriod = 'month', msView = 'chart';
+  function msNextMonthLabel(m) {
+    var y = +m.slice(0, 4), mm = +m.slice(5, 7) + 1;
+    if (mm > 12) { mm = 1; y++; }
+    return y + '-' + (mm < 10 ? '0' + mm : mm);
+  }
+  function msAggregate() {
+    if (msPeriod === 'month') {
+      return { labels: MS_MONTHLY.months.slice(), achieved: MS_MONTHLY.achieved.slice(), delayed: MS_MONTHLY.delayed.slice(), planned: MS_MONTHLY.planned.slice() };
+    }
+    var yobj = {}, order = [];
+    MS_MONTHLY.months.forEach(function(m, i) {
+      var y = m.slice(0, 4);
+      if (!yobj[y]) { yobj[y] = { a: 0, d: 0, p: 0 }; order.push(y); }
+      yobj[y].a += MS_MONTHLY.achieved[i];
+      yobj[y].d += MS_MONTHLY.delayed[i];
+      yobj[y].p += MS_MONTHLY.planned[i];
+    });
+    return {
+      labels: order,
+      achieved: order.map(function(y) { return yobj[y].a; }),
+      delayed: order.map(function(y) { return yobj[y].d; }),
+      planned: order.map(function(y) { return yobj[y].p; })
+    };
+  }
+  function setMsPeriod(p) { msPeriod = p; renderMilestoneProgress(); }
+  function setMsView(v) { msView = v; renderMilestoneProgress(); }
+  window.setMsPeriod = setMsPeriod;
+  window.setMsView = setMsView;
+  function renderMilestoneProgress() {
+    document.querySelectorAll('#ms-period-seg button').forEach(function(b) { b.classList.toggle('active', b.getAttribute('data-msp') === msPeriod); });
+    document.querySelectorAll('#ms-view-seg button').forEach(function(b) { b.classList.toggle('active', b.getAttribute('data-msv') === msView); });
+    var chartWrap = document.getElementById('ms-progress-chart-wrap');
+    var tableWrap = document.getElementById('ms-progress-table-wrap');
+    if (!chartWrap || !tableWrap) return;
+    chartWrap.style.display = msView === 'chart' ? 'block' : 'none';
+    tableWrap.style.display = msView === 'table' ? 'block' : 'none';
+    var agg = msAggregate();
+    if (msView === 'chart') {
+      var el = document.getElementById('chartMsProgress');
+      if (el) {
+        if (charts.msProgress) charts.msProgress.destroy();
+        charts.msProgress = new Chart(el, {
+          type: 'line',
+          data: {
+            labels: agg.labels,
+            datasets: [
+              { label: '예정(계획)', data: agg.planned, borderColor: '#94A3B8', backgroundColor: 'rgba(148,163,184,0.06)', borderDash: [5, 4], tension: 0.3, pointRadius: 3, pointBackgroundColor: '#94A3B8', borderWidth: 2 },
+              { label: '달성(완료)', data: agg.achieved, borderColor: '#10B981', backgroundColor: 'rgba(16,185,129,0.12)', fill: true, tension: 0.3, pointRadius: 4, pointBackgroundColor: '#10B981', borderWidth: 3 },
+              { label: '지연', data: agg.delayed, borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.08)', tension: 0.3, pointRadius: 4, pointBackgroundColor: '#EF4444', borderWidth: 3 }
+            ]
+          },
+          options: {
+            responsive: true, maintainAspectRatio: false,
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+              legend: { position: 'bottom', labels: { usePointStyle: true, padding: 16, font: { size: 13 } } },
+              datalabels: { display: false },
+              tooltip: { mode: 'index', intersect: false, callbacks: { label: function(c) { return c.dataset.label + ': ' + c.parsed.y + '건'; } } }
+            },
+            scales: {
+              y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 }, title: { display: true, text: '과제 개수' }, grid: { color: 'rgba(0,0,0,0.06)' } },
+              x: { grid: { display: false }, title: { display: true, text: msPeriod === 'month' ? '기간 (YYYY-MM)' : '연도' } }
+            }
+          }
+        });
+      }
+    } else {
+      var add = function(a, b) { return a + b; };
+      var rows = agg.labels.map(function(lb, i) {
+        var cur = (msPeriod === 'month' && lb === MS_CURRENT) ? ' style="background:#FFF7ED"' : '';
+        return '<tr' + cur + '><td>' + lb + (cur ? ' <span style="color:#B45309;font-size:11px;">(이번달)</span>' : '') + '</td><td>' + agg.planned[i] + '</td><td class="ms-td-done">' + agg.achieved[i] + '</td><td class="ms-td-delay">' + agg.delayed[i] + '</td></tr>';
+      }).join('');
+      var tp = agg.planned.reduce(add, 0), ta = agg.achieved.reduce(add, 0), td = agg.delayed.reduce(add, 0);
+      tableWrap.innerHTML = '<table class="ms-progress-table"><thead><tr><th>' + (msPeriod === 'month' ? '기간 (월)' : '연도') + '</th><th>예정(계획)</th><th>달성(완료)</th><th>지연</th></tr></thead><tbody>'
+        + rows
+        + '<tr class="ms-total-row"><td>합계</td><td>' + tp + '</td><td>' + ta + '</td><td>' + td + '</td></tr></tbody></table>';
+    }
+  }
+  function msQuarterInfo(m) {
+    var y = +m.slice(0, 4), mm = +m.slice(5, 7);
+    var q = Math.ceil(mm / 3);
+    var nq = q + 1, ny = y;
+    if (nq > 4) { nq = 1; ny = y + 1; }
+    return { isEnd: mm % 3 === 0, q: q, y: y, nq: nq, ny: ny };
+  }
+  function renderMsSummary() {
+    var tbody = document.getElementById('ms-summary-tbody');
+    var thead = document.getElementById('ms-summary-thead');
+    if (!tbody || !thead) return;
+    var qi = msQuarterInfo(MS_CURRENT);
+    var sub = document.getElementById('ms-summary-sub');
+    if (sub) {
+      var s = '기준: 이번 달(' + MS_CURRENT + ') · 다음 달(' + msNextMonthLabel(MS_CURRENT) + ')';
+      if (qi.isEnd) s += '  |  이번 분기(' + qi.y + ' Q' + qi.q + ') · 다음 분기(' + qi.ny + ' Q' + qi.nq + ')';
+      sub.textContent = s;
+    }
+    if (qi.isEnd) {
+      thead.innerHTML =
+        '<tr>'
+        + '<th rowspan="2">핵심 마일스톤</th>'
+        + '<th colspan="3">월간 (' + MS_CURRENT + ')</th>'
+        + '<th colspan="3" class="ms-q-group">분기 요약 (' + qi.y + ' Q' + qi.q + ')</th>'
+        + '</tr>'
+        + '<tr>'
+        + '<th>이번달 달성</th><th>이번달 지연</th><th>다음달 예정</th>'
+        + '<th class="ms-q-col">분기 달성</th><th class="ms-q-col">분기 지연</th><th class="ms-q-col ms-q-end">다음 분기 예정</th>'
+        + '</tr>';
+    } else {
+      thead.innerHTML = '<tr><th>핵심 마일스톤</th><th>이번달 달성</th><th>이번달 지연</th><th>다음달 예정</th></tr>';
+    }
+    tbody.innerHTML = MS_SUMMARY.map(function(m) {
+      var row = '<tr><td class="ms-name">' + m.name + '</td>'
+        + '<td><span class="ms-badge-num done' + (m.achieved > 0 ? ' hot' : '') + '">' + m.achieved + '</span></td>'
+        + '<td><span class="ms-badge-num delay' + (m.delayed > 0 ? ' hot' : '') + '">' + m.delayed + '</span></td>'
+        + '<td><span class="ms-badge-num plan' + (m.planned > 0 ? ' hot' : '') + '">' + m.planned + '</span></td>';
+      if (qi.isEnd) {
+        row += '<td class="ms-q-col"><span class="ms-badge-num done' + (m.qAchieved > 0 ? ' hot' : '') + '">' + m.qAchieved + '</span></td>'
+          + '<td class="ms-q-col"><span class="ms-badge-num delay' + (m.qDelayed > 0 ? ' hot' : '') + '">' + m.qDelayed + '</span></td>'
+          + '<td class="ms-q-col ms-q-end"><span class="ms-badge-num plan' + (m.qNextPlanned > 0 ? ' hot' : '') + '">' + m.qNextPlanned + '</span></td>';
+      }
+      row += '</tr>';
+      return row;
+    }).join('');
+    function sum(k) { return MS_SUMMARY.reduce(function(a, m) { return a + (m[k] || 0); }, 0); }
+    var totalRow = '<tr class="ms-total-row"><td class="ms-name">전체 (Total)</td>'
+      + '<td><span class="ms-badge-num done' + (sum('achieved') > 0 ? ' hot' : '') + '">' + sum('achieved') + '</span></td>'
+      + '<td><span class="ms-badge-num delay' + (sum('delayed') > 0 ? ' hot' : '') + '">' + sum('delayed') + '</span></td>'
+      + '<td><span class="ms-badge-num plan' + (sum('planned') > 0 ? ' hot' : '') + '">' + sum('planned') + '</span></td>';
+    if (qi.isEnd) {
+      totalRow += '<td class="ms-q-col"><span class="ms-badge-num done' + (sum('qAchieved') > 0 ? ' hot' : '') + '">' + sum('qAchieved') + '</span></td>'
+        + '<td class="ms-q-col"><span class="ms-badge-num delay' + (sum('qDelayed') > 0 ? ' hot' : '') + '">' + sum('qDelayed') + '</span></td>'
+        + '<td class="ms-q-col ms-q-end"><span class="ms-badge-num plan' + (sum('qNextPlanned') > 0 ? ' hot' : '') + '">' + sum('qNextPlanned') + '</span></td>';
+    }
+    totalRow += '</tr>';
+    tbody.innerHTML += totalRow;
   }
 
   function renderCharts() {
@@ -2773,6 +3052,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('chartDisease')) {
       charts.disease = new Chart(document.getElementById('chartDisease'), { type: 'pie', data: { labels: ['Diabetes', 'Gastric', 'Respiratory', 'Others'], datasets: [{ label: '대상질환별', data: [19.2, 13.3, 20, 13], backgroundColor: colors }] }, options: pieOpts });
     }
+    renderMilestoneProgress();
+    renderMsSummary();
   }
 
   function initSitesChart() {
