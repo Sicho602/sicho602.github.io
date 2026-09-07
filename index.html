@@ -11,6 +11,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <script>if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') Chart.register(ChartDataLabels);</script>
   <link rel="stylesheet" href="css/report.css">
+  <link rel="stylesheet" href="css/quality.css">
   <style>
     :root {
       --nav-bg: #fff;
@@ -491,6 +492,7 @@
       <a href="#program" data-page="program">Studies</a>
       <a href="#closed" data-page="closed">Completed Studies</a>
       <a href="#report" data-page="report">Report</a>
+      <a href="#quality/dashboard" data-page="quality">Quality Management</a>
       <a href="#approval" data-page="approval">Approvals</a>
       <a href="#partner" data-page="partner">Partners</a>
       <a href="#system" data-page="system">Admin</a>
@@ -901,6 +903,17 @@
         </div>
       </div>
       <div data-report-root></div>
+    </div>
+
+    <div id="view-quality" class="view-page">
+      <div class="page-header qm-page-header">
+        <div>
+          <div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Clinical Quality Management</div>
+          <h1 class="page-title">Clinical Quality Management</h1>
+          <p class="page-description">Audit·Inspection에서 발생한 Quality Issue와 CAPA를 추적합니다.</p>
+        </div>
+      </div>
+      <div id="quality-management-root"></div>
     </div>
 
     <!-- 뷰: 과제관리 - 과제 상세 (사이드바 + 콘텐츠) -->
@@ -2794,6 +2807,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (h === 'report' || h.indexOf('report/') === 0) {
       return { page: 'report', projectId: null, tab: null, dashboardSub: null, closedViewSub: null };
     }
+    if (h === 'quality' || h.indexOf('quality/') === 0) {
+      return { page: 'quality', projectId: null, tab: null, dashboardSub: null, closedViewSub: null };
+    }
     return { page: h || 'dashboard', projectId: null, tab: 'info', dashboardSub: 'overall', closedViewSub: null };
   }
 
@@ -2926,6 +2942,8 @@ document.addEventListener('DOMContentLoaded', function() {
       if (currentProjectTab === 'report' && typeof window.renderCtmsReports === 'function') window.renderCtmsReports(currentProjectId);
     } else if (page === 'report') {
       if (typeof window.renderCtmsReports === 'function') window.renderCtmsReports('');
+    } else if (page === 'quality') {
+      if (typeof window.renderClinicalQuality === 'function') window.renderClinicalQuality();
     } else if (page === 'closed-project') {
       document.getElementById('closedProjectTitle').textContent = CLOSED_TITLES[currentProjectId] || '';
       document.getElementById('closedTabLabel').textContent = CLOSED_TAB_LABELS[currentProjectTab] || 'Study Info';
@@ -3456,5 +3474,6 @@ document.addEventListener('DOMContentLoaded', function() {
 })();
   </script>
   <script src="js/report.js"></script>
+  <script src="js/quality.js"></script>
 </body>
 </html>
