@@ -10,6 +10,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
   <script>if (typeof Chart !== 'undefined' && typeof ChartDataLabels !== 'undefined') Chart.register(ChartDataLabels);</script>
+  <link rel="stylesheet" href="css/report.css">
   <style>
     :root {
       --nav-bg: #fff;
@@ -108,6 +109,24 @@
     .actual-expected { display: flex; align-items: center; gap: 8px; }
     .actual-expected input { width: 100px; padding: 6px 10px; border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--input-bg); }
     .actual-expected .sep { color: var(--text-muted); }
+    /* 자동연동 / 직접입력 구분 */
+    .field-legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-bottom: 16px; padding: 10px 12px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: var(--radius); font-size: 12px; color: var(--text-muted); }
+    .field-legend .fl-item { display: inline-flex; align-items: center; gap: 6px; }
+    .field-legend .fl-dot { width: 11px; height: 11px; border-radius: 3px; display: inline-block; flex: none; }
+    .field-legend .fl-auto .fl-dot { background: #DBEAFE; border: 1px solid #2563EB; }
+    .field-legend .fl-manual .fl-dot { background: #fff; border: 1px solid #94A3B8; }
+    .actual-expected.ae-pair { align-items: flex-end; gap: 10px; }
+    .actual-expected.ae-pair .sep { padding-bottom: 8px; }
+    .ae-cell { display: flex; flex-direction: column; gap: 3px; }
+    .ae-cell input { width: 120px; }
+    .ae-cap { font-size: 10px; font-weight: 700; letter-spacing: .02em; display: inline-flex; align-items: center; gap: 4px; }
+    .ae-cap::before { content: ""; width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+    .ae-auto .ae-cap { color: #2563EB; }
+    .ae-auto .ae-cap::before { background: #DBEAFE; border: 1px solid #2563EB; }
+    .ae-manual .ae-cap { color: #64748B; }
+    .ae-manual .ae-cap::before { background: #fff; border: 1px solid #94A3B8; }
+    .ae-auto input, input.input-auto { background: #EFF6FF; border-color: #BFDBFE !important; color: #1E40AF; cursor: not-allowed; }
+    .auto-tag { display: inline-block; font-size: 10px; font-weight: 700; color: #2563EB; background: #EFF6FF; border: 1px solid #BFDBFE; border-radius: 6px; padding: 1px 6px; margin-left: 6px; vertical-align: middle; }
     .schema-box { display: flex; flex-direction: column; gap: 12px; }
     .schema-preview { border: 1px solid var(--input-border); border-radius: var(--radius); background: var(--input-bg); padding: 12px; min-height: 120px; display: flex; align-items: center; justify-content: center; overflow: auto; }
     .schema-preview img.schema-img { max-width: 100%; height: auto; display: block; border-radius: 4px; }
@@ -276,6 +295,12 @@
     .wf-table td.g-cell { min-width: 50px; width: 50px; padding: 0; border-right: 1px solid #F1F5F9; position: relative; }
     .wf-table td.g-cell .gwrap { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); height: 11px; }
     .wf-table td.g-cell .gbar { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
+    .wf-table tr.wf-doc-row td { height: 48px; }
+    .wf-table td.g-cell .gwrap.gwrap-version { top: 60%; }
+    .gbar.g-version { background: #2563EB; box-shadow: inset 0 0 0 1px rgba(255,255,255,.45); }
+    .gbar.g-version.g-version-alt { background: #14B8A6; }
+    .gbar.g-version.g-version-open { background: repeating-linear-gradient(45deg, #60A5FA, #60A5FA 4px, #BFDBFE 4px, #BFDBFE 8px); }
+    .g-version-label { position: absolute; right: 2px; bottom: 14px; z-index: 4; padding: 1px 4px; border-radius: 3px; background: rgba(255,255,255,.94); color: #1E3A8A; font-size: 9px; font-weight: 700; white-space: nowrap; box-shadow: 0 1px 2px rgba(15,23,42,.12); pointer-events: none; }
     .gbar.g-done { background: #16A34A; }
     .gbar.g-prog { background: #2563EB; }
     .gbar.g-plan { background: repeating-linear-gradient(45deg, #CBD5E1, #CBD5E1 4px, #E2E8F0 4px, #E2E8F0 8px); }
@@ -319,6 +344,14 @@
     .ms-history .h-type { font-size: 12px; color: var(--primary); margin-left: 8px; }
     .ms-history .h-change { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
     .task-modal-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 22px; }
+    .doc-version-editor { grid-column: 1 / -1; width: 100%; overflow-x: auto; }
+    .doc-version-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .doc-version-table th, .doc-version-table td { padding: 6px 4px; border-bottom: 1px solid var(--input-border); text-align: left; }
+    .doc-version-table th { color: var(--text-muted); font-size: 11px; }
+    .doc-version-table .form-control { min-width: 100px; padding: 6px 7px; }
+    .doc-version-table .version-input { min-width: 72px; width: 78px; }
+    .doc-version-delete { border: 0; background: transparent; color: #DC2626; cursor: pointer; font-size: 18px; }
+    .doc-version-add { margin-top: 8px; border: 0; background: transparent; color: var(--primary); cursor: pointer; font-weight: 600; }
     .member-subnav { display: flex; gap: 4px; margin-bottom: 12px; }
     .member-subnav button { padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--input-border); background: var(--card-bg); cursor: pointer; font-size: 13px; color: var(--text-muted); }
     .member-subnav button.active { background: var(--primary); color: #fff; border-color: var(--primary); }
@@ -457,6 +490,7 @@
       <a href="#dashboard" data-page="dashboard">Dashboard</a>
       <a href="#program" data-page="program">Studies</a>
       <a href="#closed" data-page="closed">Completed Studies</a>
+      <a href="#report" data-page="report">Report</a>
       <a href="#approval" data-page="approval">Approvals</a>
       <a href="#partner" data-page="partner">Partners</a>
       <a href="#system" data-page="system">Admin</a>
@@ -858,6 +892,17 @@
       <div class="card"></div>
     </div>
 
+    <div id="view-report" class="view-page">
+      <div class="page-header">
+        <div>
+          <div class="breadcrumb"><a href="#dashboard">Dashboard</a> &gt; Report</div>
+          <h1 class="page-title">Report</h1>
+          <p class="page-description">담당 과제의 주간보고와 내부 회의록을 작성하고 관리합니다.</p>
+        </div>
+      </div>
+      <div data-report-root></div>
+    </div>
+
     <!-- 뷰: 과제관리 - 과제 상세 (사이드바 + 콘텐츠) -->
     <div id="view-project" class="view-page">
       <div class="page-header">
@@ -873,6 +918,8 @@
           <a href="#" data-project-tab="site">Sites</a>
           <a href="#" data-project-tab="vendor">Vendors</a>
           <a href="#" data-project-tab="milestone">Milestones</a>
+          <a href="#" data-project-tab="document-matrix">Document Matrix</a>
+          <a href="#" data-project-tab="report">Report</a>
           <a href="#" data-project-tab="studyteam">Study Team</a>
         </aside>
         <div class="project-content">
@@ -920,19 +967,23 @@
             </div>
             <div class="card">
               <h2 class="section-title">상세 정보</h2>
+              <div class="field-legend">
+                <span class="fl-item fl-auto"><span class="fl-dot"></span>자동 연동 · Site 탭 / 마일스톤 워크플로우에서 자동 반영 (읽기 전용)</span>
+                <span class="fl-item fl-manual"><span class="fl-dot"></span>직접 입력 · 이 화면에서 입력</span>
+              </div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px;">
                 <div class="form-row" style="margin-bottom:0"><label>CTMS No.</label><input type="text" class="form-control" value="195_DW_DWP16001308"></div>
                 <div class="form-row" style="margin-bottom:0"><label>Protocol Version</label><input type="text" class="form-control" value="3.0"></div>
                 <div class="form-row" style="margin-bottom:0"><label>Registry No.</label><input type="text" class="form-control" value="NCT06141980"></div>
                 <div class="form-row" style="margin-bottom:0"><label>눈가림 종류</label><select class="form-control"><option value="Open" selected>Open</option><option value="Single">Single</option><option value="Double">Double</option></select></div>
                 <div class="form-row" style="margin-bottom:0"><label>무작위 배정 여부</label><input type="text" class="form-control" value="No"></div>
-                <div class="form-row" style="margin-bottom:0"><label>대상자 수 (Actual/Expected)</label><div class="actual-expected"><input type="text" value="2"><span class="sep">/</span><input type="text" value="134"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>대상자 수</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="text" value="2" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" value="134"></label></div></div>
                 <div class="form-row" style="margin-bottom:0"><label>대상질환</label><input type="text" class="form-control" value="내분비, 영양 및 대사 질환"></div>
-                <div class="form-row" style="margin-bottom:0"><label>LPI (Actual/Expected)</label><div class="actual-expected"><input type="date" value="2024-11-29"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
-                <div class="form-row" style="margin-bottom:0"><label>기관 수 (Actual/Expected)</label><div class="actual-expected"><input type="text" value="17"><span class="sep">/</span><input type="text" value="16"></div></div>
-                <div class="form-row" style="margin-bottom:0"><label>CSR final (Actual/Expected)</label><div class="actual-expected"><input type="text" placeholder="실제"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
-                <div class="form-row" style="margin-bottom:0"><label>FPI (Actual/Expected)</label><div class="actual-expected"><input type="date" value="2024-02-14"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
-                <div class="form-row" style="margin-bottom:0"><label>LPO (Actual/Expected)</label><div class="actual-expected"><input type="text" placeholder="실제"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>LPI</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="date" value="2024-11-29" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" placeholder="예상"></label></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>Site 수 (기관 수)</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="text" value="17" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" value="16"></label></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>CSR final</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="text" placeholder="실제" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" placeholder="예상"></label></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>FPI</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="date" value="2024-02-14" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" placeholder="예상"></label></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>LPO</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="text" placeholder="실제" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" placeholder="예상"></label></div></div>
                 <div class="form-row" style="margin-bottom:0"><label>PI/CI</label><input type="text" class="form-control" value="분당서울대병원 임수"></div>
               </div>
             </div>
@@ -943,12 +994,16 @@
             </div>
             <div class="card">
               <h2 class="section-title">공시 정보</h2>
+              <div class="field-legend">
+                <span class="fl-item fl-auto"><span class="fl-dot"></span>일자는 마일스톤 워크플로우에서 자동 연동됩니다 (읽기 전용)</span>
+                <span class="fl-item fl-manual"><span class="fl-dot"></span>링크는 직접 입력</span>
+              </div>
               <div class="table-wrap">
                 <table class="data-table">
                   <thead><tr><th>단계</th><th>일자</th><th>링크</th></tr></thead>
                   <tbody>
-                    <tr><td>IND 신청</td><td><input type="date" value="2023-08-30"></td><td><input type="text" placeholder=""></td></tr>
-                    <tr><td>결과 발표 (Topline)</td><td><input type="date"></td><td><input type="text" placeholder=""></td></tr>
+                    <tr><td>IND 신청 <span class="auto-tag">자동</span></td><td><input type="date" value="2023-08-30" class="input-auto" readonly title="마일스톤 워크플로우(IND Submission)에서 자동 연동"></td><td><input type="text" placeholder=""></td></tr>
+                    <tr><td>결과 발표 (Topline) <span class="auto-tag">자동</span></td><td><input type="date" class="input-auto" readonly title="마일스톤 워크플로우(Topline)에서 자동 연동"></td><td><input type="text" placeholder=""></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -1310,6 +1365,16 @@
               </div>
             </div>
           </div>
+          <div id="project-panel-document-matrix" class="project-panel" style="display:none;">
+            <div class="card">
+              <h2 class="card-title">Document Version / Effective Date Matrix</h2>
+              <p class="page-description" style="margin-bottom:16px">문서별 Version과 Actual End Date(유효일)의 선후 관계를 비교합니다.</p>
+              <div id="document-matrix-root"></div>
+            </div>
+          </div>
+          <div id="project-panel-report" class="project-panel" style="display:none;">
+            <div data-report-root data-project-context="true"></div>
+          </div>
           <div id="project-panel-studyteam" class="project-panel" style="display:none;">
             <div class="card">
               <h2 class="card-title">Study Team Member</h2>
@@ -1512,19 +1577,23 @@
             </div>
             <div class="card">
               <h2 class="section-title">상세 정보</h2>
+              <div class="field-legend">
+                <span class="fl-item fl-auto"><span class="fl-dot"></span>자동 연동 · Site 탭 / 마일스톤 워크플로우에서 자동 반영 (읽기 전용)</span>
+                <span class="fl-item fl-manual"><span class="fl-dot"></span>직접 입력 · 이 화면에서 입력</span>
+              </div>
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px;">
                 <div class="form-row" style="margin-bottom:0"><label>CTMS No.</label><input type="text" class="form-control" value="195_DW_DWP16001308"></div>
                 <div class="form-row" style="margin-bottom:0"><label>Protocol Version</label><input type="text" class="form-control" value="3.0"></div>
                 <div class="form-row" style="margin-bottom:0"><label>Registry No.</label><input type="text" class="form-control" value="NCT06141980"></div>
                 <div class="form-row" style="margin-bottom:0"><label>눈가림 종류</label><select class="form-control"><option value="Open" selected>Open</option><option value="Single">Single</option><option value="Double">Double</option></select></div>
                 <div class="form-row" style="margin-bottom:0"><label>무작위 배정 여부</label><input type="text" class="form-control" value="No"></div>
-                <div class="form-row" style="margin-bottom:0"><label>대상자 수 (Actual/Expected)</label><div class="actual-expected"><input type="text" value="2"><span class="sep">/</span><input type="text" value="134"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>대상자 수</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="text" value="2" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" value="134"></label></div></div>
                 <div class="form-row" style="margin-bottom:0"><label>대상질환</label><input type="text" class="form-control" value="내분비, 영양 및 대사 질환"></div>
-                <div class="form-row" style="margin-bottom:0"><label>LPI (Actual/Expected)</label><div class="actual-expected"><input type="date" value="2024-11-29"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
-                <div class="form-row" style="margin-bottom:0"><label>기관 수 (Actual/Expected)</label><div class="actual-expected"><input type="text" value="17"><span class="sep">/</span><input type="text" value="16"></div></div>
-                <div class="form-row" style="margin-bottom:0"><label>CSR final (Actual/Expected)</label><div class="actual-expected"><input type="text" placeholder="실제"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
-                <div class="form-row" style="margin-bottom:0"><label>FPI (Actual/Expected)</label><div class="actual-expected"><input type="date" value="2024-02-14"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
-                <div class="form-row" style="margin-bottom:0"><label>LPO (Actual/Expected)</label><div class="actual-expected"><input type="text" placeholder="실제"><span class="sep">/</span><input type="text" placeholder="예상"></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>LPI</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="date" value="2024-11-29" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" placeholder="예상"></label></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>Site 수 (기관 수)</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="text" value="17" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" value="16"></label></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>CSR final</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="text" placeholder="실제" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" placeholder="예상"></label></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>FPI</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="date" value="2024-02-14" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" placeholder="예상"></label></div></div>
+                <div class="form-row" style="margin-bottom:0"><label>LPO</label><div class="actual-expected ae-pair"><label class="ae-cell ae-auto"><span class="ae-cap">Actual · 자동</span><input type="text" placeholder="실제" readonly title="Site 탭에서 자동 연동"></label><span class="sep">/</span><label class="ae-cell ae-manual"><span class="ae-cap">Expected · 입력</span><input type="text" placeholder="예상"></label></div></div>
                 <div class="form-row" style="margin-bottom:0"><label>PI/CI</label><input type="text" class="form-control" value="분당서울대병원 임수"></div>
               </div>
             </div>
@@ -1535,12 +1604,16 @@
             </div>
             <div class="card">
               <h2 class="section-title">공시 정보</h2>
+              <div class="field-legend">
+                <span class="fl-item fl-auto"><span class="fl-dot"></span>일자는 마일스톤 워크플로우에서 자동 연동됩니다 (읽기 전용)</span>
+                <span class="fl-item fl-manual"><span class="fl-dot"></span>링크는 직접 입력</span>
+              </div>
               <div class="table-wrap">
                 <table class="data-table">
                   <thead><tr><th>단계</th><th>일자</th><th>링크</th></tr></thead>
                   <tbody>
-                    <tr><td>IND 신청</td><td><input type="date" value="2023-08-30"></td><td><input type="text" placeholder=""></td></tr>
-                    <tr><td>결과 발표 (Topline)</td><td><input type="date"></td><td><input type="text" placeholder=""></td></tr>
+                    <tr><td>IND 신청 <span class="auto-tag">자동</span></td><td><input type="date" value="2023-08-30" class="input-auto" readonly title="마일스톤 워크플로우(IND Submission)에서 자동 연동"></td><td><input type="text" placeholder=""></td></tr>
+                    <tr><td>결과 발표 (Topline) <span class="auto-tag">자동</span></td><td><input type="date" class="input-auto" readonly title="마일스톤 워크플로우(Topline)에서 자동 연동"></td><td><input type="text" placeholder=""></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -2217,6 +2290,48 @@ var WORKFLOW = [
 ];
 var TASKS_BY_KEY = {};
 WORKFLOW.forEach(function(g) { g.tasks.forEach(function(t) { TASKS_BY_KEY[t.key] = t; }); });
+var DOCUMENT_VERSION_STORAGE_KEY = 'ctms_document_versions_v1';
+var DOCUMENT_VERSION_SEED = {
+  protocol: [
+    { version: 'v1.0', actualStart: '2025-07-20', actualEnd: '2025-08-14', status: 'Final', summary: '초안 작성 및 1차 확정' },
+    { version: 'v2.0', actualStart: '2025-08-18', actualEnd: '2025-09-10', status: 'Final', summary: 'Sample Size 수정, Visit Window 변경' }
+  ],
+  dmp: [
+    { version: 'v1.0', actualStart: '2026-02-20', actualEnd: '2026-02-28', status: 'Draft', summary: '초안 작성' },
+    { version: 'v1.1', actualStart: '2026-03-01', actualEnd: '', status: 'Review', summary: 'CRF 항목 추가 반영' }
+  ]
+};
+function cloneJson(value) { return JSON.parse(JSON.stringify(value)); }
+function loadDocumentVersions() {
+  var stored = {};
+  try { stored = JSON.parse(localStorage.getItem(DOCUMENT_VERSION_STORAGE_KEY) || '{}') || {}; } catch (e) { stored = {}; }
+  WORKFLOW.forEach(function(group) {
+    group.tasks.forEach(function(t) {
+      if (t.type !== 'doc') return;
+      var fallback = DOCUMENT_VERSION_SEED[t.key];
+      if (!fallback && t.currentVersion) {
+        fallback = [{
+          version: t.currentVersion,
+          actualStart: t.actualStart || '',
+          actualEnd: t.actualEnd || '',
+          status: t.docStatus || 'Draft',
+          summary: t.lastUpdateSummary || ''
+        }];
+      }
+      t.documentVersions = cloneJson(stored[t.key] || fallback || []);
+    });
+  });
+}
+function persistDocumentVersions() {
+  var data = {};
+  WORKFLOW.forEach(function(group) {
+    group.tasks.forEach(function(t) {
+      if (t.type === 'doc') data[t.key] = t.documentVersions || [];
+    });
+  });
+  localStorage.setItem(DOCUMENT_VERSION_STORAGE_KEY, JSON.stringify(data));
+}
+loadDocumentVersions();
 
 function wfStatusBadge(s) {
   var cls = s === '완료' ? 'st-done' : (s === '진행중' ? 'st-prog' : 'st-plan');
@@ -2253,7 +2368,7 @@ function computeStatusFlag() {
   if (TASKS_BY_KEY['tlf'] && TASKS_BY_KEY['tlf'].actualEnd) flag = 'Close-out';
   return flag;
 }
-var GANTT_CURRENT = 2026 * 12 + 6;
+var GANTT_CURRENT = (new Date()).getFullYear() * 12 + ((new Date()).getMonth() + 1);
 function ganttMonths() {
   var arr = [], y = 2025, m = 7;
   for (var i = 0; i < 18; i++) {
@@ -2272,7 +2387,40 @@ function taskPeriod(t) {
   if (t.status === '진행중') return { s: dateKey(t.actualStart || t.planStart), e: dateKey(t.planEnd), kind: 'g-prog' };
   return { s: dateKey(t.planStart), e: dateKey(t.planEnd), kind: 'g-plan' };
 }
+function daysInMonth(year, month) { return new Date(year, month, 0).getDate(); }
+function datePartPercent(date, isEnd) {
+  if (!date) return isEnd ? 100 : 0;
+  var p = date.split('-');
+  var day = Math.max(1, Math.min(daysInMonth(+p[0], +p[1]), +p[2] || 1));
+  return isEnd ? (day / daysInMonth(+p[0], +p[1])) * 100 : ((day - 1) / daysInMonth(+p[0], +p[1])) * 100;
+}
+function shortDate(date) {
+  if (!date) return '진행중';
+  var p = date.split('-');
+  return p.length === 3 ? p[1] + '/' + p[2] : date;
+}
+function documentGanttCells(t, months) {
+  var today = new Date();
+  var todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+  var versions = (t.documentVersions || []).filter(function(v) { return v.version && v.actualStart; });
+  return months.map(function(mn) {
+    var cur = mn.key === GANTT_CURRENT ? ' g-current' : '';
+    var bars = versions.map(function(v, idx) {
+      var endDate = v.actualEnd || todayStr;
+      var startKey = dateKey(v.actualStart);
+      var endKey = dateKey(endDate);
+      if (startKey == null || endKey == null || mn.key < startKey || mn.key > endKey) return '';
+      var left = mn.key === startKey ? datePartPercent(v.actualStart, false) : 0;
+      var right = mn.key === endKey ? 100 - datePartPercent(endDate, true) : 0;
+      var classes = 'gbar g-version' + (idx % 2 ? ' g-version-alt' : '') + (!v.actualEnd ? ' g-version-open' : '');
+      var label = mn.key === endKey ? '<span class="g-version-label">' + v.version + ' (' + shortDate(v.actualEnd) + ')</span>' : '';
+      return '<div class="gwrap gwrap-version"><div class="' + classes + '" style="left:' + left.toFixed(2) + '%;right:' + right.toFixed(2) + '%"></div>' + label + '</div>';
+    }).join('');
+    return '<td class="g-cell' + cur + '">' + bars + '</td>';
+  }).join('');
+}
 function ganttCells(t, months) {
+  if (t.type === 'doc' && t.documentVersions && t.documentVersions.length) return documentGanttCells(t, months);
   var p = taskPeriod(t);
   return months.map(function(mn) {
     var cur = mn.key === GANTT_CURRENT ? ' g-current' : '';
@@ -2319,7 +2467,7 @@ function renderWorkflow() {
       var planEndCell = t.planEnd
         ? (overdue ? '<span class="wf-overdue" title="계획 종료일 경과 · 실제 종료일 미입력">' + t.planEnd + ' &#9888;</span>' : t.planEnd)
         : '-';
-      html += '<tr class="wf-task' + (overdue ? ' wf-overdue-row' : '') + '" onclick="openTaskModal(\'' + t.key + '\')">'
+      html += '<tr class="wf-task' + (t.type === 'doc' ? ' wf-doc-row' : '') + (overdue ? ' wf-overdue-row' : '') + '" onclick="openTaskModal(\'' + t.key + '\')">'
         + '<td class="wf-name-cell"><div class="wf-name"><span>' + icon + '</span><span class="task-link">' + t.name + '</span>' + verTag + trigger + '</div></td>'
         + '<td>' + wfTypeBadge(t) + '</td>'
         + '<td>' + wfStatusBadge(t.status) + '</td>'
@@ -2435,6 +2583,80 @@ function tdRow(label, valueHtml) {
 function tdSection(title, rowsHtml) {
   return '<div class="tform-sec"><div class="tform-sec-title">' + title + '</div><div class="task-detail-grid">' + rowsHtml + '</div></div>';
 }
+function escapeAttr(value) {
+  return String(value == null ? '' : value).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function documentVersionRowHtml(v) {
+  v = v || { version: '', actualStart: '', actualEnd: '', status: 'Draft', summary: '' };
+  var statuses = ['Draft', 'Review', 'Final'];
+  return '<tr class="doc-version-row">'
+    + '<td><input class="form-control version-input dv-version" value="' + escapeAttr(v.version) + '" placeholder="v1.0"></td>'
+    + '<td><input type="date" class="form-control dv-start" value="' + escapeAttr(v.actualStart) + '"></td>'
+    + '<td><input type="date" class="form-control dv-end" value="' + escapeAttr(v.actualEnd) + '"></td>'
+    + '<td><select class="form-control dv-status">' + statuses.map(function(s) { return '<option' + (s === v.status ? ' selected' : '') + '>' + s + '</option>'; }).join('') + '</select></td>'
+    + '<td><input class="form-control dv-summary" value="' + escapeAttr(v.summary) + '" placeholder="주요 변경사항"></td>'
+    + '<td><button type="button" class="doc-version-delete" title="버전 삭제" onclick="removeDocumentVersionRow(this)">×</button></td>'
+    + '</tr>';
+}
+function documentVersionEditorHtml(t) {
+  return '<div class="doc-version-editor"><table class="doc-version-table"><thead><tr><th>Version</th><th>Actual Start</th><th>Actual End (유효일)</th><th>상태</th><th>주요 변경</th><th></th></tr></thead>'
+    + '<tbody id="doc-version-rows">' + (t.documentVersions || []).map(documentVersionRowHtml).join('') + '</tbody></table>'
+    + '<button type="button" class="doc-version-add" onclick="addDocumentVersionRow()">+ Version 추가</button></div>';
+}
+function addDocumentVersionRow() {
+  var tbody = document.getElementById('doc-version-rows');
+  if (tbody) tbody.insertAdjacentHTML('beforeend', documentVersionRowHtml());
+}
+function removeDocumentVersionRow(button) {
+  var row = button && button.closest('.doc-version-row');
+  if (row) row.remove();
+}
+function saveTaskDetails(key) {
+  var t = TASKS_BY_KEY[key];
+  if (!t) return;
+  if (t.type === 'doc') {
+    var rows = document.querySelectorAll('#doc-version-rows .doc-version-row');
+    var versions = [];
+    rows.forEach(function(row) {
+      var version = row.querySelector('.dv-version').value.trim();
+      var actualStart = row.querySelector('.dv-start').value;
+      var actualEnd = row.querySelector('.dv-end').value;
+      if (!version) return;
+      if (actualEnd && !actualStart) {
+        throw new Error(version + '의 Actual Start를 먼저 입력하세요.');
+      }
+      if (versions.some(function(v) { return v.version.toLowerCase() === version.toLowerCase(); })) {
+        throw new Error(version + ' Version이 중복되었습니다.');
+      }
+      if (actualStart && actualEnd && actualStart > actualEnd) {
+        throw new Error(version + '의 Actual End는 Start보다 빠를 수 없습니다.');
+      }
+      versions.push({
+        version: version,
+        actualStart: actualStart,
+        actualEnd: actualEnd,
+        status: row.querySelector('.dv-status').value,
+        summary: row.querySelector('.dv-summary').value.trim()
+      });
+    });
+    versions.sort(function(a, b) { return (a.actualStart || '').localeCompare(b.actualStart || ''); });
+    t.documentVersions = versions;
+    if (versions.length) {
+      var latest = versions[versions.length - 1];
+      t.currentVersion = latest.version;
+      t.docStatus = latest.status;
+      t.lastUpdateSummary = latest.summary;
+      t.actualStart = versions.map(function(v) { return v.actualStart; }).filter(Boolean).sort()[0] || t.actualStart;
+      var ends = versions.map(function(v) { return v.actualEnd; }).filter(Boolean).sort();
+      t.actualEnd = latest.actualEnd || '';
+      if (latest.actualEnd && ends.length) t.actualEnd = ends[ends.length - 1];
+    }
+    persistDocumentVersions();
+  }
+  renderWorkflow();
+  if (typeof window.renderDocumentMatrix === 'function') window.renderDocumentMatrix();
+  closeTaskModal();
+}
 function openTaskModal(key) {
   var t = TASKS_BY_KEY[key];
   if (!t) return;
@@ -2448,9 +2670,10 @@ function openTaskModal(key) {
   grid += tdSection('&#128197; 일정 (Schedule)', taskDateRangeRows(t));
   if (t.type === 'doc') {
     grid += tdSection('&#128196; 문서 버전 / 상태',
-      tdRow('Current Version', '<input type="text" class="form-control" value="' + (t.currentVersion || '') + '" placeholder="예: v2.0" style="max-width:140px">')
-      + tdRow('Document Status', docStatusSelectHtml(t))
-      + tdRow('Last Update Summary', '<textarea class="form-control" rows="2" maxlength="200" placeholder="최근 변경 요약 (최대 200자)">' + (t.lastUpdateSummary || '') + '</textarea>'));
+      tdRow('Current Version', '<strong>' + escapeAttr(t.currentVersion || '-') + '</strong>')
+      + tdRow('Document Status', '<span class="docstatus ' + docStatusClass(t.docStatus) + '">' + escapeAttr(t.docStatus || 'Draft') + '</span>')
+      + tdRow('Last Update Summary', '<span>' + escapeAttr(t.lastUpdateSummary || '-') + '</span>')
+      + documentVersionEditorHtml(t));
     grid += tdSection('&#128193; 문서 경로 (eTMF / BearDoc)',
       tdRow('eTMF Reference', '<input type="text" class="form-control" value="' + (t.etmf || '') + '" placeholder="예: Study Start-up &gt; Protocol &gt; Final Protocol">')
       + tdRow('BearDoc Link', '<input type="text" class="form-control tdv-mono" value="' + (t.beardoc || '') + '" placeholder="예: \\\\beardoc\\Clinical\\ProjectA\\Protocol">'));
@@ -2475,7 +2698,7 @@ function openTaskModal(key) {
     + '</ul>';
   var foot = '<div class="task-modal-foot">'
     + '<button type="button" class="btn btn-outline" onclick="closeTaskModal()">닫기</button>'
-    + '<button type="button" class="btn btn-primary" onclick="alert(\'저장되었습니다 (데모)\'); closeTaskModal();">저장</button>'
+    + '<button type="button" class="btn btn-primary" onclick="try { saveTaskDetails(\'' + t.key + '\'); } catch (e) { alert(e.message); }">저장</button>'
     + '</div>';
   document.getElementById('task-detail-body').innerHTML = head + grid + flagInfo + docNote + histHtml + foot;
   document.getElementById('task-detail-modal').classList.add('show');
@@ -2495,7 +2718,7 @@ document.addEventListener('DOMContentLoaded', function() {
   var PROJECT_IDS = ['enblo-mb', 'enblo-gem', 'enblo-china', 'enblo-insulin'];
   var PROJECT_TITLES = { 'enblo-mb': '엔블로 매스밸런스 1상', 'enblo-gem': '엔블로젬 3상', 'enblo-china': '엔블로 중국 3상', 'enblo-insulin': '엔블로 인슐린 3상' };
   var CLOSED_TITLES = { 'closed-01': '엔블로 DWP16001 3상 (종료)', 'closed-02': '엔블로 단일제 2상 (종료)' };
-  var TAB_LABELS = { info: 'Overview', budget: 'Budget', site: 'Sites', vendor: 'Vendors', milestone: 'Milestones', studyteam: 'Study Team' };
+  var TAB_LABELS = { info: 'Overview', budget: 'Budget', site: 'Sites', vendor: 'Vendors', milestone: 'Milestones', 'document-matrix': 'Document Matrix', report: 'Report', studyteam: 'Study Team' };
   var CLOSED_TAB_LABELS = { info: 'Overview', budget: 'Budget', site: 'Sites', vendor: 'Vendors', milestone: 'Milestones', studyteam: 'Study Team', results: 'Results', operational: 'Operations' };
   var myProjects = [
     { id: 'enblo-mb', tag: '엔블로', name: '엔블로 매스밸런스 1상', status: 'before', pct: 0 },
@@ -2567,6 +2790,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (h === 'approval' || h.indexOf('approval/') === 0) {
       var asub = h === 'approval' ? 'request' : (h.split('/')[1] || 'request');
       return { page: 'approval', projectId: null, tab: null, dashboardSub: null, closedViewSub: null, partnerSub: null, approvalSub: asub };
+    }
+    if (h === 'report' || h.indexOf('report/') === 0) {
+      return { page: 'report', projectId: null, tab: null, dashboardSub: null, closedViewSub: null };
     }
     return { page: h || 'dashboard', projectId: null, tab: 'info', dashboardSub: 'overall', closedViewSub: null };
   }
@@ -2696,6 +2922,10 @@ document.addEventListener('DOMContentLoaded', function() {
       if (panel) panel.style.display = 'block';
       if (currentProjectTab === 'site') initSitesChart();
       if (currentProjectTab === 'milestone') setTimeout(function() { syncWfTopScroll(); scrollWfToCurrentMonth(); }, 0);
+      if (currentProjectTab === 'document-matrix' && typeof window.renderDocumentMatrix === 'function') window.renderDocumentMatrix();
+      if (currentProjectTab === 'report' && typeof window.renderCtmsReports === 'function') window.renderCtmsReports(currentProjectId);
+    } else if (page === 'report') {
+      if (typeof window.renderCtmsReports === 'function') window.renderCtmsReports('');
     } else if (page === 'closed-project') {
       document.getElementById('closedProjectTitle').textContent = CLOSED_TITLES[currentProjectId] || '';
       document.getElementById('closedTabLabel').textContent = CLOSED_TAB_LABELS[currentProjectTab] || 'Study Info';
@@ -3225,5 +3455,6 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 })();
   </script>
+  <script src="js/report.js"></script>
 </body>
 </html>
